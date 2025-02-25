@@ -1,0 +1,30 @@
+{
+  "name": "Realmsz",
+  "short_name": "Realmsz",
+  "start_url": "/",
+  "scope": "/",
+  "description": "Realmsz combines 10 essential modules in one place: Focus, Plans, Profile, Network, Milai, Studio, Finance, Crypto, Websites, and Storage. Streamline your workflow, create content, connect with your community, and manage your digital assets. Get started by creating an account and exploring each module!",
+  "lang": "en-US",
+  "dir": "ltr",
+  "theme_color": "#00449f",
+  "background_color": "#000000",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "version": "0.0.2",
+  "icons": [
+    {
+      "src": "./android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
+
+

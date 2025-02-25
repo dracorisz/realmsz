@@ -1,0 +1,52 @@
+<script setup>
+import { ref } from "vue";
+import { Head, useForm } from "@inertiajs/vue3";
+import AuthenticationCard from "@/Components/AuthenticationCard.vue";
+import ApplicationLogo from "@/Components/ApplicationLogo.vue";
+import InputError from "@/Components/InputError.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import TextInput from "@/Components/TextInput.vue";
+
+const form = useForm({
+  password: "",
+});
+
+const passwordInput = ref(null);
+
+const submit = () => {
+  form.post(route("password.confirm"), {
+    onFinish: () => {
+      form.reset();
+      passwordInput.value.focus();
+    },
+  });
+};
+</script>
+
+<template>
+  <Head title="Secure Area" />
+
+  <AuthenticationCard>
+    <template #logo>
+      <ApplicationLogo />
+    </template>
+
+    <div class="mb-5 text-sm">
+      <p>This is a secure area of the application. Please confirm your password before continuing.</p>
+    </div>
+
+    <form @submit.prevent="submit">
+      <div class="flex flex-col gap-1">
+        <InputLabel for="password" value="Password" />
+        <TextInput id="password" ref="passwordInput" v-model="form.password" type="password" required autocomplete="current-password" autofocus />
+        <InputError class="mt-2" :message="form.errors.password" />
+      </div>
+
+      <div class="mt-5 flex justify-end">
+        <PrimaryButton class="ml-3" :disabled="form.processing">Confirm</PrimaryButton>
+      </div>
+    </form>
+  </AuthenticationCard>
+</template>
+
