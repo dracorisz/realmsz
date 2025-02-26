@@ -77,7 +77,7 @@ const submit = () => {
           </template>
         </button>
 
-        <PrimaryButton class="ml-3" :disabled="form.processing">Login</PrimaryButton>
+        <PrimaryButton class="ml-3" color="#000" opacity="30" hoverOpacity="50" :disabled="form.processing">Login</PrimaryButton>
       </div>
     </form>
   </AuthenticationCard>

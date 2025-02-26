@@ -193,14 +193,14 @@ const currentCard = ref("start");
   <AppLayout title="Studio">
     <template v-if="currentCard == 'start'">
       <div class="flex h-full w-full items-center justify-center p-5">
-        <div class="grid h-full w-full grid-cols-3 gap-5 text-xs">
-          <div class="crypto-gradient" @click="currentCard = 'design'">
+        <div class="flex h-full w-full gap-5 text-xs">
+          <div class="crypto-gradient w-1/6 " @click="currentCard = 'design'">
             <span class="text-sm text-white/70 group-hover:text-white">Design</span>
           </div>
-          <div class="crypto-gradient" @click="currentCard = 'improve'">
+          <div class="crypto-gradient w-1/3" @click="currentCard = 'improve'">
             <span class="text-sm text-white/70 group-hover:text-white">Improve</span>
           </div>
-          <div class="crypto-gradient relative" @click="currentCard = '3d'">
+          <div class="crypto-gradient w-1/2 relative" @click="currentCard = '3d'">
             <img :src="'images/backgrounds/johnwick.jpg'" class="absolute inset-0 z-0 h-full w-full object-cover opacity-50" />
           </div>
         </div>
@@ -268,7 +268,7 @@ const currentCard = ref("start");
 
 <style scoped lang="pcss">
 .crypto-gradient {
-  @apply relative z-[1] flex w-full cursor-pointer flex-col items-center justify-center gap-5 rounded-2xl border-white/5 p-10;
+  @apply relative z-[1] flex cursor-pointer flex-col items-center justify-center gap-5 rounded-2xl border-white/5 p-10;
   background-image: linear-gradient(34deg, hsla(0, 0%, 55%, 0.13), hsla(0, 0%, 21%, 0.21));
 }
 

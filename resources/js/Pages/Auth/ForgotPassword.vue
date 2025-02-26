@@ -33,7 +33,7 @@ const submit = () => {
     </div>
 
     <form @submit.prevent="submit" class="flex flex-col gap-5">
-      <div class="flex flex-col w-full gap-1">
+      <div class="flex w-full flex-col gap-1">
         <InputLabel for="email" value="Email" />
         <TextInput id="email" v-model="form.email" type="email" required autocomplete="username" />
         <InputError class="mt-2" :message="form.errors.email" />
@@ -43,9 +43,9 @@ const submit = () => {
         <p>{{ status }}</p>
       </div>
 
-      <div class="gap-2 flex pl-px w-full items-start">
+      <div class="flex w-full items-start gap-2 pl-px">
         <Link :href="route('register')" class="link">Not registered?</Link>
-        <PrimaryButton class="ml-auto"  :disabled="form.processing">Email Me</PrimaryButton>
+        <PrimaryButton class="ml-auto" color="#000" opacity="30" hoverOpacity="50" :disabled="form.processing">Email Me</PrimaryButton>
       </div>
     </form>
   </AuthenticationCard>

@@ -62,7 +62,7 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 textarea {
-  @apply resize-none rounded-none border border-[#2a2a2a] bg-[#0d0d0d] text-sm text-white placeholder:!text-white/50 focus:border-[#4d4d4d] focus:bg-[#1a1a1a] focus:placeholder:!text-white/70;
+  @apply resize-none rounded-xl border border-[#2a2a2a] bg-[#0d0d0d] text-sm text-white placeholder:!text-white/50 focus:border-[#4d4d4d] focus:bg-[#1a1a1a] focus:placeholder:!text-white/70;
 }
 
 select,
@@ -70,16 +70,8 @@ select,
 [type="date"],
 [type="email"],
 [type="password"] {
-  @apply rounded-none border border-[#2a2a2a] bg-[#0d0d0d] text-sm text-white ah-[43px] placeholder:!text-white/50 focus:border-[#4d4d4d] focus:bg-[#1a1a1a] focus:placeholder:!text-white/70;
+  @apply rounded-xl border border-[#2a2a2a] bg-[#0d0d0d] text-sm text-white ah-[43px] placeholder:!text-white/50 focus:border-[#4d4d4d] focus:bg-[#1a1a1a] focus:placeholder:!text-white/70;
 }
-
-/* select:open {
-  @apply rounded-b-none;
-}
-
-option {
-  @apply bg-[#191919] text-white/70 checked:bg-black checked:text-white hover:bg-black hover:text-white;
-} */
 
 #app {
   @apply h-full;
@@ -115,7 +107,7 @@ option {
 }
 
 .icons {
-  @apply as-[20px];
+  @apply as-[20px] z-10;
 }
 
 .disabled {
@@ -132,16 +124,16 @@ option {
 }
 
 [tooltip] {
-  @apply relative z-30;
+  @apply relative z-40;
 }
 
 [tooltip]:hover:after {
-  @apply opacity-100 transition-opacity duration-100 ease-in-out delay-1000 visible;
+  @apply opacity-100 transition-opacity duration-100 ease-in-out delay-1000 visible z-[-1];
 }
 
 [tooltip]:after {
   content: attr(tooltip);
-  @apply bg-black text-white rounded-xl absolute ah-[24px] flex items-center justify-center bottom-[36px] -right-[25px] aw-[80px] whitespace-nowrap opacity-0 border font-light tracking-widest border-white/80 text-zx z-40 invisible;
+  @apply bg-black text-white rounded-xl absolute z-50 ah-[24px] flex items-center justify-center bottom-[24px] left-0 aw-[80px] whitespace-nowrap opacity-0 border font-light tracking-widest border-white/80 text-zx invisible;
 }
 
 .fade-enter-active,

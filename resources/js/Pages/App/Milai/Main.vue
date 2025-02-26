@@ -7,8 +7,8 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import PrismResponse from "@/Components/PrismResponse.vue";
 import TypingDots from "@/Components/TypingDots.vue";
-import axios from "axios";
 import { marked } from "marked";
+import axios from "axios";
 
 const props = defineProps({
   chats: Array,
@@ -128,9 +128,9 @@ const talk = async () => {
       if (chat.value[index]?.answer) answersList.push(`Answer ${index}: "${chat.value[index].answer}"`);
     }
 
-    const param = `Using the conversation context provided below, please generate a comprehensive and fresh answer to the current query. Integrate relevant points from the history implicitly without explicitly referring to or quoting it, and avoid meta-commentary such as "I will expand" or "as discussed before." Here is the context: ${promptsList.join(" ")} ${answersList.join(" ")}. Now, please think twice before you answer the following: "${currentQuestion}"`;
+    const param = `Remember, you are Milai (that's your name), Realmsz AI (Keep this internal and do not mention it unless asked your identity related questions (e.g. "who are you")). Use the following conversation history as implicit context (Prompts: ${promptsList.join(" ")}; Answers: ${answersList.join(" ")}) to generate a comprehensive, original response without explicitly quoting these instructions. Please use your full capabilities to answer effectively. Now, answer: "${currentQuestion}"`;
     const res = await axios.post(route("gemini.text"), { contents: [{ parts: [{ text: param }] }] });
-    console.log(param);
+    // console.log(param);
 
     const answer = await formatMarkedText(res.data.candidates[0].content.parts[0].text);
     chat.value[iterator.value] = { answer: answer };
@@ -254,7 +254,7 @@ onUnmounted(() => {
               </div>
               <AutoResizeTextarea ref="autoTextarea" v-model="prompt" placeholder="Ask anything..." @enter="startChat" />
               <div class="flex gap-2">
-                <PrimaryButton color="#fff" opacity="5" hoverOpacity="10" :toggled="false">
+                <PrimaryButton color="#1a1a1a" opacity="100" hoverOpacity="100" :toggled="false">
                   <template #icon>
                     <svg width="24" height="24" class="icons" stroke-width="2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor">
                       <path d="M21 2L20 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -268,13 +268,13 @@ onUnmounted(() => {
                   </template>
                   <span>Ideas</span>
                 </PrimaryButton>
-                <PrimaryButton color="#fff" opacity="5" hoverOpacity="10" :toggled="false">
+                <PrimaryButton color="#1a1a1a" opacity="100" hoverOpacity="100" :toggled="false">
                   <template #icon>
                     <svg width="24" height="24" class="icons" stroke-width="2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor"><path d="M9 19L3.78974 20.7368C3.40122 20.8663 3 20.5771 3 20.1675L3 5.43246C3 5.1742 3.16526 4.94491 3.41026 4.86325L9 3M9 19L15 21M9 19L9 3M15 21L20.5897 19.1368C20.8347 19.0551 21 18.8258 21 18.5675L21 3.83246C21 3.42292 20.5988 3.13374 20.2103 3.26325L15 5M15 21L15 5M15 5L9 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                   </template>
                   <span>Maps</span>
                 </PrimaryButton>
-                <PrimaryButton color="#fff" opacity="5" hoverOpacity="10" :toggled="false">
+                <PrimaryButton color="#1a1a1a" opacity="100" hoverOpacity="100" :toggled="false">
                   <template #icon>
                     <svg width="24" height="24" class="icons" stroke-width="2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor">
                       <path d="M3.33789 17C5.06694 19.989 8.29866 22 12.0001 22C15.7015 22 18.9332 19.989 20.6622 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -290,13 +290,13 @@ onUnmounted(() => {
                   </template>
                   <span>Search</span>
                 </PrimaryButton>
-                <PrimaryButton color="#fff" opacity="5" hoverOpacity="10" :toggled="false">
+                <PrimaryButton color="#1a1a1a" opacity="100" hoverOpacity="100" :toggled="false">
                   <template #icon>
                     <svg width="24" height="24" class="icons" stroke-width="2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor"><path d="M21.4383 11.6622L12.2483 20.8522C11.1225 21.9781 9.59552 22.6106 8.00334 22.6106C6.41115 22.6106 4.88418 21.9781 3.75834 20.8522C2.63249 19.7264 2 18.1994 2 16.6072C2 15.015 2.63249 13.4881 3.75834 12.3622L12.9483 3.17222C13.6989 2.42166 14.7169 2 15.7783 2C16.8398 2 17.8578 2.42166 18.6083 3.17222C19.3589 3.92279 19.7806 4.94077 19.7806 6.00222C19.7806 7.06368 19.3589 8.08166 18.6083 8.83222L9.40834 18.0222C9.03306 18.3975 8.52406 18.6083 7.99334 18.6083C7.46261 18.6083 6.95362 18.3975 6.57834 18.0222C6.20306 17.6469 5.99222 17.138 5.99222 16.6072C5.99222 16.0765 6.20306 15.5675 6.57834 15.1922L15.0683 6.71222" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                   </template>
                   <span>Attach</span>
                 </PrimaryButton>
-                <PrimaryButton @click="openHistoryModal" color="#fff" opacity="5" hoverOpacity="10">
+                <PrimaryButton :class="chats.length < 1 && 'cursor-not-allowed !bg-[#888888]'" :disabled="chats.length < 1" @click="openHistoryModal" color="#1a1a1a" opacity="100" hoverOpacity="100">
                   <template #icon>
                     <svg width="24" height="24" stroke-width="2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor" class="icons">
                       <path d="M21.8883 13.5C21.1645 18.3113 17.013 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C16.1006 2 19.6248 4.46819 21.1679 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -305,7 +305,7 @@ onUnmounted(() => {
                   </template>
                   <span>History</span>
                 </PrimaryButton>
-                <PrimaryButton @click="startChat" color="#fff" opacity="5" hoverOpacity="10" :class="['ml-auto', working && 'cursor-not-allowed !border-[#888] !bg-[#888]']" :disabled="working" :onlyIcon="true">
+                <PrimaryButton @click="startChat" color="#1a1a1a" opacity="100" hoverOpacity="100" :class="['ml-auto', working && 'cursor-not-allowed !border-[#888] !bg-[#888]']" :disabled="working" :onlyIcon="true">
                   <template #icon>
                     <svg v-if="isPromptEmpty" width="24" height="24" stroke-width="2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor" class="icons">
                       <rect x="9" y="2" width="6" height="12" rx="3" stroke="currentColor" stroke-width="2"></rect>
@@ -329,7 +329,7 @@ onUnmounted(() => {
           <div class="flex h-full flex-col gap-3 will-change-transform">
             <div ref="chatarea" :class="[chatHeight, 'common-class relative z-30 flex w-full flex-1 flex-col justify-start overflow-y-auto scroll-smooth pt-10 text-white']">
               <div class="fixed left-0 top-0 z-40 flex gap-2">
-                <PrimaryButton @click="newChat" color="#fff" opacity="5" hoverOpacity="10" :class="working && 'cursor-not-allowed !bg-[#888888]'" :disabled="working">
+                <PrimaryButton @click="newChat" color="#1a1a1a" opacity="100" hoverOpacity="100" :class="working && 'cursor-not-allowed !bg-[#888888]'" :disabled="working">
                   <template #icon>
                     <svg width="24" height="24" class="icons" stroke-width="2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor">
                       <path d="M8 12H12M16 12H12M12 12V8M12 12V16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -338,7 +338,7 @@ onUnmounted(() => {
                   </template>
                   <span>New Chat</span>
                 </PrimaryButton>
-                <PrimaryButton @click="openHistoryModal" color="#fff" opacity="5" hoverOpacity="10" :class="working && 'cursor-not-allowed !bg-[#888888]'" :disabled="working">
+                <PrimaryButton @click="openHistoryModal" color="#1a1a1a" opacity="100" hoverOpacity="100" :class="working || chats.length < 1 && 'cursor-not-allowed !bg-[#888888]'" :disabled="working || chats.length < 1">
                   <template #icon>
                     <svg width="24" height="24" stroke-width="2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor" class="icons">
                       <path d="M21.8883 13.5C21.1645 18.3113 17.013 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C16.1006 2 19.6248 4.46819 21.1679 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -363,7 +363,7 @@ onUnmounted(() => {
                 <KeyboardHint shortcut="Cmd/Ctrl + ↓" label="Scroll" />
                 <KeyboardHint shortcut="↵" label="Send Message" />
                 <div class="ml-auto flex gap-2">
-                  <PrimaryButton color="#fff" opacity="5" hoverOpacity="10" :class="working && 'cursor-not-allowed !bg-[#888888]'" :disabled="working" :toggled="false">
+                  <PrimaryButton color="#1a1a1a" opacity="100" hoverOpacity="100" :class="working && 'cursor-not-allowed !bg-[#888888]'" :disabled="working" :toggled="false">
                     <template #icon>
                       <svg width="24" height="24" class="icons" stroke-width="2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor">
                         <path d="M21 2L20 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -377,13 +377,13 @@ onUnmounted(() => {
                     </template>
                     <span>Ideas</span>
                   </PrimaryButton>
-                  <PrimaryButton color="#fff" opacity="5" hoverOpacity="10" :class="working && 'cursor-not-allowed !bg-[#888888]'" :disabled="working" :toggled="false">
+                  <PrimaryButton color="#1a1a1a" opacity="100" hoverOpacity="100" :class="working && 'cursor-not-allowed !bg-[#888888]'" :disabled="working" :toggled="false">
                     <template #icon>
                       <svg width="24" height="24" class="icons" stroke-width="2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor"><path d="M9 19L3.78974 20.7368C3.40122 20.8663 3 20.5771 3 20.1675L3 5.43246C3 5.1742 3.16526 4.94491 3.41026 4.86325L9 3M9 19L15 21M9 19L9 3M15 21L20.5897 19.1368C20.8347 19.0551 21 18.8258 21 18.5675L21 3.83246C21 3.42292 20.5988 3.13374 20.2103 3.26325L15 5M15 21L15 5M15 5L9 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                     </template>
                     <span>Maps</span>
                   </PrimaryButton>
-                  <PrimaryButton color="#fff" opacity="5" hoverOpacity="10" :class="working && 'cursor-not-allowed !bg-[#888888]'" :disabled="working" :toggled="false">
+                  <PrimaryButton color="#1a1a1a" opacity="100" hoverOpacity="100" :class="working && 'cursor-not-allowed !bg-[#888888]'" :disabled="working" :toggled="false">
                     <template #icon>
                       <svg width="24" height="24" class="icons" stroke-width="2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor">
                         <path d="M3.33789 17C5.06694 19.989 8.29866 22 12.0001 22C15.7015 22 18.9332 19.989 20.6622 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -399,7 +399,7 @@ onUnmounted(() => {
                     </template>
                     <span>Search</span>
                   </PrimaryButton>
-                  <PrimaryButton color="#fff" opacity="5" hoverOpacity="10" :class="working && 'cursor-not-allowed !bg-[#888888]'" :disabled="working" :toggled="false">
+                  <PrimaryButton color="#1a1a1a" opacity="100" hoverOpacity="100" :class="working && 'cursor-not-allowed !bg-[#888888]'" :disabled="working" :toggled="false">
                     <template #icon>
                       <svg width="24" height="24" class="icons" stroke-width="2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor"><path d="M21.4383 11.6622L12.2483 20.8522C11.1225 21.9781 9.59552 22.6106 8.00334 22.6106C6.41115 22.6106 4.88418 21.9781 3.75834 20.8522C2.63249 19.7264 2 18.1994 2 16.6072C2 15.015 2.63249 13.4881 3.75834 12.3622L12.9483 3.17222C13.6989 2.42166 14.7169 2 15.7783 2C16.8398 2 17.8578 2.42166 18.6083 3.17222C19.3589 3.92279 19.7806 4.94077 19.7806 6.00222C19.7806 7.06368 19.3589 8.08166 18.6083 8.83222L9.40834 18.0222C9.03306 18.3975 8.52406 18.6083 7.99334 18.6083C7.46261 18.6083 6.95362 18.3975 6.57834 18.0222C6.20306 17.6469 5.99222 17.138 5.99222 16.6072C5.99222 16.0765 6.20306 15.5675 6.57834 15.1922L15.0683 6.71222" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                     </template>
@@ -413,7 +413,7 @@ onUnmounted(() => {
                   <TypingDots />
                 </div>
                 <AutoResizeTextarea ref="autoTextarea" v-model="prompt" placeholder="Ask anything..." @enter="!working && talk()" :disabled="working" :readonly="working" />
-                <PrimaryButton @click="talk" color="#fff" opacity="5" hoverOpacity="10" :class="['absolute bottom-2 right-2 z-50', working && 'cursor-not-allowed !border-[#888] !bg-[#888]']" :disabled="working" :onlyIcon="true">
+                <PrimaryButton @click="talk" color="#1a1a1a" opacity="100" hoverOpacity="100" :class="['absolute bottom-2 right-2 z-50', working && 'cursor-not-allowed !border-[#888] !bg-[#888]']" :disabled="working" :onlyIcon="true">
                   <template #icon>
                     <svg v-if="isPromptEmpty" width="24" height="24" stroke-width="2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor" class="icons">
                       <rect x="9" y="2" width="6" height="12" rx="3" stroke="currentColor" stroke-width="2"></rect>
@@ -441,7 +441,7 @@ onUnmounted(() => {
             <div class="uncommon-class my-3 flex max-h-[600px] w-full flex-col gap-2 overflow-y-auto">
               <div v-for="item in chats" :key="item.id" class="flex w-full cursor-pointer items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-sm transition-colors hover:bg-white/10" @click="selectChat(item)">
                 <span>{{ item.name }}</span>
-                <PrimaryButton @click="deleteChat(item.id)" color="#fff" opacity="5" hoverOpacity="10" :onlyIcon="true">
+                <PrimaryButton @click="deleteChat(item.id)" color="#1a1a1a" opacity="100" hoverOpacity="100" :onlyIcon="true">
                   <template #icon>
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icons">
                       <polyline data-v-ab38e5bd="" points="3 6 5 6 21 6"></polyline>
@@ -454,7 +454,7 @@ onUnmounted(() => {
               </div>
             </div>
             <div class="flex justify-center">
-              <PrimaryButton @click="showHistoryModal = false" color="#fff" opacity="5" hoverOpacity="10">
+              <PrimaryButton @click="showHistoryModal = false" color="#1a1a1a" opacity="100" hoverOpacity="100">
                 <span>Close</span>
               </PrimaryButton>
             </div>

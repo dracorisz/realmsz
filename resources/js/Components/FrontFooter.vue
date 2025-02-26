@@ -68,7 +68,7 @@ const year = new Date().getFullYear();
           <Link :href="route('policy')" class="text-xs text-white/70 hover:text-white">Privacy Policy</Link>
         </div>
       </div>
-      <div class="flex w-full items-center justify-center text-zx text-white/50">v0.0.1</div>
+      <div class="flex w-full items-center justify-center text-zx text-white/50">v0.0.3</div>
     </div>
   </div>
 </template>

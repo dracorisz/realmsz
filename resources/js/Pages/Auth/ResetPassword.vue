@@ -52,7 +52,7 @@ const submit = () => {
       </div>
 
       <div class="mt-8 flex items-center justify-end">
-        <PrimaryButton :disabled="form.processing">Reset Password</PrimaryButton>
+        <PrimaryButton :disabled="form.processing" color="#000" opacity="30" hoverOpacity="50">Reset Password</PrimaryButton>
       </div>
     </form>
   </AuthenticationCard>

@@ -65,7 +65,7 @@ const submit = () => {
       </div>
       <div class="flex items-center justify-end">
         <Link :href="route('login')" class="link">Already registered?</Link>
-        <PrimaryButton class="ml-3" :disabled="form.processing">Register</PrimaryButton>
+        <PrimaryButton class="ml-3" color="#000" opacity="30" hoverOpacity="50" :disabled="form.processing">Register</PrimaryButton>
       </div>
     </form>
   </AuthenticationCard>

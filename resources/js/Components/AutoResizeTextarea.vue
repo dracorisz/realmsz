@@ -87,7 +87,7 @@ onMounted(() => {
 <style scoped lang="pcss">
 .autoresize-class {
   scrollbar-gutter: 50px;
-  @apply max-h-[200px] min-h-[50px] w-full resize-none overflow-x-hidden rounded-none bg-[#0d0d0d] focus:bg-[#1a1a1a] px-4 py-3 pr-[40px] text-white placeholder:text-white/50 focus:outline-none focus:ring-0;
+  @apply max-h-[200px] min-h-[50px] w-full resize-none overflow-x-hidden rounded-xl bg-[#0d0d0d] focus:bg-[#1a1a1a] px-4 py-3 pr-[40px] text-white placeholder:text-white/50 focus:outline-none focus:ring-0;
 }
 
 .autoresize-class::-webkit-scrollbar {

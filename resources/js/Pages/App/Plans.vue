@@ -49,13 +49,13 @@ const modal = ref({
 const request = ref("");
 const errors = ref({ title: "" });
 
-const actions = (evt, row, action, status) => {
+const actions = (evt, row, action, status, priority) => {
   if (evt) {
     evt.stopImmediatePropagation();
     evt.stopPropagation();
   }
 
-  if (row !== -1) activeRow.value = props.items.find((i) => i.id === row);
+  if (row != -1) activeRow.value = props.items.find((i) => i.id === row);
 
   switch (action) {
     case "create":
@@ -67,8 +67,6 @@ const actions = (evt, row, action, status) => {
       request.value = "item.duplicate";
       break;
     case "delete":
-      console.log(row);
-
       modal.value.title = "Deleting:";
       modal.value.text = activeRow.value.archived != 1 && activeRow.value.archived != "1" ? "Perhaps archive instead?" : "";
       modal.value.button = "Delete";
@@ -87,6 +85,7 @@ const actions = (evt, row, action, status) => {
       break;
     case "priority":
       request.value = "item.priority";
+      activeRow.value.priority_id = priority;
       break;
     case "archive":
       request.value = "item.archive";
@@ -126,7 +125,10 @@ const callAction = () => {
 
 const search = ref("");
 const showArchived = ref(false);
-const categoriesToggle = ref([]);
+const categoriesToggle = ref({});
+props.categories.forEach((cat) => {
+  categoriesToggle.value[cat.id] = true;
+});
 
 const sorting = ref({
   field: "status_id",
@@ -147,7 +149,7 @@ const finalItems = computed(() => {
 
   if (search.value.trim() !== "") {
     const s = search.value.toLowerCase();
-    base = base.filter((item) => item.title.toLowerCase().includes(s) || item.description && item.description.toLowerCase().includes(s));
+    base = base.filter((item) => item.title.toLowerCase().includes(s) || (item.description && item.description.toLowerCase().includes(s)));
   }
 
   let sorted = base.slice();
@@ -189,9 +191,30 @@ const toggleArchive = () => {
   // saveState();
 };
 
+const isAllSelected = computed(() => {
+  return props.categories.every((cat) => categoriesToggle.value[cat.id]);
+});
+
+const toggleAllCategories = () => {
+  if (isAllSelected.value) {
+    props.categories.forEach((cat) => {
+      categoriesToggle.value[cat.id] = false;
+    });
+    if (props.categories.length > 0) {
+      categoriesToggle.value[props.categories[0].id] = true;
+    }
+  } else {
+    props.categories.forEach((cat) => {
+      categoriesToggle.value[cat.id] = true;
+    });
+  }
+};
+
 const toggleCategory = (id) => {
-  categoriesToggle.value[id] = !categoriesToggle.value[id];
-  // saveState();
+  props.categories.forEach((cat) => {
+    categoriesToggle.value[cat.id] = false;
+  });
+  categoriesToggle.value[id] = true;
 };
 
 const applySort = (field) => {
@@ -345,10 +368,9 @@ const toggleGrid = (val) => {
 };
 
 const rowClass = (col) => {
-  let background = "bg-" + col.substring(5, col.length) + "/10";
   let grid = gridLayout.value ? "flex flex-col" : "";
   let draggingOn = isDragging.value ? "opacity-50" : "";
-  return `${grid} ${draggingOn} ${background}`.trim();
+  return `${grid} ${draggingOn}`.trim();
 };
 
 const settingsModal = ref(false);
@@ -363,6 +385,11 @@ const change = (typ, pro, row) => {
     pro: pro,
     row: row,
   };
+};
+
+const updateSelection = (nv, ri, itemId = 0) => {
+  activeRow.value[ri] = nv;
+  if (itemId > 0) actions(null, itemId, "priority", null, nv);
 };
 
 const changeCall = () => {
@@ -517,7 +544,7 @@ onUnmounted(() => {
               </div>
             </template>
           </div>
-          <PrimaryButton :onlyIcon="true" color="#fff" opacity="5" hoverOpacity="10" @click="changeCall" tooltip="Save">
+          <PrimaryButton :onlyIcon="true" color="#1a1a1a" opacity="100" hoverOpacity="100" @click="changeCall" tooltip="Save">
             <template #icon>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="icons" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
@@ -531,15 +558,19 @@ onUnmounted(() => {
     </template>
     <template #header>
       <div class="flex w-full items-center justify-start gap-3">
-        <PrimaryButton :onlyIcon="true" color="#fff" opacity="5" hoverOpacity="10" @click="console.log('toggle all categories')">
+        <PrimaryButton :onlyIcon="true" color="#1a1a1a" opacity="100" hoverOpacity="100" @click="toggleAllCategories">
           <template #icon>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="icons" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+            <svg v-if="isAllSelected" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="icons" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
               <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
               <polyline points="22 4 12 14.01 9 11.01" />
             </svg>
+            <svg v-else width="24" height="24" class="icons" stroke-width="2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor">
+              <path d="M8 12H16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+              <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
           </template>
         </PrimaryButton>
-        <PrimaryButton v-for="c in categories" :key="c.id" :toggled="categoriesToggle[c.id]" @click="toggleCategory(c.id)" :color="c.color">
+        <PrimaryButton v-for="c in categories" :key="c.id" :toggled="categoriesToggle[c.id]" @click="toggleCategory(c.id)" :color="c.color" :opaque="true">
           <template #icon>
             <span v-html="getIcon(c.icon_id)" />
           </template>
@@ -575,7 +606,7 @@ onUnmounted(() => {
         </div>
         <Toggle v-model:active="showArchived" label="Show Archived" @update:active="toggleArchive" />
         <div class="ml-auto flex items-center gap-3">
-          <PrimaryButton :onlyIcon="true" color="#fff" opacity="5" hoverOpacity="10" @click="settingsModal = true" tooltip="Settings">
+          <PrimaryButton :onlyIcon="true" color="#1a1a1a" opacity="100" hoverOpacity="100" @click="settingsModal = true" tooltip="Settings">
             <template #icon>
               <svg width="24" class="icons" height="24" viewBox="0 0 24 24" stroke-width="2" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor">
                 <path d="M10.0503 10.6066L2.97923 17.6777C2.19818 18.4587 2.19818 19.7251 2.97923 20.5061V20.5061C3.76027 21.2872 5.0266 21.2872 5.80765 20.5061L12.8787 13.4351" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -585,7 +616,7 @@ onUnmounted(() => {
               </svg>
             </template>
           </PrimaryButton>
-          <PrimaryButton @click="exportCSV" color="#fff" opacity="5" hoverOpacity="10">
+          <PrimaryButton @click="exportCSV" color="#1a1a1a" opacity="100" hoverOpacity="100">
             <template #icon>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icons">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -595,7 +626,7 @@ onUnmounted(() => {
             </template>
             <span>Export</span>
           </PrimaryButton>
-          <PrimaryButton @click="actions($event, -1, 'create')" color="#fff" opacity="5" hoverOpacity="10">
+          <PrimaryButton @click="actions($event, -1, 'create')" color="#1a1a1a" opacity="100" hoverOpacity="100">
             <template #icon>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icons">
                 <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -608,8 +639,8 @@ onUnmounted(() => {
       </div>
     </template>
     <div ref="scrollContainer" class="common-class mx-auto flex h-full w-full flex-col overflow-x-hidden">
-      <div v-if="finalItems.length > 0" class="rounded-2xl">
-        <table class="relative table border-separate border-spacing-0 rounded-2xl text-sm">
+      <div v-if="finalItems.length > 0" :class="['rounded-xl', !gridLayout && 'border border-white/10']">
+        <table class="relative table border-separate border-spacing-0 rounded-xl text-sm">
           <thead :class="gridLayout && 'hidden'">
             <tr class="head-row">
               <th class="mr-auto">
@@ -666,18 +697,22 @@ onUnmounted(() => {
             </tr>
           </thead>
           <TransitionGroup name="list" tag="tbody" :class="['relative', gridLayout && 'grid grid-cols-3 gap-5']">
-            <tr v-for="(item, index) in finalItems" :key="item.id" draggable="true" @dragstart="dragStart($event, item)" @dragleave="dragLeave($event)" @dragover="dragOver($event)" @dragend="dragEnd" @drop="dragDrop($event, index)" :class="rowClass(item.status.color)" @click="actions($event, item.id, 'update')">
-              <td :class="['mr-auto', gridLayout && 'flex w-full min-w-full items-center justify-start border-l border-t py-5']">
+            <tr v-for="(item, index) in finalItems" :key="item.id" draggable="true" @dragstart="dragStart($event, item)" @dragleave="dragLeave($event)" @dragover="dragOver($event)" @dragend="dragEnd" @drop="dragDrop($event, index)" :style="{ background: item.status.color + '11' }" :class="rowClass(item.status.color)" @click="actions($event, item.id, 'update')">
+              <td :class="['mr-auto', gridLayout && 'flex w-full rounded-t-xl min-w-full items-center justify-start border-x border-t py-5']">
                 <span :class="['flex w-full items-center', gridLayout ? 'justify-start' : 'justify-between']">
                   <div class="relative -ml-1 flex items-center justify-between">
-                    <span :tooltip="item.status.name" :style="{ color: item.status.color }" class="relative mr-3 flex cursor-pointer items-center justify-center overflow-hidden aw-[24px]" @click="toggleStatus($event, item.id)">
-                      <span v-html="getIcon(item.status.icon_id)" />
-                    </span>
+                    <div :tooltip="item.status.name" :style="{ color: item.status.color }" @click="toggleStatus($event, item.id)">
+                      <span class="!relative !z-[100] mr-3 flex cursor-pointer items-center justify-center overflow-hidden aw-[24px]">
+                        <span v-html="getIcon(item.status.icon_id)" />
+                      </span>
+                    </div>
                     <div class="-ml-1 mr-3 flex items-center gap-2" v-if="statusPopups[item.id]">
                       <template v-for="s in statuses" :key="s.id">
-                        <span :tooltip="s.name" v-if="s.id != item.status.id" :style="{ color: s.color }" class="relative flex cursor-pointer items-center justify-center overflow-hidden text-xs aw-[24px]" @click="actions($event, item.id, 'status', s.id)">
-                          <span v-html="getIcon(s.icon_id)" />
-                        </span>
+                        <div :tooltip="s.name" v-if="s.id != item.status.id" :style="{ color: s.color }" @click="actions($event, item.id, 'status', s.id)">
+                          <span class="!relative !z-[100] flex cursor-pointer items-center justify-center overflow-hidden text-xs aw-[24px]">
+                            <span v-html="getIcon(s.icon_id)" />
+                          </span>
+                        </div>
                       </template>
                     </div>
                   </div>
@@ -730,8 +765,8 @@ onUnmounted(() => {
                   </div>
                 </span>
               </td>
-              <td v-if="gridLayout" class="flex w-full min-w-full items-center justify-between border-l py-5">{{ item.title.length < 30 ? item.title : item.title.substring(0, 30) + "..." }}</td>
-              <td :class="['relative', gridLayout ? 'aw-full flex items-center justify-between border-l py-5' : 'aw-[200px]']" @click="toggleDatepicker($event, item.id)">
+              <td v-if="gridLayout" class="flex w-full min-w-full items-center justify-between border-x py-5">{{ item.title.length < 30 ? item.title : item.title.substring(0, 30) + "..." }}</td>
+              <td :class="['relative', gridLayout ? 'aw-full flex items-center justify-between border-x py-5' : 'aw-[200px]']" @click="toggleDatepicker($event, item.id)">
                 <Datepicker v-if="rowDatepicker[item.id]" :date="item.date" :item="item.id" @update:date="(newDate) => turnOffDatepicker(item, newDate)" />
                 <div class="flex w-full items-center justify-between">
                   <span>{{ item.date ? item.date : "Unknown" }}</span>
@@ -746,8 +781,8 @@ onUnmounted(() => {
                   </span>
                 </div>
               </td>
-              <td :class="['relative !px-0', gridLayout ? 'flex w-full min-w-full items-center justify-between border-b border-l py-5' : 'aw-[200px]']">
-                <Multiselect :id="`priority_id-inline${item.id}`" :value="item.priority" :options="priorities" @click="$event.stopPropagation()" :icons="icons" :inlineSelect="true" />
+              <td :class="['relative !px-0', gridLayout ? 'flex rounded-b-xl w-full min-w-full items-center justify-between border-b border-x py-5' : 'aw-[200px]']">
+                <Multiselect :id="`priority_id-inline${item.id}`" @update="(nv) => updateSelection(nv, 'status_id', item.id)" :valueProp="item.priority_id" :options="priorities" @click="$event.stopPropagation()" :icons="icons" :inlineSelect="true" />
               </td>
             </tr>
           </TransitionGroup>
@@ -757,7 +792,7 @@ onUnmounted(() => {
         <p class="mb-5 text-center text-sm text-white">No items found.</p>
         <div class="mx-auto flex w-full items-center justify-center text-center text-sm text-white">
           <span>Press</span>
-          <PrimaryButton @click="actions($event, -1, 'create')" class="mx-2" color="#fff" opacity="5" hoverOpacity="10">
+          <PrimaryButton @click="actions($event, -1, 'create')" class="mx-2" color="#1a1a1a" opacity="100" hoverOpacity="100">
             <template #icon>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icons">
                 <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -802,8 +837,8 @@ onUnmounted(() => {
               <div class="flex w-full items-center gap-5">
                 <div class="flex items-center justify-center border border-[#2a2a2a] bg-[#0d0d0d] transition-colors as-[144px] hover:border-[#4d4d4d] hover:bg-[#1a1a1a]" @mouseenter="imageIcons = true" @mouseleave="imageIcons = false">
                   <Transition name="fade">
-                    <div v-if="imageIcons" class="flex flex-col items-center gap-1">
-                      <div class="flex items-center gap-1">
+                    <div v-if="imageIcons" class="relative z-20 flex flex-col items-center gap-1">
+                      <div class="relative z-20 flex items-center gap-1">
                         <PrimaryButton tooltip="Upload" :onlyIcon="true">
                           <template #icon>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="icons" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
@@ -821,7 +856,7 @@ onUnmounted(() => {
                           </template>
                         </PrimaryButton>
                       </div>
-                      <div class="flex items-center gap-1">
+                      <div class="relative z-20 flex items-center gap-1">
                         <PrimaryButton tooltip="Generate" :onlyIcon="true">
                           <template #icon>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="icons" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
@@ -853,14 +888,14 @@ onUnmounted(() => {
                   </div>
                   <div class="flex w-full flex-col gap-1">
                     <InputLabel for="category_id" value="Category" />
-                    <Multiselect id="category_id" :value="activeRow.category_id" :options="categories" @click="$event.stopPropagation()" :inlineSelect="false" />
+                    <Multiselect id="category_id" @update="(nv) => updateSelection(nv, 'category_id')" :valueProp="activeRow.category_id" :options="categories" @click="$event.stopPropagation()" :inlineSelect="false" />
                   </div>
                 </div>
               </div>
               <div class="relative flex w-full flex-col gap-1">
                 <InputLabel for="description" value="Description" />
                 <AutoResizeTextarea id="description" v-model="activeRow.description" />
-                <PrimaryButton :tooltip="activeRow.description && activeRow.description.length > 5 ? 'Improve' : 'Generate'" class="!absolute bottom-2 right-2 z-30" color="#fff" opacity="5" hoverOpacity="10" :onlyIcon="true">
+                <PrimaryButton :tooltip="activeRow.description && activeRow.description.length > 5 ? 'Improve' : 'Generate'" class="!absolute bottom-2 right-2 z-30" color="#1a1a1a" opacity="100" hoverOpacity="100" :onlyIcon="true">
                   <template #icon>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="icons" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                       <path d="M10.5 9C10.5 9 10.5 7 9.5 5C13.5 5 16 7.49997 16 7.49997C16 7.49997 19.5 7 22 12C21 17.5 16 18 16 18L12 20.5C12 20.5 12 19.5 12 17.5C9.5 16.5 6.99998 14 7 12.5C7.00001 11 10.5 9 10.5 9ZM10.5 9C10.5 9 11.5 8.5 12.5 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -873,11 +908,11 @@ onUnmounted(() => {
               <div class="grid w-full grid-cols-3 gap-5">
                 <div class="flex flex-col gap-1">
                   <InputLabel for="priority_id" value="Priority" />
-                  <Multiselect id="priority_id" :value="activeRow.priority_id" :options="priorities" @click="$event.stopPropagation()" :inlineSelect="false" />
+                  <Multiselect id="priority_id" @update="(nv) => updateSelection(nv, 'priority_id')" :valueProp="activeRow.priority_id" :options="priorities" @click="$event.stopPropagation()" :inlineSelect="false" />
                 </div>
                 <div class="flex flex-col gap-1">
                   <InputLabel for="status_id" value="Status" />
-                  <Multiselect id="status_id" :value="activeRow.status_id" :options="statuses" @click="$event.stopPropagation()" :inlineSelect="false" />
+                  <Multiselect id="status_id" @update="(nv) => updateSelection(nv, 'status_id')" :valueProp="activeRow.status_id" :options="statuses" @click="$event.stopPropagation()" :inlineSelect="false" />
                 </div>
                 <div class="flex flex-col gap-1">
                   <InputLabel for="date" value="Due Date" />
@@ -982,32 +1017,32 @@ tr {
 }
 
 thead tr {
-  @apply bg-white/10 text-xs text-white;
+  @apply bg-[#0d0d0d] text-xs text-white;
 }
 
 tbody tr {
-  @apply bg-white/5 text-white/80 hover:bg-white/10;
+  @apply bg-[#000] text-white/80 hover:bg-[#1d1d1d];
 }
 
 tr:last-child td:first-child {
-  @apply rounded-bl-xl;
+  @apply rounded-bl-lg;
 }
 
 tr:last-child td:last-child {
-  @apply rounded-br-xl;
+  @apply rounded-br-lg;
 }
 
 th:first-child {
-  @apply rounded-tl-xl;
+  @apply rounded-tl-lg;
 }
 
 th:last-child {
-  @apply rounded-tr-xl;
+  @apply rounded-tr-lg;
 }
 
 td,
 th {
-  @apply border-b border-r border-white/10 px-3 text-left text-xs font-normal ah-[43px];
+  @apply border-b border-white/10 px-3 text-left text-xs font-normal ah-[43px];
 }
 
 td:last-child,
@@ -1019,48 +1054,26 @@ th:last-child {
   @apply bg-success/20;
 }
 
-.drag-element {
-  @apply transition-colors duration-300 ease-in-out;
-}
-
-tr:not(.head-row) {
-  @apply transition-all ease-in-out;
-}
-
 tr:active:not(.head-row) {
-  @apply bg-primary/30;
+  @apply bg-primary/20;
 }
 
 tr:not(.head-row) {
-  animation: enter;
-  @apply duration-300 ease-in-out;
+  @apply transition-all duration-500 ease-in-out;
 }
 
-@keyframes enter {
-  from {
-    @apply opacity-0;
-  }
-  to {
-    @apply opacity-100;
-  }
-}
-
-.list-move {
-  @apply transition-all duration-300 ease-in-out;
-}
-
-.list-enter-active,
+.list-leave-active > *,
 .list-leave-active {
-  @apply transition-all duration-300 ease-in-out;
+  @apply flex items-stretch justify-stretch opacity-50 ah-[45px] aw-[100%];
 }
 
 .list-enter-from,
 .list-leave-to {
-  @apply translate-y-5 opacity-50;
+  @apply origin-top scale-y-0 border-0 opacity-50 ah-[0];
 }
 
 .icons-container {
-  @apply cursor-pointer p-px text-sm text-white/50 transition hover:text-white focus:text-white focus:ring-0 md:text-base lg:text-lg;
+  @apply cursor-pointer p-px text-white/50 transition hover:text-white focus:text-white focus:ring-0;
 }
 
 .fade-mask {

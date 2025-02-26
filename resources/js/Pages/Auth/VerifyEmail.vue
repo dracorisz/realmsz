@@ -36,7 +36,7 @@ const verificationLinkSent = computed(() => props.status === "verification-link-
 
     <form @submit.prevent="submit" class="flex flex-col gap-5">
       <div class="flex items-center justify-between">
-        <PrimaryButton :disabled="form.processing">Resend Email</PrimaryButton>
+        <PrimaryButton color="#000" opacity="30" hoverOpacity="50" :disabled="form.processing">Resend Email</PrimaryButton>
 
         <div class="flex items-center justify-between">
           <Link :href="route('profile')" class="link">Edit Profile</Link>

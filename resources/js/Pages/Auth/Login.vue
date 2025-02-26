@@ -47,16 +47,16 @@ const submit = () => {
         <InputError class="mt-2" :message="form.errors.password" />
       </div>
 
-      <div class="flex flex-col gap-1">
-        <label for="remember" class="flex items-center">
+      <!-- <div class="flex flex-col gap-1">
+        <InputLabel for="remember" class="flex items-center">
           <Checkbox id="remember" v-model="form.remember" />
           <span class="link ml-2">Remember me</span>
-        </label>
-      </div>
+        </InputLabel>
+      </div> -->
 
       <div class="flex items-center justify-end">
         <Link v-if="canResetPassword" :href="route('password.request')" class="link">Forgot your password?</Link>
-        <PrimaryButton class="ml-3" :disabled="form.processing">Login</PrimaryButton>
+        <PrimaryButton class="ml-3" :disabled="form.processing" color="#000" opacity="30" hoverOpacity="50">Login</PrimaryButton>
       </div>
     </form>
   </AuthenticationCard>

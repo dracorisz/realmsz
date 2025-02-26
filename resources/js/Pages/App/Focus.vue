@@ -16,7 +16,7 @@ defineProps({
       </div>
       <div class="relative z-30 mt-auto flex w-full justify-between p-5">
         <div class="grid grid-cols-4 gap-3">
-          <PrimaryButton  color="#fff" opacity="5" hoverOpacity="10" :onlyIcon="true" tooltip="Notes">
+          <PrimaryButton  color="#00c2c5" opacity="30" hoverOpacity="50" :onlyIcon="true" tooltip="Notes">
             <template #icon>
               <svg width="24" height="24" class="icons" stroke-width="2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor">
                 <path d="M8 14L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -26,7 +26,7 @@ defineProps({
               </svg>
             </template>
           </PrimaryButton>
-          <PrimaryButton  color="#fff" opacity="5" hoverOpacity="10" :onlyIcon="true" tooltip="Bckground">
+          <PrimaryButton  color="#00c2c5" opacity="30" hoverOpacity="50" :onlyIcon="true" tooltip="Bckground">
             <template #icon>
               <svg width="24" height="24" class="icons" stroke-width="2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor">
                 <path d="M21 3.6V20.4C21 20.7314 20.7314 21 20.4 21H3.6C3.26863 21 3 20.7314 3 20.4V3.6C3 3.26863 3.26863 3 3.6 3H20.4C20.7314 3 21 3.26863 21 3.6Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -35,7 +35,7 @@ defineProps({
               </svg>
             </template>
           </PrimaryButton>
-          <PrimaryButton  color="#fff" opacity="5" hoverOpacity="10" :onlyIcon="true" tooltip="Messages">
+          <PrimaryButton  color="#00c2c5" opacity="30" hoverOpacity="50" :onlyIcon="true" tooltip="Messages">
             <template #icon>
               <svg width="24" height="24" class="icons" stroke-width="2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor">
                 <path d="M7 12L17 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -44,7 +44,7 @@ defineProps({
               </svg>
             </template>
           </PrimaryButton>
-          <PrimaryButton  color="#fff" opacity="5" hoverOpacity="10" :onlyIcon="true" tooltip="Weather">
+          <PrimaryButton  color="#00c2c5" opacity="30" hoverOpacity="50" :onlyIcon="true" tooltip="Weather">
             <template #icon>
               <svg width="24" height="24" class="icons" stroke-width="2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor">
                 <path d="M6 13C4.33333 13 1 14 1 18C1 22 4.33333 23 6 23H18C19.6667 23 23 22 23 18C23 14 19.6667 13 18 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>

@@ -1,39 +1,49 @@
 <script setup>
-import { defineEmits, onMounted, ref } from "vue";
+import { defineEmits, onMounted, watch, ref } from "vue";
 import Multiselect from "vue-multiselect";
 import "vue-multiselect/dist/vue-multiselect.min.css";
 
 const props = defineProps({
   id: String,
   icons: Array,
-  value: {
-    type: [String, Object, Number],
-    default: "",
-  },
-  options: {
-    type: Array,
-    required: true,
-  },
-  inlineSelect: {
-    type: Boolean,
-    default: true,
-  }
+  inlineSelect: Boolean,
+  options: Array,
+  valueProp: [String, Object, Number],
 });
 
-const emit = defineEmits(["update:selected"]);
+const emit = defineEmits(["update"]);
+
+const getColor = (id) => {
+  return props.options.find((i) => i.id === id)?.color;
+};
 
 const getIcon = (id) => {
-  return props.icons.find((i) => i.id === id).data;
+  let iconId = props.options.find((i) => i.id === id)?.icon_id;
+  return props.icons.find((i) => i.id === iconId)?.data;
 };
 
 const getOptionName = (id) => {
-  return props.options.find((i) => i.id === id).name;
+  return props.options.find((i) => i.id === id)?.name;
 };
+
+const modelValue = ref(props.valueProp);
 
 const caretUp = ref(false);
 const toggleCaret = () => {
   caretUp.value = !caretUp.value;
 };
+
+const updateSelection = (newValue) => {
+  modelValue.value = newValue.id;
+  emit("update", newValue.id);
+};
+
+watch(
+  () => props.valueProp,
+  (newValue) => {
+    modelValue.value = newValue;
+  },
+);
 
 onMounted(() => {
   if (!props.inlineSelect) {
@@ -58,7 +68,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <Multiselect :id="id" :optionHeight="43" @open="toggleCaret" @close="toggleCaret" :maxHeight="500" :modelValue="value" track-by="id" label="name" :allowEmpty="false" placeholder="" :hideSelected="false" :options="options" selectLabel="↵ Select">
+  <Multiselect :id="id" :optionHeight="43" @open="toggleCaret" @close="toggleCaret" trackBy="id" label="name" :maxHeight="500" v-model="modelValue" @update:modelValue="updateSelection" :allowEmpty="false" placeholder="" :hideSelected="false" :options="options" selectLabel="↵ Select">
     <template #beforeList>
       <span class="px-3 py-2 block text-white/50 text-xs">Search...</span>
     </template>
@@ -66,16 +76,15 @@ onMounted(() => {
       No options found.
     </template>
     <template #singleLabel="data">
-      <div :style="{ color: inlineSelect && data.option.color }" :class="['flex items-center gap-2 ah-[43px]', inlineSelect ? '!text-xs' : '!text-sm']">
-        <span v-if="inlineSelect" v-html="getIcon(data.option.icon_id)" />
-        <span v-if="inlineSelect">{{ data.option.name }}</span>
-        <span v-else>{{ getOptionName(value) }}</span>
+      <div :style="{ color: inlineSelect && getColor(data.option) }" :class="['flex items-center gap-2 ah-[43px]', inlineSelect ? '!text-xs' : '!text-sm']">
+        <span v-if="inlineSelect" v-html="getIcon(data.option)" />
+        <span>{{ getOptionName(data.option) }}</span>
       </div>
     </template>
     <template #option="data">
-      <div :style="{ color: inlineSelect && data.option.color }" :class="['flex items-center gap-2 ah-[43px]', inlineSelect ? '!text-xs' : '!text-sm']">
-        <span v-if="inlineSelect" v-html="getIcon(data.option.icon_id)" />
-        <span>{{ data.option.name }}</span>
+      <div :style="{ color: inlineSelect && getColor(data.option.id) }" :class="['flex items-center gap-2 ah-[43px]', inlineSelect ? '!text-xs' : '!text-sm']">
+        <span v-if="inlineSelect" v-html="getIcon(data.option.id)" />
+        <span>{{ getOptionName(data.option.id) }}</span>
       </div>
     </template>
     <template #caret>
@@ -97,7 +106,7 @@ onMounted(() => {
 :deep(.multiselect__element),
 :deep(.multiselect__tags-wrap),
 :deep(.multiselect) {
-  @apply ah-[43px] overflow-hidden rounded-none text-white bg-transparent leading-none border-[#2a2a2a] flex items-center justify-center w-full font-normal;
+  @apply ah-[43px] overflow-hidden rounded-xl text-white bg-transparent leading-none border-[#2a2a2a] flex items-center justify-center w-full font-normal;
 }
 
 :deep(.multiselect__content),

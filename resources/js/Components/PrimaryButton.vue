@@ -19,6 +19,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  opaque: {
+    type: Boolean,
+    default: false,
+  },
   color: {
     type: String,
     default: "#00449f",
@@ -75,12 +79,14 @@ const rgbaFromHex = (hex, opacity) => {
 };
 
 const inlineStyles = computed(() => {
-  const backgroundColor = rgbaFromHex(props.color, props.opacity / 3);
-  const hoverBackgroundColor = rgbaFromHex(props.color, props.hoverOpacity / 2);
-  const borderColor = rgbaFromHex(props.color, props.opacity / 3);
-  const hoverBorderColor = rgbaFromHex(props.color, props.hoverOpacity / 2);
-  const textColor = "rgba(255, 255, 255, .5)"; // Default white text with 70% opacity
-  const hoverTextColor = "rgba(255, 255, 255, 1)"; // White text on hover
+  const backgroundOpaque = props.opacity / (props.opaque ? 5 : 1);
+  const backgroundHoverOpaque = props.opacity / (props.opaque ? 3 : 1);
+  const backgroundColor = rgbaFromHex(props.color, backgroundOpaque);
+  const hoverBackgroundColor = rgbaFromHex(props.color, backgroundHoverOpaque);
+  const borderColor = rgbaFromHex(props.color, backgroundOpaque);
+  const hoverBorderColor = rgbaFromHex(props.color, backgroundHoverOpaque);
+  const textColor = "rgba(255, 255, 255, .5)";
+  const hoverTextColor = "rgba(255, 255, 255, 1)";
 
   return {
     backgroundColor: props.toggled ? hoverBackgroundColor : hoverState.value ? hoverBackgroundColor : backgroundColor,

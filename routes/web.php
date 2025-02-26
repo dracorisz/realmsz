@@ -30,7 +30,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::get('/milai', [ChatController::class, 'index'])->name('milai');
     Route::get('/focus', [ItemController::class, 'focus'])->name('focus');
     Route::get('/plans', [ItemController::class, 'index'])->name('plans');
-    Route::get('/studio', function () { return Inertia::render('App/Studio'); })->name('studio');
+    Route::get('/studio', function () { return Inertia::render('App/Studio/Main'); })->name('studio');
     Route::get('/finance', function () { return Inertia::render('App/Finance'); })->name('finance');
     Route::get('/crypto', function () { return Inertia::render('App/Crypto'); })->name('crypto');
     Route::get('/websites', function () { return Inertia::render('App/Websites'); })->name('websites');

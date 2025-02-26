@@ -44,7 +44,7 @@ const submit = () => {
       </div>
 
       <div class="mt-5 flex justify-end">
-        <PrimaryButton class="ml-3" :disabled="form.processing">Confirm</PrimaryButton>
+        <PrimaryButton class="ml-3" color="#000" opacity="30" hoverOpacity="50" :disabled="form.processing">Confirm</PrimaryButton>
       </div>
     </form>
   </AuthenticationCard>
