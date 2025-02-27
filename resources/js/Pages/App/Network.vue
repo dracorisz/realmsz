@@ -13,7 +13,11 @@ const parseDate = (date) => {
 
 <template>
   <AppLayout title="Network">
-    <div class="mx-auto flex w-full flex-col text-white">
+    <div class="h-full flex items-center justify-center w-full gap-2 text-white/70">
+      <span>Module under development</span>
+      <span class="animate-pulse">_</span>
+    </div>
+    <!-- <div class="mx-auto flex w-full flex-col text-white">
       <table v-if="users.length > 0" class="table table-auto border-collapse border-spacing-0 rounded-b-lg bg-white/10 p-2 text-right text-sm">
         <thead>
           <tr class="p-2">
@@ -41,7 +45,7 @@ const parseDate = (date) => {
       <template v-else>
         <p class="mb-10 text-center">No items found.</p>
       </template>
-    </div>
+    </div> -->
   </AppLayout>
 </template>
 

@@ -132,6 +132,8 @@ class ItemController extends Controller
 		try {
 			$item = Item::find($request->id);
 			$item->date = $request->date;
+			$item->recurring = $request->recurring;
+			$item->recurring_interval = $request->recurring_interval;
 			$item->save();
 			return 'Date updated.';
 		} catch (Exception $e) {

@@ -119,7 +119,8 @@ const callAction = () => {
       closeModal();
     })
     .catch((err) => {
-      errors.value.title = err.response.data.message;
+      console.log(err);
+      if (err.response) errors.value.title = err.response.data.message;
     });
 };
 
@@ -349,17 +350,44 @@ const toggleDatepicker = (evt, id) => {
   rowDatepicker.value[id] = !rowDatepicker.value[id];
 };
 
-const turnOffDatepicker = (item, newDate) => {
+const modalDatepicker = ref([]);
+const toggleModalDatepicker = (evt, id) => {
+  evt.stopPropagation();
+  for (let index = 0; index < modalDatepicker.value.length; index++) {
+    if (modalDatepicker.value[index] !== modalDatepicker.value[id]) modalDatepicker.value[index] = false;
+  }
+
+  modalDatepicker.value[id] = !modalDatepicker.value[id];
+};
+
+const tOD = (item, newDate, newRecurring, newRI) => {
   rowDatepicker.value[item.id] = false;
-  if (newDate === "" || item.date === newDate) return;
+  if (!newDate && !newRecurring && !newRI) return;
+  
+  let dbRV = newRecurring ? 1 : 0;
+  let dbRIV = newRI && newRI ? newRI : 0;
+
   item.date = newDate;
+  item.recurring = dbRV;
+  item.recurring_interval = dbRIV;
   actions(null, item.id, "date");
 };
 
-const offModalDatepicker = (item, newDate) => {
-  rowDatepicker.value[item.id] = false;
-  if (newDate === "" || item.date === newDate) return;
-  item.date = newDate;
+const tOMD = (item, newDate, newRecurring, newRI) => {
+  modalDatepicker.value[item.id] = false;
+  if (!newDate && !newRecurring && !newRI) return;
+  let dbRV = newRecurring ? 1 : 0;
+  let dbRIV = newRI && newRI ? newRI : 0;
+
+  activeRow.value.date = newDate;
+  activeRow.value.recurring = dbRV;
+  activeRow.value.recurring_interval = dbRIV;
+};
+
+const clearRowDate = () => {
+  activeRow.value.date = "";
+  activeRow.value.recurring = 0;
+  activeRow.value.recurring_interval = "";
 };
 
 const gridLayout = ref(false);
@@ -367,10 +395,10 @@ const toggleGrid = (val) => {
   gridLayout.value = val;
 };
 
-const rowClass = (col) => {
+const rowClass = () => {
   let grid = gridLayout.value ? "flex flex-col" : "";
   let draggingOn = isDragging.value ? "opacity-50" : "";
-  return `${grid} ${draggingOn}`.trim();
+  return `cursor-pointer ${grid} ${draggingOn}`.trim();
 };
 
 const settingsModal = ref(false);
@@ -509,6 +537,74 @@ const updateFadeOpacity = () => {
   fadeOpacity.value = distance < threshold ? distance / threshold : 1;
 };
 
+const formatDate = (date, ri) => {
+  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const getOrdinal = (n) => {
+    if (n % 100 >= 11 && n % 100 <= 13) return "th";
+    switch (n % 10) {
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
+    }
+  };
+
+  let d = new Date(date);
+  const dayNumber = d.getDate();
+  const ordinal = getOrdinal(dayNumber);
+  const monthName = monthNames[d.getMonth()];
+  const dayName = dayNames[d.getDay()];
+
+  let r = "Every ";
+  switch (ri) {
+    case "yearly":
+      r = `Yearly on ${dayNumber}${ordinal} of ${monthName}.`;
+      break;
+    case "monthly":
+      r += `month on ${dayNumber}${ordinal}.`;
+      break;
+    case "weekly":
+      r += `week on ${dayName}.`;
+      break;
+    case "daily":
+      r += `day.`;
+      break;
+    default:
+      break;
+  }
+  return r;
+};
+
+const formatFullDate = (date) => {
+  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const getOrdinal = (n) => {
+    if (n % 100 >= 11 && n % 100 <= 13) return "th";
+    switch (n % 10) {
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
+    }
+  };
+
+  let d = new Date(date);
+  const dayNumber = d.getDate();
+  const ordinal = getOrdinal(dayNumber);
+  const monthName = monthNames[d.getMonth()];
+  const year = d.getFullYear();
+
+  return `${dayNumber}${ordinal} of ${monthName}, ${year}.`;
+};
+
 onMounted(() => {
   if (scrollContainer.value) {
     scrollContainer.value.addEventListener("scroll", updateFadeOpacity);
@@ -640,7 +736,7 @@ onUnmounted(() => {
     </template>
     <div ref="scrollContainer" class="common-class mx-auto flex h-full w-full flex-col overflow-x-hidden">
       <div v-if="finalItems.length > 0" :class="['rounded-xl', !gridLayout && 'border border-white/10']">
-        <table class="relative table border-separate border-spacing-0 rounded-xl text-sm">
+        <table class="relative table border-separate border-spacing-0 rounded-xl text-sm z-10">
           <thead :class="gridLayout && 'hidden'">
             <tr class="head-row">
               <th class="mr-auto">
@@ -660,7 +756,7 @@ onUnmounted(() => {
                   <span>Title</span>
                 </div>
               </th>
-              <th class="aw-[200px]">
+              <th class="aw-[250px] border-x">
                 <div class="m-0 flex items-center justify-start gap-1 p-0">
                   <div class="-ml-2 inline-flex w-min flex-col justify-around text-sm ah-[18px]">
                     <span class="inline-block cursor-pointer" @click="applySort('date')">
@@ -697,8 +793,8 @@ onUnmounted(() => {
             </tr>
           </thead>
           <TransitionGroup name="list" tag="tbody" :class="['relative', gridLayout && 'grid grid-cols-3 gap-5']">
-            <tr v-for="(item, index) in finalItems" :key="item.id" draggable="true" @dragstart="dragStart($event, item)" @dragleave="dragLeave($event)" @dragover="dragOver($event)" @dragend="dragEnd" @drop="dragDrop($event, index)" :style="{ background: item.status.color + '11' }" :class="rowClass(item.status.color)" @click="actions($event, item.id, 'update')">
-              <td :class="['mr-auto', gridLayout && 'flex w-full rounded-t-xl min-w-full items-center justify-start border-x border-t py-5']">
+            <tr v-for="(item, index) in finalItems" :key="item.id" draggable="true" @dragstart="dragStart($event, item)" @dragleave="dragLeave($event)" @dragover="dragOver($event)" @dragend="dragEnd" @drop="dragDrop($event, index)" :style="{ background: item.status.color + '17' }" :class="rowClass(item.status.color)" @click="actions($event, item.id, 'update')">
+              <td :class="['mr-auto', gridLayout && 'flex w-full min-w-full items-center justify-start rounded-t-xl border-x border-t py-5']">
                 <span :class="['flex w-full items-center', gridLayout ? 'justify-start' : 'justify-between']">
                   <div class="relative -ml-1 flex items-center justify-between">
                     <div :tooltip="item.status.name" :style="{ color: item.status.color }" @click="toggleStatus($event, item.id)">
@@ -766,10 +862,10 @@ onUnmounted(() => {
                 </span>
               </td>
               <td v-if="gridLayout" class="flex w-full min-w-full items-center justify-between border-x py-5">{{ item.title.length < 30 ? item.title : item.title.substring(0, 30) + "..." }}</td>
-              <td :class="['relative', gridLayout ? 'aw-full flex items-center justify-between border-x py-5' : 'aw-[200px]']" @click="toggleDatepicker($event, item.id)">
-                <Datepicker v-if="rowDatepicker[item.id]" :date="item.date" :item="item.id" @update:date="(newDate) => turnOffDatepicker(item, newDate)" />
+              <td :class="['relative border-x', gridLayout ? 'aw-full flex items-center justify-between py-5' : 'aw-[200px]']" @click="toggleDatepicker($event, item.id)">
+                <Datepicker v-if="rowDatepicker[item.id]" :id="item.id" :date="item.date" :recurring="item.recurring" :recurringInterval="item.recurring_interval" @update:date="(newDate, newRecurring, newRI) => tOD(item, newDate, newRecurring, newRI)" @close="tOD(item, false, false, false)" />
                 <div class="flex w-full items-center justify-between">
-                  <span>{{ item.date ? item.date : "Unknown" }}</span>
+                  <span>{{ item.date ? (item.recurring == 1 ? formatDate(item.date, item.recurring_interval) : formatFullDate(item.date)) : "Unknown" }}</span>
                   <span class="icons-container" tooltip="Edit Date">
                     <svg width="24" height="24" viewBox="0 0 24 24" stroke-width="2" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor" class="as-[18px]">
                       <path d="M13 21H5C3.89543 21 3 20.1046 3 19V10H21V15M15 4V2M15 4V6M15 4H10.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -781,7 +877,7 @@ onUnmounted(() => {
                   </span>
                 </div>
               </td>
-              <td :class="['relative !px-0', gridLayout ? 'flex rounded-b-xl w-full min-w-full items-center justify-between border-b border-x py-5' : 'aw-[200px]']">
+              <td :class="['relative !px-0', gridLayout ? 'flex w-full min-w-full items-center justify-between rounded-b-xl border-x border-b py-5' : 'aw-[200px]']">
                 <Multiselect :id="`priority_id-inline${item.id}`" @update="(nv) => updateSelection(nv, 'status_id', item.id)" :valueProp="item.priority_id" :options="priorities" @click="$event.stopPropagation()" :icons="icons" :inlineSelect="true" />
               </td>
             </tr>
@@ -823,7 +919,6 @@ onUnmounted(() => {
       </template>
     </div>
     <div class="fade-mask" :style="{ opacity: fadeOpacity }"></div>
-
     <DialogModal :show="modal.active" @close="closeModal">
       <template #header>
         <span>{{ modal.title + " " + activeRow.title }}</span>
@@ -835,7 +930,7 @@ onUnmounted(() => {
             <span v-if="modal.text && modal.text.length > 0">{{ modal.text }}</span>
             <template v-if="modal.button != 'Delete'">
               <div class="flex w-full items-center gap-5">
-                <div class="flex items-center justify-center border border-[#2a2a2a] bg-[#0d0d0d] transition-colors as-[144px] hover:border-[#4d4d4d] hover:bg-[#1a1a1a]" @mouseenter="imageIcons = true" @mouseleave="imageIcons = false">
+                <div class="flex items-center justify-center rounded-xl border border-[#2a2a2a] bg-[#0d0d0d] transition-colors as-[144px] hover:border-[#4d4d4d] hover:bg-[#1a1a1a]" @mouseenter="imageIcons = true" @mouseleave="imageIcons = false">
                   <Transition name="fade">
                     <div v-if="imageIcons" class="relative z-20 flex flex-col items-center gap-1">
                       <div class="relative z-20 flex items-center gap-1">
@@ -905,7 +1000,7 @@ onUnmounted(() => {
                   </template>
                 </PrimaryButton>
               </div>
-              <div class="grid w-full grid-cols-3 gap-5">
+              <div class="grid w-full grid-cols-2 gap-5">
                 <div class="flex flex-col gap-1">
                   <InputLabel for="priority_id" value="Priority" />
                   <Multiselect id="priority_id" @update="(nv) => updateSelection(nv, 'priority_id')" :valueProp="activeRow.priority_id" :options="priorities" @click="$event.stopPropagation()" :inlineSelect="false" />
@@ -914,22 +1009,25 @@ onUnmounted(() => {
                   <InputLabel for="status_id" value="Status" />
                   <Multiselect id="status_id" @update="(nv) => updateSelection(nv, 'status_id')" :valueProp="activeRow.status_id" :options="statuses" @click="$event.stopPropagation()" :inlineSelect="false" />
                 </div>
-                <div class="flex flex-col gap-1">
-                  <InputLabel for="date" value="Due Date" />
-                  <div class="relative flex w-full items-center justify-between" type="date">
-                    <Datepicker v-if="rowDatepicker[activeRow.id]" :date="activeRow.date" :item="activeRow.id" @update:date="(newDate) => offModalDatepicker(activeRow, newDate)" />
-                    <TextInput id="date" v-model="activeRow.date" type="text" class="absolute left-0 w-full !border-transparent !bg-transparent focus:!bg-white/5" />
-                    <div class="flex w-full items-center justify-end">
-                      <span class="icons-container" @click="toggleDatepicker($event, activeRow.id)" tooltip="Edit Date">
-                        <svg width="24" height="24" viewBox="0 0 24 24" stroke-width="2" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor" class="as-[18px]">
-                          <path d="M13 21H5C3.89543 21 3 20.1046 3 19V10H21V15M15 4V2M15 4V6M15 4H10.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                          <path d="M3 10V6C3 4.89543 3.89543 4 5 4H7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                          <path d="M7 2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                          <path d="M21 10V6C21 4.89543 20.1046 4 19 4H18.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                          <path d="M16 20L18 22L22 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                        </svg>
-                      </span>
-                    </div>
+              </div>
+              <div class="flex w-full flex-col gap-1">
+                <InputLabel for="date" value="Due Date" />
+                <div class="relative flex w-full items-center justify-between" type="date">                 
+                  <Datepicker v-if="modalDatepicker[activeRow.id]" :id="activeRow.id + 'mdp'" :date="activeRow.date" :recurring="activeRow.recurring" :recurringInterval="activeRow.recurring_interval" @update:date="(newDate, newRecurring, newRI) => tOMD(activeRow, newDate, newRecurring, newRI)" @close="tOMD(activeRow, false, false, false)" />
+                  <div class="flex w-full items-center justify-start gap-2">
+                    <span class="icons-container" @click="toggleModalDatepicker($event, activeRow.id)" tooltip="Edit Date">
+                      <svg width="24" height="24" viewBox="0 0 24 24" stroke-width="2" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor" class="as-[18px]">
+                        <path d="M13 21H5C3.89543 21 3 20.1046 3 19V10H21V15M15 4V2M15 4V6M15 4H10.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M3 10V6C3 4.89543 3.89543 4 5 4H7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M7 2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M21 10V6C21 4.89543 20.1046 4 19 4H18.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M16 20L18 22L22 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </svg>
+                    </span>
+                    <span>{{ (activeRow.date && activeRow.date.length > 1) ? (activeRow.recurring == 1 ? formatDate(activeRow.date, activeRow.recurring_interval) : formatFullDate(activeRow.date)) : "Unknown" }}</span>
+                  </div>
+                  <div class="icons-container" @click="clearRowDate" tooltip="Clear Date">
+                    <svg width="24" height="24" class="icons" stroke-width="2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor"><path d="M19.1414 5C17.3265 3.14864 14.7974 2 12 2C6.47715 2 2 6.47715 2 12C2 14.7255 3.09032 17.1962 4.85857 19M19.1414 5C20.9097 6.80375 22 9.27455 22 12C22 17.5228 17.5228 22 12 22C9.20261 22 6.67349 20.8514 4.85857 19M19.1414 5L4.85857 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                   </div>
                 </div>
               </div>
@@ -1021,7 +1119,7 @@ thead tr {
 }
 
 tbody tr {
-  @apply bg-[#000] text-white/80 hover:bg-[#1d1d1d];
+  @apply bg-[#000] text-white/80 hover:!bg-[#1d1d1d];
 }
 
 tr:last-child td:first-child {
@@ -1051,15 +1149,15 @@ th:last-child {
 }
 
 .drop-zone {
-  @apply bg-success/20;
+  @apply !bg-success/20;
 }
 
 tr:active:not(.head-row) {
-  @apply bg-primary/20;
+  @apply !bg-primary/20;
 }
 
 tr:not(.head-row) {
-  @apply transition-all duration-500 ease-in-out;
+  @apply transition-all duration-300 ease-in-out;
 }
 
 .list-leave-active > *,

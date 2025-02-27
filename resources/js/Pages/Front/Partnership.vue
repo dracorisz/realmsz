@@ -74,11 +74,11 @@ onMounted(() => {
           <h2 class="heading-1">Partner up with Realmsz</h2>
         </div>
         <div class="heading-3 mx-auto flex w-full max-w-7xl items-center justify-start px-10 text-left">
-          <Link :href="route('roadmap')" class="text-white/70 transition-colors hover:text-[rgb(34,144,233)]" :class="route().current('roadmap')">Roadmap</Link>
-          <span>,</span>
-          <Link :href="route('ipo')" class="ml-2 text-white/70 transition-colors hover:text-[rgb(34,144,233)]" :class="route().current('ipo')">IPO</Link>
-          <span>, and</span>
-          <Link :href="route('ico')" class="mx-2 text-white/70 transition-colors hover:text-[rgb(34,144,233)]" :class="route().current('ico')">ICO</Link>
+          <!-- <Link :href="route('roadmap')" class="text-white/70 transition-colors hover:text-[rgb(34,144,233)]" :class="route().current('roadmap')">Roadmap</Link>
+          <span>,</span> -->
+          <Link :href="route('ipo')" class="mr-2 text-white/70 transition-colors hover:text-[rgb(34,144,233)]" :class="route().current('ipo')">IPO</Link>
+          <!-- <span>, and</span>
+          <Link :href="route('ico')" class="mx-2 text-white/70 transition-colors hover:text-[rgb(34,144,233)]" :class="route().current('ico')">ICO</Link> -->
           <span>for investors and shateholders.</span>
         </div>
         <div class="heading-3 mx-auto my-10 flex w-full max-w-7xl flex-col justify-start px-10 text-left">

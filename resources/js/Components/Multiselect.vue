@@ -1,5 +1,5 @@
 <script setup>
-import { defineEmits, onMounted, watch, ref } from "vue";
+import { onMounted, watch, ref } from "vue";
 import Multiselect from "vue-multiselect";
 import "vue-multiselect/dist/vue-multiselect.min.css";
 
@@ -7,6 +7,7 @@ const props = defineProps({
   id: String,
   icons: Array,
   inlineSelect: Boolean,
+  datepickerSelect: Boolean,
   options: Array,
   valueProp: [String, Object, Number],
 });
@@ -36,6 +37,11 @@ const toggleCaret = () => {
 const updateSelection = (newValue) => {
   modelValue.value = newValue.id;
   emit("update", newValue.id);
+};
+
+const updateDatepickerSelection = (newValue) => {
+  modelValue.value = newValue;
+  emit("update", newValue);
 };
 
 watch(
@@ -68,7 +74,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <Multiselect :id="id" :optionHeight="43" @open="toggleCaret" @close="toggleCaret" trackBy="id" label="name" :maxHeight="500" v-model="modelValue" @update:modelValue="updateSelection" :allowEmpty="false" placeholder="" :hideSelected="false" :options="options" selectLabel="↵ Select">
+  <Multiselect v-if="datepickerSelect" :id="id" :optionHeight="43" @open="toggleCaret" @close="toggleCaret" :maxHeight="500" v-model="modelValue" @update:modelValue="updateDatepickerSelection" :allowEmpty="false" placeholder="" :hideSelected="false" :options="options" />
+  <Multiselect v-else :id="id" :optionHeight="43" @open="toggleCaret" @close="toggleCaret" trackBy="id" label="name" :maxHeight="500" v-model="modelValue" @update:modelValue="updateSelection" :allowEmpty="false" placeholder="" :hideSelected="false" :options="options">
+    <!--  selectLabel="↵ Select" -->
     <template #beforeList>
       <span class="px-3 py-2 block text-white/50 text-xs">Search...</span>
     </template>
@@ -106,7 +114,7 @@ onMounted(() => {
 :deep(.multiselect__element),
 :deep(.multiselect__tags-wrap),
 :deep(.multiselect) {
-  @apply ah-[43px] overflow-hidden rounded-xl text-white bg-transparent leading-none border-[#2a2a2a] flex items-center justify-center w-full font-normal;
+  @apply ah-[43px] overflow-hidden rounded-xl capitalize text-xs text-white bg-transparent leading-none border-[#2a2a2a] flex items-center justify-start w-full font-normal;
 }
 
 :deep(.multiselect__content),
