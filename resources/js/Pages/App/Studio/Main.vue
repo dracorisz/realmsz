@@ -252,10 +252,10 @@ const currentCard = ref("start");
           <Model v-else-if="animatedModel == 'modelWarmup'" modelName="modelWarmup" :positionX="positionX" :positionY="positionY" :positionZ="positionZ" :rotationX="rotationX" :rotationY="rotationY" :rotationZ="rotationZ" />
           <Model v-else-if="animatedModel == 'modelDance'" modelName="modelDance" :positionX="positionX" :positionY="positionY" :positionZ="positionZ" :rotationX="rotationX" :rotationY="rotationY" :rotationZ="rotationZ" />
           <Model v-else-if="animatedModel == 'modelThink'" modelName="modelThink" :positionX="positionX" :positionY="positionY" :positionZ="positionZ" :rotationX="rotationX" :rotationY="rotationY" :rotationZ="rotationZ" />
-          <Model v-else-if="animatedModel == 'drako'" modelName="drako" :positionX="positionX" :positionY="positionY" :positionZ="positionZ" :rotationX="rotationX" :rotationY="rotationY" :rotationZ="rotationZ" />
+          <!-- <Model v-else-if="animatedModel == 'drako'" modelName="drako" :positionX="positionX" :positionY="positionY" :positionZ="positionZ" :rotationX="rotationX" :rotationY="rotationY" :rotationZ="rotationZ" />
           <Model v-else-if="animatedModel == 'drago'" modelName="drago" :positionX="positionX" :positionY="positionY" :positionZ="positionZ" :rotationX="rotationX" :rotationY="rotationY" :rotationZ="rotationZ" />
           <Model v-else-if="animatedModel == 'draco'" modelName="draco" iteration="3" :positionX="positionX" :positionY="positionY" :positionZ="positionZ" :rotationX="rotationX" :rotationY="rotationY" :rotationZ="rotationZ" />
-          <Model v-else-if="animatedModel == 'dracorisz'" modelName="dracorisz" :positionX="positionX" :positionY="positionY" :positionZ="positionZ" :rotationX="rotationX" :rotationY="rotationY" :rotationZ="rotationZ" />
+          <Model v-else-if="animatedModel == 'dracorisz'" modelName="dracorisz" :positionX="positionX" :positionY="positionY" :positionZ="positionZ" :rotationX="rotationX" :rotationY="rotationY" :rotationZ="rotationZ" /> -->
         </Suspense>
         <!-- <Edges color="#ffffff" /> -->
         <TresDirectionalLight :intensity="3" :position="[10, 5, 0]" />

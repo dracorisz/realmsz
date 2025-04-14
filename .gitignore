@@ -19,3 +19,7 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+.vapor/
+.env.production
+.env.staging
+.env.domain

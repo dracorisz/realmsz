@@ -114,7 +114,7 @@ onMounted(() => {
 :deep(.multiselect__element),
 :deep(.multiselect__tags-wrap),
 :deep(.multiselect) {
-  @apply ah-[43px] overflow-hidden rounded-xl capitalize text-xs text-white bg-transparent leading-none border-[#2a2a2a] flex items-center justify-start w-full font-normal;
+  @apply ah-[43px] !ring-0 overflow-hidden rounded-xl capitalize text-xs text-white bg-transparent leading-none border-[#2a2a2a] flex items-center justify-start w-full font-normal;
 }
 
 :deep(.multiselect__content),

@@ -59,7 +59,6 @@ const year = new Date().getFullYear();
             </Transition>
           </template>
         </div>
-        <PrimaryButton type="link" href="register">Start Now</PrimaryButton>
       </div>
       <div class="flex w-full flex-1 flex-col items-center justify-between gap-2 md:flex-row">
         <p class="text-xs text-white/70 hover:text-white/70">&copy; Realmsz {{ year }}. All rights reserved.</p>
@@ -68,7 +67,7 @@ const year = new Date().getFullYear();
           <Link :href="route('policy')" class="text-xs text-white/70 hover:text-white">Privacy Policy</Link>
         </div>
       </div>
-      <div class="flex w-full items-center justify-center text-zx text-white/50">v0.0.3</div>
+      <div class="flex w-full items-center justify-center text-zx text-white/50">v0.0.5-init</div>
     </div>
   </div>
 </template>

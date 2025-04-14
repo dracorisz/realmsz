@@ -77,4 +77,15 @@ class ProfileController extends Controller
             $agent->setUserAgent($session->user_agent);
         });
     }
+
+    public function getActivityStats()
+    {
+        $user = auth()->user();
+        return [
+            'tasks_created' => $user->tasks()->count(),
+            'total_users' => User::count(),
+            'total_tasks' => Task::count(),
+            'total_storage' => Storage::sum('size'),
+        ];
+    }
 }

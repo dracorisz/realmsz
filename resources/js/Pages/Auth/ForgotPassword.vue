@@ -44,7 +44,7 @@ const submit = () => {
       </div>
 
       <div class="flex w-full items-start gap-2 pl-px">
-        <Link :href="route('register')" class="link">Not registered?</Link>
+        <!-- <Link :href="route('register')" class="link">Not ed?</Link> -->
         <PrimaryButton class="ml-auto" color="#000" opacity="30" hoverOpacity="50" :disabled="form.processing">Email Me</PrimaryButton>
       </div>
     </form>

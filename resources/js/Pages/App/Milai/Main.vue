@@ -234,6 +234,36 @@ onUnmounted(() => {
   window.removeEventListener("keydown", handler);
   window.removeEventListener("keydown", handleKeyboardShortcuts);
 });
+
+const webSearchEnabled = ref(false);
+const mapsEnabled = ref(false);
+
+const toggleWebSearch = () => {
+  webSearchEnabled.value = !webSearchEnabled.value;
+};
+
+const toggleMaps = () => {
+  mapsEnabled.value = !mapsEnabled.value;
+};
+
+const chatMessages = ref([]);
+const speechSynthesis = window.speechSynthesis;
+let speechUtterance;
+
+const startTextToSpeech = () => {
+  if (!speechSynthesis) {
+    console.error("Text-to-Speech is not supported in this browser.");
+    return;
+  }
+  speechUtterance = new SpeechSynthesisUtterance("Text-to-Speech enabled.");
+  speechSynthesis.speak(speechUtterance);
+};
+
+const stopTextToSpeech = () => {
+  if (speechSynthesis) {
+    speechSynthesis.cancel();
+  }
+};
 </script>
 
 <template>
@@ -462,6 +492,19 @@ onUnmounted(() => {
         </div>
       </transition>
     </teleport>
+    <div>
+      <PrimaryButton @click="toggleWebSearch">Web Search</PrimaryButton>
+      <PrimaryButton @click="toggleMaps">Maps</PrimaryButton>
+      <div v-if="webSearchEnabled">Web Search Content</div>
+      <div v-if="mapsEnabled">Maps Content</div>
+    </div>
+    <div>
+      <PrimaryButton @click="startTextToSpeech">Enable Text-to-Speech</PrimaryButton>
+      <PrimaryButton @click="stopTextToSpeech">Disable Text-to-Speech</PrimaryButton>
+      <div v-for="message in chatMessages" :key="message.id">
+        <p>{{ message.text }}</p>
+      </div>
+    </div>
   </AppLayout>
 </template>
 

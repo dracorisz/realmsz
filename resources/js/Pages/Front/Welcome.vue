@@ -17,9 +17,9 @@ const canRegister = ref(true);
             <h2 class="heading-0 text-accent saturate-[1.1]">Infinite Possibilities</h2>
           </div>
           <div class="flex gap-3">
-            <Link v-if="canRegister" :href="route('register')">
+            <!-- <Link v-if="canRegister" :href="route('register')">
               <PrimaryButton>Early Access</PrimaryButton>
-            </Link>
+            </Link> -->
             <PrimaryButton :onlyIcon="true">
               <template #icon>
                 <svg class="icons" width="24" height="24" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor">

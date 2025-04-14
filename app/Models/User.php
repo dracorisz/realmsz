@@ -29,6 +29,9 @@ class User extends Authenticatable
         'email',
         'role',
         'password',
+        'subscription_status',
+        'renewal_date',
+        'payment_method',
     ];
 
     /**

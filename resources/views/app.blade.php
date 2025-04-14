@@ -9,12 +9,12 @@
 
   <title inertia>Realmsz</title>
 
-  <meta name="author" content="Realmsz" />
+  <meta name="author" content="Realmsz Team" />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#00449f" />
-  <meta name="description" content="Realmsz combines 10 essential modules in one place: Focus, Plans, Profile, Network, Milai, Studio, Finance, Crypto, Websites, and Storage. Streamline your workflow, create content, connect with your community, and manage your digital assets. Get started by creating an account and exploring each module!" />
+  <meta name="description" content="Realmsz - Manage your tasks, plans, and projects efficiently." />
   <meta name="robots" content="index, follow" />
-  <meta name="keywords" content="streamline, productivity, all-in-one, workspace, content creation, collaboration, crypto, Finance, wallet, NFT, AI, website builder, storage, social network" />
+  <meta name="keywords" content="task management, project planning, productivity" />
 
   <link rel="image_src" href="https://realmsz.com/cover.jpg" />
   <link rel="canonical" href="https://realmsz.com" />
@@ -58,6 +58,7 @@
   <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('favicon/favicon-96x96.png') }}" />
   <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('favicon/android-chrome-192x192.png') }}">
   <link rel="icon" type="image/png" sizes="512x512" href="{{ asset('favicon/android-chrome-512x512.png') }}">
+  <link rel="icon" href="{{ asset('favicon/android-chrome-512x512.png') }}">
   <link rel="manifest" href="{{ asset('favicon/site.webmanifest') }}">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">

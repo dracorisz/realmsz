@@ -14,6 +14,10 @@
   --dp-cell-size: 34px !important;
   --dp-primary-color: #00509c !important;
   --dp-common-padding: 13px !important;
+  --primary-gradient: linear-gradient(90deg, #ff7e5f, #feb47b);
+  --secondary-gradient: linear-gradient(90deg, #6a11cb, #2575fc);
+  --transition-duration: 0.3s;
+  --semi-transparent-black: rgba(0, 0, 0, 0.5);
 }
 
 * {
@@ -56,6 +60,24 @@ body::-webkit-scrollbar-thumb:hover {
   cursor: pointer;
 }
 
+.scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-gradient) var(--semi-transparent-black);
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background: var(--primary-gradient);
+  border-radius: 4px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background: var(--semi-transparent-black);
+}
+
 [type="checkbox"],
 [type="radio"] {
   @apply border border-[#2a2a2a] bg-[#0d0d0d] text-sm text-white placeholder:text-sm focus:border-[#4d4d4d] focus:bg-[#1a1a1a];
@@ -69,28 +91,25 @@ select,
 [type="text"],
 [type="date"],
 [type="email"],
-[type="password"] {
-  @apply rounded-xl border border-[#2a2a2a] bg-[#0d0d0d] text-sm text-white ah-[43px] placeholder:!text-white/50 focus:border-[#4d4d4d] focus:bg-[#1a1a1a] focus:placeholder:!text-white/70;
+[type="password"] { 
+  @apply tracking-normal !ring-0 rounded-xl border border-[#2a2a2a] bg-[#0d0d0d] text-sm text-white ah-[43px] placeholder:!text-white/50 focus:border-[#4d4d4d] focus:bg-[#1a1a1a] focus:placeholder:!text-white/70;
+}
+
+button {
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+button:hover {
+  background-color: var(--primary-gradient);
+  transform: scale(1.05);
 }
 
 #app {
-  @apply h-full;
-}
-
-.heading-0 {
-  @apply text-3xl font-bold tracking-normal md:text-7xl;
-}
-
-.heading-1 {
-  @apply text-2xl font-bold md:text-3xl;
-}
-
-.heading-2 {
-  @apply text-base md:text-2xl;
 }
 
 .heading-3 {
   @apply text-sm md:text-base;
+  @apply bg-clip-text font-black text-transparent;
 }
 
 .text-gradient {
@@ -114,7 +133,6 @@ select,
   @apply pointer-events-none cursor-not-allowed opacity-25;
 }
 
-.Vue-Toastification,
 .Vue-Toastification__toast-body {
   @apply flex items-center justify-start !rounded-2xl !py-0 !text-sm;
 }
@@ -128,10 +146,6 @@ select,
 }
 
 [tooltip]:hover:after {
-  @apply opacity-100 transition-opacity duration-100 ease-in-out delay-1000 visible z-[-1];
-}
-
-[tooltip]:after {
   content: attr(tooltip);
   @apply bg-black text-white rounded-xl absolute z-50 ah-[24px] flex items-center justify-center bottom-[24px] left-0 aw-[80px] whitespace-nowrap opacity-0 border font-light tracking-widest border-white/80 text-zx invisible;
 }
@@ -144,4 +158,42 @@ select,
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+  }
+
+  .content {
+    padding: 10px;
+  }
+}
+
+.task-complete {
+    animation: taskComplete 0.5s ease-in-out forwards;
+}
+
+@keyframes taskComplete {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
+}
+
+.table-row {
+    transition: all 0.3s ease-in-out;
+}
+
+.table-row:hover {
+    background-color: #f5f5f5;
+    transform: scale(1.02);
 }

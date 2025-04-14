@@ -1,5 +1,6 @@
 <?php
 
+use App\Logging\SlackLogger;
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
@@ -54,7 +55,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single'],
+            'channels' => ['slack', 'single'],
             'ignore_exceptions' => false,
         ],
 
@@ -74,12 +75,9 @@ return [
         ],
 
         'slack' => [
-            'driver' => 'slack',
-            'url' => env('LOG_SLACK_WEBHOOK_URL'),
-            'username' => 'Laravel Log',
-            'emoji' => ':boom:',
-            'level' => env('LOG_LEVEL', 'critical'),
-            'replace_placeholders' => true,
+            'driver' => 'custom',
+            'via' => [SlackLogger::class],
+            'level' => 'debug',
         ],
 
         'papertrail' => [

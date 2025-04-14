@@ -1,5 +1,4 @@
 <script setup>
-import { ref } from "vue";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import { Link } from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
@@ -16,12 +15,11 @@ defineProps({
       <ApplicationLogo />
       <nav class="ml-10 flex w-full items-center justify-start gap-5 ah-[55px]">
         <Link :href="route('ecosystem')" class="link" :class="route().current('ecosystem')">Ecosystem</Link>
-        <Link :href="route('partnership')" class="link" :class="route().current('partnership')">Partnership</Link>
+        <!-- <Link :href="route('partnership')" class="link" :class="route().current('partnership')">Partnership</Link> -->
         <div v-if="canLogin" class="ml-auto flex items-center ah-[55px]">
           <Link v-if="$page.props.auth.user" :href="route('focus')" class="link">Focus</Link>
           <div v-else class="flex items-center ah-[55px]">
             <Link :href="route('login')" class="link">Login</Link>
-            <PrimaryButton v-if="canRegister" href="register" type="link" class="ml-4">Register</PrimaryButton>
           </div>
         </div>
       </nav>

@@ -5,6 +5,7 @@ use App\Http\Controllers\NetworkController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ChatController;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +37,15 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::get('/websites', function () { return Inertia::render('App/Websites'); })->name('websites');
     Route::get('/storage', function () { return Inertia::render('App/Storage'); })->name('storage');
     Route::get('/network', [NetworkController::class, 'index'])->name('network');
+});
+
+Route::get('/test-db', function () {
+    try {
+        DB::connection()->getPdo();
+        return response()->json(['status' => 'success', 'message' => 'Database connection successful']);
+    } catch (\Exception $e) {
+        return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+    }
 });
 
 require_once __DIR__ . '/jetstream.php';

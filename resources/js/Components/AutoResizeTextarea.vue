@@ -17,9 +17,9 @@ const resetHeight = () => {
   }
 };
 
-defineExpose({ 
+defineExpose({
   focus: () => textarea.value?.focus(),
-  resetHeight
+  resetHeight,
 });
 const textarea = ref(null);
 
@@ -86,8 +86,8 @@ onMounted(() => {
 
 <style scoped lang="pcss">
 .autoresize-class {
-  scrollbar-gutter: 50px;
-  @apply max-h-[200px] min-h-[50px] w-full resize-none overflow-x-hidden rounded-xl bg-[#0d0d0d] focus:bg-[#1a1a1a] px-4 py-3 pr-[40px] text-white placeholder:text-white/50 focus:outline-none focus:ring-0;
+  scrollbar-gutter: 20px;
+  @apply font-normal max-h-[200px] min-h-[50px] w-full resize-none overflow-x-hidden rounded-xl bg-[#0d0d0d] px-4 py-3 pr-[40px] text-white placeholder:text-white/50 focus:bg-[#1a1a1a] focus:outline-none focus:ring-0;
 }
 
 .autoresize-class::-webkit-scrollbar {
@@ -95,21 +95,16 @@ onMounted(() => {
 }
 
 .autoresize-class::-webkit-scrollbar-track {
-  background: #0d0d0d;
-  background-color: #0d0d0d;
-  border-radius: 13px;
+  @apply rounded-xl bg-[#0d0d0d] focus:bg-[#1a1a1a];
 }
 
 .autoresize-class::-webkit-scrollbar-thumb {
-  background: #333;
-  background-color: #333;
+  @apply cursor-pointer rounded-xl bg-[#333] hover:bg-[#555];
   border: 8px solid #0d0d0d;
-  border-radius: 13px;
 }
 
-.autoresize-class::-webkit-scrollbar-thumb:hover {
-  background-color: #555;
-  cursor: pointer;
+.autoresize-class:focus::-webkit-scrollbar-thumb {
+  border: 8px solid #1a1a1a;
 }
 </style>
 

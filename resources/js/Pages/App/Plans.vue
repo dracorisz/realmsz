@@ -229,12 +229,13 @@ const isDragging = ref(false);
 const ghost = ref(null);
 
 const dragStart = (evt, item) => {
-  let tr = evt.target.closest("tr");
+  const tr = evt.target.closest("tr");
   if (!tr || tr.classList.contains("head-row")) return;
 
-  let clone = tr.cloneNode(true);
+  const clone = tr.cloneNode(true);
   clone.classList.add("ghost");
   clone.innerHTML = "Release to drop...";
+  
   const layout = document.querySelector("#dragref");
   layout.appendChild(clone);
   evt.dataTransfer.setDragImage(clone, clone.offsetWidth / 2, clone.offsetHeight / 2);
@@ -252,8 +253,7 @@ const dragDrop = (evt, targetIndex) => {
   const sourceIndex = finalItems.value.findIndex((item) => item.id === draggedItemId);
 
   if (sourceIndex !== targetIndex) {
-    const itemToMove = finalItems.value[sourceIndex];
-    finalItems.value.splice(sourceIndex, 1);
+    const [itemToMove] = finalItems.value.splice(sourceIndex, 1);
     finalItems.value.splice(targetIndex, 0, itemToMove);
   }
 
@@ -263,34 +263,26 @@ const dragDrop = (evt, targetIndex) => {
 const dragOver = (evt) => {
   evt.preventDefault();
   const dropZone = evt.target.closest("tr");
-  if (dropZone) {
-    document.querySelectorAll(".drop-zone").forEach((el) => {
-      if (el !== dropZone) el.classList.remove("drop-zone");
-    });
-  }
+  if (!dropZone) return;
+  
+  document.querySelectorAll(".drop-zone").forEach(el => el.classList.remove("drop-zone"));
   dropZone.classList.add("drop-zone");
 };
 
 const dragEnd = () => {
   isDragging.value = false;
-  const layout = document.querySelector("#dragref");
-  layout.removeChild(ghost.value);
-
+  document.querySelector("#dragref").removeChild(ghost.value);
   clearDragClasses();
 };
 
 const dragLeave = (evt) => {
   evt.preventDefault();
-  const dropZone = evt.target.closest("tr");
-  if (dropZone) dropZone.classList.remove("drop-zone");
+  evt.target.closest("tr")?.classList.remove("drop-zone");
 };
 
 const clearDragClasses = () => {
-  document.querySelectorAll(".drag-element").forEach((el) => {
-    el.classList.remove("drag-element");
-  });
-  document.querySelectorAll(".drop-zone").forEach((el) => {
-    el.classList.remove("drop-zone");
+  document.querySelectorAll(".drag-element, .drop-zone").forEach(el => {
+    el.classList.remove("drag-element", "drop-zone");
   });
 };
 
@@ -363,7 +355,7 @@ const toggleModalDatepicker = (evt, id) => {
 const tOD = (item, newDate, newRecurring, newRI) => {
   rowDatepicker.value[item.id] = false;
   if (!newDate && !newRecurring && !newRI) return;
-  
+
   let dbRV = newRecurring ? 1 : 0;
   let dbRIV = newRI && newRI ? newRI : 0;
 
@@ -701,6 +693,9 @@ onUnmounted(() => {
           </span>
         </div>
         <Toggle v-model:active="showArchived" label="Show Archived" @update:active="toggleArchive" />
+        <div class="flex mx-auto items-center text-xs text-white/70">
+          <span>Showing {{ finalItems.length }} items.</span>
+        </div>
         <div class="ml-auto flex items-center gap-3">
           <PrimaryButton :onlyIcon="true" color="#1a1a1a" opacity="100" hoverOpacity="100" @click="settingsModal = true" tooltip="Settings">
             <template #icon>
@@ -736,7 +731,7 @@ onUnmounted(() => {
     </template>
     <div ref="scrollContainer" class="common-class mx-auto flex h-full w-full flex-col overflow-x-hidden">
       <div v-if="finalItems.length > 0" :class="['rounded-xl', !gridLayout && 'border border-white/10']">
-        <table class="relative table border-separate border-spacing-0 rounded-xl text-sm z-10">
+        <table class="relative z-10 table border-separate border-spacing-0 rounded-xl text-sm">
           <thead :class="gridLayout && 'hidden'">
             <tr class="head-row">
               <th class="mr-auto">
@@ -756,7 +751,7 @@ onUnmounted(() => {
                   <span>Title</span>
                 </div>
               </th>
-              <th class="aw-[250px] border-x">
+              <th class="border-x aw-[250px]">
                 <div class="m-0 flex items-center justify-start gap-1 p-0">
                   <div class="-ml-2 inline-flex w-min flex-col justify-around text-sm ah-[18px]">
                     <span class="inline-block cursor-pointer" @click="applySort('date')">
@@ -1012,7 +1007,7 @@ onUnmounted(() => {
               </div>
               <div class="flex w-full flex-col gap-1">
                 <InputLabel for="date" value="Due Date" />
-                <div class="relative flex w-full items-center justify-between" type="date">                 
+                <div class="relative flex w-full items-center justify-between" type="date">
                   <Datepicker v-if="modalDatepicker[activeRow.id]" :id="activeRow.id + 'mdp'" :date="activeRow.date" :recurring="activeRow.recurring" :recurringInterval="activeRow.recurring_interval" @update:date="(newDate, newRecurring, newRI) => tOMD(activeRow, newDate, newRecurring, newRI)" @close="tOMD(activeRow, false, false, false)" />
                   <div class="flex w-full items-center justify-start gap-2">
                     <span class="icons-container" @click="toggleModalDatepicker($event, activeRow.id)" tooltip="Edit Date">
@@ -1024,7 +1019,7 @@ onUnmounted(() => {
                         <path d="M16 20L18 22L22 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                       </svg>
                     </span>
-                    <span>{{ (activeRow.date && activeRow.date.length > 1) ? (activeRow.recurring == 1 ? formatDate(activeRow.date, activeRow.recurring_interval) : formatFullDate(activeRow.date)) : "Unknown" }}</span>
+                    <span>{{ activeRow.date && activeRow.date.length > 1 ? (activeRow.recurring == 1 ? formatDate(activeRow.date, activeRow.recurring_interval) : formatFullDate(activeRow.date)) : "Unknown" }}</span>
                   </div>
                   <div class="icons-container" @click="clearRowDate" tooltip="Clear Date">
                     <svg width="24" height="24" class="icons" stroke-width="2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor"><path d="M19.1414 5C17.3265 3.14864 14.7974 2 12 2C6.47715 2 2 6.47715 2 12C2 14.7255 3.09032 17.1962 4.85857 19M19.1414 5C20.9097 6.80375 22 9.27455 22 12C22 17.5228 17.5228 22 12 22C9.20261 22 6.67349 20.8514 4.85857 19M19.1414 5L4.85857 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
@@ -1047,30 +1042,73 @@ onUnmounted(() => {
       </template>
       <template #content>
         <div class="flex w-full flex-col">
-          <div class="mb-5 flex w-full items-center justify-stretch">
+          <div class="flex w-full items-center justify-between rounded-2xl border border-white/10 bg-black/10 px-3 py-1">
+              <div class="flex items-center gap-2 text-white/70">
+                <svg width="24" height="24" class="icons" stroke-width="2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor">
+                  <path d="M19 8C20.6569 8 22 6.65685 22 5C22 3.34315 20.6569 2 19 2C17.3431 2 16 3.34315 16 5C16 6.65685 17.3431 8 19 8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                  <path d="M21 12V15C21 18.3137 18.3137 21 15 21H9C5.68629 21 3 18.3137 3 15V9C3 5.68629 5.68629 3 9 3H12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+                <span>Click on icon, color or title to change it.</span>
+              </div>
+              <PrimaryButton color="#000">
+                <template #icon>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icons">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                </template>
+                <span>Add</span>
+              </PrimaryButton>
+            </div>
+          <div class="my-5 flex w-full items-center justify-stretch">
             <span class="w-full cursor-pointer rounded-l-2xl border border-white/10 py-3 text-center text-xs transition-colors hover:bg-white/5" :class="activeTab == 'cat' && 'bg-white/10'" @click="setActiveTab('cat')">Categories</span>
             <span class="w-full cursor-pointer border-y border-white/10 py-3 text-center text-xs transition-colors hover:bg-white/5" :class="activeTab == 'sta' && 'bg-white/10'" @click="setActiveTab('sta')">Statuses</span>
             <span class="w-full cursor-pointer rounded-r-2xl border border-white/10 py-3 text-center text-xs transition-colors hover:bg-white/5" :class="activeTab == 'pri' && 'bg-white/10'" @click="setActiveTab('pri')">Priorities</span>
           </div>
-          <div v-if="activeTab == 'cat'" class="flex flex-col gap-3">
-            <div v-for="i in categories" :key="i.id" class="flex items-center justify-start gap-3 border-white/5 ah-[24px]">
-              <span v-html="i.icon.data" @click="change('ico', 'cat', i)" />
-              <span :style="{ background: i.color }" class="rounded as-[24px]" @click="change('col', 'cat', i)" />
-              <span @click="change('nam', 'cat', i)">{{ i.name.length > 0 ? i.name : "None" }}</span>
+          <div v-if="activeTab == 'cat'" class="flex w-full flex-wrap items-center gap-3">
+            <div v-for="i in categories" :key="i.id" class="flex items-center justify-center gap-3 rounded-2xl border px-3 py-2 hover:bg-white/5" :style="{ borderColor: `${i.color}55` }">
+              <span v-html="i.icon.data" @click="change('ico', 'cat', i)" class="cursor-pointer" />
+              <span :style="{ background: i.color }" class="cursor-pointer rounded as-[20px]" @click="change('col', 'cat', i)" />
+              <span class="cursor-pointer" @click="change('nam', 'cat', i)">{{ i.name.length > 0 ? i.name : "None" }}</span>
+              <!-- @click="actions($event, item.id, 'delete')"  -->
+              <span class="icons-container ml-2" tooltip="Delete">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="as-[18px]">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  <line x1="10" y1="11" x2="10" y2="17"></line>
+                  <line x1="14" y1="11" x2="14" y2="17"></line>
+                </svg>
+              </span>
             </div>
           </div>
-          <div v-if="activeTab == 'sta'" class="flex flex-col gap-3">
-            <div v-for="i in statuses" :key="i.id" class="flex items-center justify-start gap-3 border-white/5 ah-[24px]">
-              <span v-html="i.icon.data" @click="change('ico', 'sta', i)" />
-              <span :style="{ background: i.color }" class="rounded as-[24px]" @click="change('col', 'sta', i)" />
-              <span @click="change('nam', 'sta', i)">{{ i.name.length > 0 ? i.name : '<em>None</em>' }}</span>
+          <div v-if="activeTab == 'sta'" class="flex w-full flex-wrap items-center gap-3">
+            <div v-for="i in statuses" :key="i.id" class="flex items-center justify-center gap-3 rounded-2xl border px-3 py-2 hover:bg-white/5" :style="{ borderColor: `${i.color}55` }">
+              <span v-html="i.icon.data" @click="change('ico', 'sta', i)" class="cursor-pointer" />
+              <span :style="{ background: i.color }" class="cursor-pointer rounded as-[20px]" @click="change('col', 'sta', i)" />
+              <span class="cursor-pointer" @click="change('nam', 'sta', i)">{{ i.name.length > 0 ? i.name : '<em>None</em>' }}</span>
+              <span class="icons-container ml-2" tooltip="Delete">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="as-[18px]">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  <line x1="10" y1="11" x2="10" y2="17"></line>
+                  <line x1="14" y1="11" x2="14" y2="17"></line>
+                </svg>
+              </span>
             </div>
           </div>
-          <div v-if="activeTab == 'pri'" class="flex flex-col gap-3">
-            <div v-for="i in priorities" :key="i.id" class="flex items-center justify-start gap-3 border-white/5 ah-[24px]">
-              <span v-html="i.icon.data" @click="change('ico', 'pri', i)" />
-              <span :style="{ background: i.color }" class="rounded as-[24px]" @click="change('col', 'pri', i)" />
-              <span @click="change('nam', 'pri', i)">{{ i.name.length > 0 ? i.name : "None" }}</span>
+          <div v-if="activeTab == 'pri'" class="flex w-full flex-wrap items-center gap-3">
+            <div v-for="i in priorities" :key="i.id" class="flex items-center justify-center gap-3 rounded-2xl border px-3 py-2 hover:bg-white/5" :style="{ borderColor: `${i.color}55` }">
+              <span v-html="i.icon.data" @click="change('ico', 'pri', i)" class="cursor-pointer" />
+              <span :style="{ background: i.color }" class="cursor-pointer rounded as-[20px]" @click="change('col', 'pri', i)" />
+              <span class="cursor-pointer" @click="change('nam', 'pri', i)">{{ i.name.length > 0 ? i.name : "None" }}</span>
+              <span class="icons-container ml-2" tooltip="Delete">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="as-[18px]">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  <line x1="10" y1="11" x2="10" y2="17"></line>
+                  <line x1="14" y1="11" x2="14" y2="17"></line>
+                </svg>
+              </span>
             </div>
           </div>
         </div>

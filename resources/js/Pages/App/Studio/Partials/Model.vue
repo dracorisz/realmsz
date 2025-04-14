@@ -32,21 +32,21 @@ if (actions || animations) {
 
 const positionYLocal = ref(props.positionY);
 
-onMounted(() => {
-  // console.log(scene);
-  if (props.modelName == "drago") positionYLocal.value = 0.47;
-  if (props.modelName == "drako") positionYLocal.value = 0.43;
+// onMounted(() => {
+//   // console.log(scene);
+//   if (props.modelName == "drago") positionYLocal.value = 0.47;
+//   if (props.modelName == "drako") positionYLocal.value = 0.43;
 
-  if (props.modelName == "draco") {
-    positionYLocal.value = 0.34;
-    scene.children[0].scale.set(0.5, 0.5, 0.5);
-  }
+//   if (props.modelName == "draco") {
+//     positionYLocal.value = 0.34;
+//     scene.children[0].scale.set(0.5, 0.5, 0.5);
+//   }
 
-  if (props.modelName == "dracorisz") {
-    positionYLocal.value = 0.48;
-    scene.children[0].scale.set(0.5, 0.5, 0.5);
-  }
-});
+//   if (props.modelName == "dracorisz") {
+//     positionYLocal.value = 0.48;
+//     scene.children[0].scale.set(0.5, 0.5, 0.5);
+//   }
+// });
 </script>
 
 <template>

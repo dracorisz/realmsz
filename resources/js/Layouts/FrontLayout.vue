@@ -2,7 +2,6 @@
 import { Head } from "@inertiajs/vue3";
 import Navigation from "@/Components/Navigation.vue";
 import FrontFooter from "@/Components/FrontFooter.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 defineProps({
   title: String,

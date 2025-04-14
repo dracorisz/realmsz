@@ -62,9 +62,9 @@ module.exports = {
           '100%': { transform: 'scale(1.13)' },
         },
         wave: {
-          '0%': { transform: 'rotate(5deg); scale(1); translateX(0px);' },
-          '50%': { transform: 'rotate(-5deg); scale(1.2); translateX(10px); translateY(-20px);' },
-          '100%': { transform: 'rotate(5deg); scale(1); translateX(0px);' },
+          '0%': { transform: 'rotate(5deg) scale(1)' },
+          '50%': { transform: 'rotate(-5deg) scale(1.1)' },
+          '100%': { transform: 'rotate(5deg) scale(1)' },
         },
         fadeIn: {
           from: { opacity: 0, transform: 'translateY(10px)' },
