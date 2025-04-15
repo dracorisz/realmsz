@@ -5,8 +5,9 @@ import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import ApplicationMark from "@/Components/ApplicationMark.vue";
 import AppBanner from "@/Components/AppBanner.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-
+import process from 'process';
 const page = usePage();
+const assetUrl = import.meta.env.VITE_ASSET_URL;
 
 defineProps({
   title: String,
@@ -196,12 +197,12 @@ const canAccess = (allowedRoles) => {
               </form>
             </div>
           </div>
-          <!-- <img :src="'images/backgrounds/background04.jpg'" alt="Sidebar Background Image" class="absolute inset-0 z-0 h-full w-full object-cover opacity-20" /> -->
-          <img v-if="hasHero" :src="'images/milai.jpg'" class="opacity-50 absolute w-full h-full object-cover z-0 inset-0" />
+          <!-- <img :src="`${process.env.VITE_ASSET_URL}/images/backgrounds/background04.jpg`" alt="Sidebar Background Image" class="absolute inset-0 z-0 h-full w-full object-cover opacity-20" /> -->
+          <img v-if="hasHero" :src="`${assetUrl}/images/milai.jpg`" class="opacity-50 absolute w-full h-full object-cover z-0 inset-0" />
         </div>
       </div>
     </nav>
-    <!-- <img v-if="hasHero" :src="'images/milai.jpg'" class="opacity-5 absolute w-full h-full object-cover z-0 inset-0" /> -->
+    <!-- <img v-if="hasHero" :src="`${process.env.VITE_ASSET_URL}/images/milai.jpg`" class="opacity-5 absolute w-full h-full object-cover z-0 inset-0" /> -->
     <div class="relative z-40 flex h-full w-full flex-col overflow-hidden" :class="route().current('studio') || route().current('focus') ? 'px-0' : 'px-5'">
       <header v-if="$slots.header" class="mx-auto flex w-full flex-col items-center justify-center gap-5 py-5 text-white">
         <slot name="header" />

@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onMounted, onUnmounted, watch } from "vue";
-
+import process from 'process';
+const assetUrl = import.meta.env.VITE_ASSET_URL;
 const props = defineProps({
   show: {
     type: Boolean,
@@ -70,7 +71,7 @@ const maxWidthClass = computed(() => {
         </transition>
         <transition enter-active-class="ease-out duration-300" enter-from-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" enter-to-class="opacity-100 translate-y-0 sm:scale-100" leave-active-class="ease-in duration-200" leave-from-class="opacity-100 translate-y-0 sm:scale-100" leave-to-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
           <div v-show="show" class="transform rounded-2xl bg-black relative transition-all sm:mx-auto sm:w-full" :class="maxWidthClass">
-            <img v-if="show" :src="'images/backgrounds/background04.jpg'" alt="" class="absolute h-full w-full object-cover opacity-5 z-[-1]" />
+            <img v-if="show" :src="`${assetUrl}/images/backgrounds/background04.jpg`" alt="" class="absolute h-full w-full object-cover opacity-5 z-[-1]" />
             <slot v-if="show" />
           </div>
         </transition>

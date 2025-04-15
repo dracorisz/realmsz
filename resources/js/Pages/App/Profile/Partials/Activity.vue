@@ -1,12 +1,12 @@
 <script setup>
 // import { ref } from "vue";
 // import { useForm } from "@inertiajs/vue3";
-// import ActionMessage from "@/Components/ActionMessage.vue";
+// import ActionMessage from "../../../../Components/ActionMessage.vue";
 import ActionSection from "@/Components/ActionSection.vue";
-// import DialogModal from "@/Components/DialogModal.vue";
-// import InputError from "@/Components/InputError.vue";
-// import PrimaryButton from "@/Components/PrimaryButton.vue";
-// import TextInput from "@/Components/TextInput.vue";
+// import DialogModal from "../../../../Components/DialogModal.vue";
+// import InputError from "../../../../Components/InputError.vue";
+// import PrimaryButton from "../../../../Components/PrimaryButton.vue";
+// import TextInput from "../../../../Components/TextInput.vue";
 </script>
 
 <template>

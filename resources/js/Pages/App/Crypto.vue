@@ -1,4 +1,4 @@
-<script setup>
+<!-- <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 
 const chains = [
@@ -18,7 +18,7 @@ const chains = [
   <AppLayout title="Crypto">
     <div class="grid w-full h-full grid-cols-2 gap-5">
       <div v-for="c in chains" :key="c.id" class="crypto-gradient group">
-        <img :src="'images/chains/' + c.name.replaceAll(' ', '-').toLowerCase() + '-' + c.id + '-logo.svg'" class="as-[55px] group-hover:animate-spin-fast" />
+        <img :src="`${process.env.VITE_ASSET_URL}/images/chains/${c.name.replaceAll(' ', '-').toLowerCase()}-${c.id}-logo.svg`" class="as-[55px] group-hover:animate-spin-fast" />
         <span class="text-sm text-white/70 group-hover:text-white">{{ c.name }}</span>
       </div>
     </div>
@@ -40,4 +40,18 @@ const chains = [
   opacity: 1;
 }
 </style>
+ -->
 
+ <script setup>
+import AppLayout from "@/Layouts/AppLayout.vue";
+// const assetUrl = import.meta.env.VITE_ASSET_URL;
+</script>
+
+<template>
+  <AppLayout title="Module">
+    <div class="h-full flex items-center justify-center w-full gap-2 text-white/70">
+      <span>Module under development</span>
+      <span class="animate-pulse">_</span>
+    </div>
+  </AppLayout>
+</template>

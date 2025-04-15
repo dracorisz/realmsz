@@ -1,192 +1,194 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import AppLayout from "@/Layouts/AppLayout.vue"; 
-import { OrbitControls, Stars } from "@tresjs/cientos";
-import { TresCanvas, useRenderLoop } from "@tresjs/core";
-import { BasicShadowMap, NoToneMapping, SRGBColorSpace, Color, AdditiveBlending, BufferAttribute, Scene, MathUtils, Box3, Vector3 } from "three";
-import Model from "./Partials/Model.vue";
-import vertexShader from "./Partials/shaders/vertex.glsl?raw";
-import fragmentShader from "./Partials/shaders/fragment.glsl?raw";
+import AppLayout from "@/Layouts/AppLayout.vue";
+// import process from 'process';
+// import { OrbitControls, Stars } from "@tresjs/cientos";
+// import { TresCanvas, useRenderLoop } from "@tresjs/core";
+// import { BasicShadowMap, NoToneMapping, SRGBColorSpace, Color, AdditiveBlending, BufferAttribute, Scene, MathUtils, Box3, Vector3 } from "three";
+// import Model from "./Partials/Model.vue";
+// import vertexShader from "./Partials/shaders/vertex.glsl?raw";
+// import fragmentShader from "./Partials/shaders/fragment.glsl?raw";
 
-const gl = {
-  clearColor: "#030303",
-  shadows: true,
-  alpha: true,
-  shadowMapType: BasicShadowMap,
-  outputColorSpace: SRGBColorSpace,
-  toneMapping: NoToneMapping,
-  // windowSize: false,
-};
+// const gl = {
+//   clearColor: "#030303",
+//   shadows: true,
+//   alpha: true,
+//   shadowMapType: BasicShadowMap,
+//   outputColorSpace: SRGBColorSpace,
+//   toneMapping: NoToneMapping,
+//   // windowSize: false,
+// };
 
-const parameters = {
-  count: 90000,
-  size: 36,
-  radius: 2.3,
-  branches: 10,
-  spin: 0,
-  randomness: 0.13,
-  randomnessPower: 5.8,
-  insideColor: "#22efff",
-  outsideColor: "#0090d4",
-};
+// const parameters = {
+//   count: 90000,
+//   size: 36,
+//   radius: 2.3,
+//   branches: 10,
+//   spin: 0,
+//   randomness: 0.13,
+//   randomnessPower: 5.8,
+//   insideColor: "#22efff",
+//   outsideColor: "#0090d4",
+// };
 
-const colorInside = new Color(parameters.insideColor);
-const colorOutside = new Color(parameters.outsideColor);
+// const colorInside = new Color(parameters.insideColor);
+// const colorOutside = new Color(parameters.outsideColor);
 
-const positions = new Float32Array(parameters.count * 3);
-const colors = new Float32Array(parameters.count * 3);
-const scales = new Float32Array(parameters.count);
-const randomnessArray = new Float32Array(parameters.count * 3);
+// const positions = new Float32Array(parameters.count * 3);
+// const colors = new Float32Array(parameters.count * 3);
+// const scales = new Float32Array(parameters.count);
+// const randomnessArray = new Float32Array(parameters.count * 3);
 
-for (let i = 0; i < parameters.count; i++) {
-  const i3 = i * 3;
+// for (let i = 0; i < parameters.count; i++) {
+//   const i3 = i * 3;
 
-  const radius = Math.random() * parameters.radius;
-  const spinAngle = radius * parameters.spin;
-  // const spinAngle = 0;
-  const branchAngle = ((i % parameters.branches) * Math.PI * 2) / parameters.branches;
+//   const radius = Math.random() * parameters.radius;
+//   const spinAngle = radius * parameters.spin;
+//   // const spinAngle = 0;
+//   const branchAngle = ((i % parameters.branches) * Math.PI * 2) / parameters.branches;
 
-  positions[i3] = Math.cos(branchAngle) * radius; // x
-  positions[i3 + 1] = 0; // y
-  positions[i3 + 2] = Math.sin(branchAngle) * radius; // z
+//   positions[i3] = Math.cos(branchAngle) * radius; // x
+//   positions[i3 + 1] = 0; // y
+//   positions[i3 + 2] = Math.sin(branchAngle) * radius; // z
 
-  const randomX = Math.random() ** parameters.randomnessPower * (Math.random() < 0.5 ? -1 : 1);
-  const randomY = Math.random() ** parameters.randomnessPower * (Math.random() < 0.5 ? -1 : 1);
-  const randomZ = Math.random() ** parameters.randomnessPower * (Math.random() < 0.5 ? -1 : 1);
+//   const randomX = Math.random() ** parameters.randomnessPower * (Math.random() < 0.5 ? -1 : 1);
+//   const randomY = Math.random() ** parameters.randomnessPower * (Math.random() < 0.5 ? -1 : 1);
+//   const randomZ = Math.random() ** parameters.randomnessPower * (Math.random() < 0.5 ? -1 : 1);
 
-  randomnessArray[i3] = randomX;
-  randomnessArray[i3 + 1] = randomY;
-  randomnessArray[i3 + 2] = randomZ;
+//   randomnessArray[i3] = randomX;
+//   randomnessArray[i3 + 1] = randomY;
+//   randomnessArray[i3 + 2] = randomZ;
 
-  const mixedColor = colorInside.clone();
-  mixedColor.lerp(colorOutside, radius / parameters.radius);
+//   const mixedColor = colorInside.clone();
+//   mixedColor.lerp(colorOutside, radius / parameters.radius);
 
-  colors[i3 + 0] = mixedColor.r; // R
-  colors[i3 + 1] = mixedColor.g; // G
-  colors[i3 + 2] = mixedColor.b; // B
+//   colors[i3 + 0] = mixedColor.r; // R
+//   colors[i3 + 1] = mixedColor.g; // G
+//   colors[i3 + 2] = mixedColor.b; // B
 
-  scales[i] = Math.random();
-}
+//   scales[i] = Math.random();
+// }
 
-const shader = {
-  transparent: true,
-  depthWrite: false,
-  blending: AdditiveBlending,
-  vertexColors: true,
-  vertexShader,
-  fragmentShader,
-  uniforms: {
-    uTime: { value: 0 },
-    uSize: {
-      value: parameters.size,
-    },
-  },
-};
+// const shader = {
+//   transparent: true,
+//   depthWrite: false,
+//   blending: AdditiveBlending,
+//   vertexColors: true,
+//   vertexShader,
+//   fragmentShader,
+//   uniforms: {
+//     uTime: { value: 0 },
+//     uSize: {
+//       value: parameters.size,
+//     },
+//   },
+// };
 
-function updateGalaxy() {
-  if (bufferRef.value) {
-    const colorInside = new Color(parameters.insideColor);
-    const colorOutside = new Color(parameters.outsideColor);
+// function updateGalaxy() {
+//   if (bufferRef.value) {
+//     const colorInside = new Color(parameters.insideColor);
+//     const colorOutside = new Color(parameters.outsideColor);
 
-    const positions = new Float32Array(parameters.count * 3);
-    const colors = new Float32Array(parameters.count * 3);
-    const scales = new Float32Array(parameters.count);
-    const randomness = new Float32Array(parameters.count * 3);
-    for (let i = 0; i < parameters.count; i++) {
-      const i3 = i * 3;
+//     const positions = new Float32Array(parameters.count * 3);
+//     const colors = new Float32Array(parameters.count * 3);
+//     const scales = new Float32Array(parameters.count);
+//     const randomness = new Float32Array(parameters.count * 3);
+//     for (let i = 0; i < parameters.count; i++) {
+//       const i3 = i * 3;
 
-      const radius = Math.random() * parameters.radius;
-      const spinAngle = radius * parameters.spin;
-      // const spinAngle = 0;
-      const branchAngle = ((i % parameters.branches) * Math.PI * 2) / parameters.branches;
+//       const radius = Math.random() * parameters.radius;
+//       const spinAngle = radius * parameters.spin;
+//       // const spinAngle = 0;
+//       const branchAngle = ((i % parameters.branches) * Math.PI * 2) / parameters.branches;
 
-      positions[i3] = Math.cos(branchAngle) * radius; // x
-      positions[i3 + 1] = 0; // y
-      positions[i3 + 2] = Math.sin(branchAngle) * radius; // z
+//       positions[i3] = Math.cos(branchAngle) * radius; // x
+//       positions[i3 + 1] = 0; // y
+//       positions[i3 + 2] = Math.sin(branchAngle) * radius; // z
 
-      const randomX = Math.random() ** parameters.randomnessPower * (Math.random() < 0.5 ? -1 : 1);
-      const randomY = Math.random() ** parameters.randomnessPower * (Math.random() < 0.5 ? -1 : 1);
-      const randomZ = Math.random() ** parameters.randomnessPower * (Math.random() < 0.5 ? -1 : 1);
+//       const randomX = Math.random() ** parameters.randomnessPower * (Math.random() < 0.5 ? -1 : 1);
+//       const randomY = Math.random() ** parameters.randomnessPower * (Math.random() < 0.5 ? -1 : 1);
+//       const randomZ = Math.random() ** parameters.randomnessPower * (Math.random() < 0.5 ? -1 : 1);
 
-      randomness[i3] = randomX;
-      randomness[i3 + 1] = randomY;
-      randomness[i3 + 2] = randomZ;
+//       randomness[i3] = randomX;
+//       randomness[i3 + 1] = randomY;
+//       randomness[i3 + 2] = randomZ;
 
-      const mixedColor = colorInside.clone();
-      mixedColor.lerp(colorOutside, radius / parameters.radius);
+//       const mixedColor = colorInside.clone();
+//       mixedColor.lerp(colorOutside, radius / parameters.radius);
 
-      colors[i3 + 0] = mixedColor.r; // R
-      colors[i3 + 1] = mixedColor.g; // G
-      colors[i3 + 2] = mixedColor.b; // B
+//       colors[i3 + 0] = mixedColor.r; // R
+//       colors[i3 + 1] = mixedColor.g; // G
+//       colors[i3 + 2] = mixedColor.b; // B
 
-      scales[i] = Math.random();
-    }
-    bufferRef.value.geometry.setAttribute("position", new BufferAttribute(positions, 3));
-    bufferRef.value.geometry.setAttribute("aRandomness", new BufferAttribute(randomness, 3));
-    bufferRef.value.geometry.setAttribute("color", new BufferAttribute(colors, 3));
-    bufferRef.value.geometry.setAttribute("aScale", new BufferAttribute(scales, 1));
-  }
-}
+//       scales[i] = Math.random();
+//     }
+//     bufferRef.value.geometry.setAttribute("position", new BufferAttribute(positions, 3));
+//     bufferRef.value.geometry.setAttribute("aRandomness", new BufferAttribute(randomness, 3));
+//     bufferRef.value.geometry.setAttribute("color", new BufferAttribute(colors, 3));
+//     bufferRef.value.geometry.setAttribute("aScale", new BufferAttribute(scales, 1));
+//   }
+// }
 
-const bufferRef = ref(null);
+// const bufferRef = ref(null);
 
-const { onLoop } = useRenderLoop();
+// const { onLoop } = useRenderLoop();
 
-onLoop(({ elapsed }) => {
-  if (bufferRef.value) {
-    bufferRef.value.material.uniforms.uTime.value = elapsed;
-  }
-});
+// onLoop(({ elapsed }) => {
+//   if (bufferRef.value) {
+//     bufferRef.value.material.uniforms.uTime.value = elapsed;
+//   }
+// });
 
-const positionX = ref(0);
-const positionY = ref(0);
-const positionZ = ref(0);
-const rotationX = ref(0);
-const rotationY = ref(0.5);
-const rotationZ = ref(0);
+// const positionX = ref(0);
+// const positionY = ref(0);
+// const positionZ = ref(0);
+// const rotationX = ref(0);
+// const rotationY = ref(0.5);
+// const rotationZ = ref(0);
 
-const camPosX = ref(0);
-const camPosY = ref(10);
-const camPosZ = ref(20);
+// const camPosX = ref(0);
+// const camPosY = ref(10);
+// const camPosZ = ref(20);
 
-const zoom = ref(1);
+// const zoom = ref(1);
 
-const camera = ref(null);
-const scene = ref(null);
+// const camera = ref(null);
+// const scene = ref(null);
 
-onMounted(() => {
-  scene.value = new Scene();
-  const model = scene.value.getObjectByName("modelIdle");
+// onMounted(() => {
+//   scene.value = new Scene();
+//   const model = scene.value.getObjectByName("modelIdle");
 
-  if (model && camera.value) {
-    model.position.set(positionX.value, positionY.value, positionZ.value);
+//   if (model && camera.value) {
+//     model.position.set(positionX.value, positionY.value, positionZ.value);
 
-    const box = new Box3().setFromObject(model);
-    const modelHeight = box.getSize(new Vector3()).y;
+//     const box = new Box3().setFromObject(model);
+//     const modelHeight = box.getSize(new Vector3()).y;
 
-    const fovRadians = MathUtils.degToRad(camera.value.fov);
-    const cameraDistance = camera.value.position.distanceTo(controls.value.target);
-    const visibleHeightAtDistance = 2 * Math.tan(fovRadians / 2) * cameraDistance;
-    zoom.value = visibleHeightAtDistance / modelHeight;
+//     const fovRadians = MathUtils.degToRad(camera.value.fov);
+//     const cameraDistance = camera.value.position.distanceTo(controls.value.target);
+//     const visibleHeightAtDistance = 2 * Math.tan(fovRadians / 2) * cameraDistance;
+//     zoom.value = visibleHeightAtDistance / modelHeight;
 
-    const center = box.getCenter(new Vector3());
-    positionX.value = -center.x;
-    positionY.value = -center.y;
-    positionZ.value = -center.z;
-    model.position.set(positionX.value, positionY.value, positionZ.value);
-  }
+//     const center = box.getCenter(new Vector3());
+//     positionX.value = -center.x;
+//     positionY.value = -center.y;
+//     positionZ.value = -center.z;
+//     model.position.set(positionX.value, positionY.value, positionZ.value);
+//   }
 
-  updateGalaxy();
-});
+//   updateGalaxy();
+// });
 
-const animatedModel = ref("modelIdle");
+// const animatedModel = ref("modelIdle");
 
-const changeModel = (modelName) => {
-  animatedModel.value = modelName;
-};
+// const changeModel = (modelName) => {
+//   animatedModel.value = modelName;
+// };
 
-const currentCard = ref("start");
+// const currentCard = ref("start");
+// const assetUrl = import.meta.env.VITE_ASSET_URL;
 </script>
 
 <template>
@@ -201,7 +203,7 @@ const currentCard = ref("start");
             <span class="text-sm text-white/70 group-hover:text-white">Improve</span>
           </div>
           <div class="crypto-gradient w-1/2 relative" @click="currentCard = '3d'">
-            <img :src="'images/backgrounds/johnwick.jpg'" class="absolute inset-0 z-0 h-full w-full object-cover opacity-50" />
+            <img :src="`${assetUrl}/images/backgrounds/johnwick.jpg`" class="absolute inset-0 z-0 h-full w-full object-cover opacity-50" />
           </div>
         </div>
       </div>
@@ -230,16 +232,16 @@ const currentCard = ref("start");
         <div class="flex items-center justify-start gap-5">
           <div class="flex flex-col">
             <div class="flex w-full flex-col items-start gap-3">
-              <PrimaryButton @click="changeModel('modelIdle')">Idle</PrimaryButton>
-              <PrimaryButton @click="changeModel('modelWarmup')">Warmup</PrimaryButton>
+              <!-- <PrimaryButton @click="changeModel('modelIdle')">Idle</PrimaryButton> -->
+              <!-- <PrimaryButton @click="changeModel('modelWarmup')">Warmup</PrimaryButton> -->
               <!-- <PrimaryButton @click="changeModel('modelDance')">Dance</PrimaryButton> -->
-              <PrimaryButton @click="changeModel('modelThink')">Think</PrimaryButton>
+              <!-- <PrimaryButton @click="changeModel('modelThink')">Think</PrimaryButton> -->
             </div>
           </div>
         </div>
       </div>
-      <TresCanvas v-bind="gl">
-        <!-- preset="realistic" -->
+      <!-- <TresCanvas v-bind="gl">
+        
         <TresPerspectiveCamera :position="[camPosX, camPosY, camPosZ]" :zoom="5.8" ref="camera" />
         <TresPoints ref="bufferRef">
           <TresBufferGeometry :position="[positions, 3]" :a-scale="[scales, 1]" :color="[colors, 3]" :a-randomness="[randomnessArray, 3]" />
@@ -252,16 +254,16 @@ const currentCard = ref("start");
           <Model v-else-if="animatedModel == 'modelWarmup'" modelName="modelWarmup" :positionX="positionX" :positionY="positionY" :positionZ="positionZ" :rotationX="rotationX" :rotationY="rotationY" :rotationZ="rotationZ" />
           <Model v-else-if="animatedModel == 'modelDance'" modelName="modelDance" :positionX="positionX" :positionY="positionY" :positionZ="positionZ" :rotationX="rotationX" :rotationY="rotationY" :rotationZ="rotationZ" />
           <Model v-else-if="animatedModel == 'modelThink'" modelName="modelThink" :positionX="positionX" :positionY="positionY" :positionZ="positionZ" :rotationX="rotationX" :rotationY="rotationY" :rotationZ="rotationZ" />
-          <!-- <Model v-else-if="animatedModel == 'drako'" modelName="drako" :positionX="positionX" :positionY="positionY" :positionZ="positionZ" :rotationX="rotationX" :rotationY="rotationY" :rotationZ="rotationZ" />
+          <Model v-else-if="animatedModel == 'drako'" modelName="drako" :positionX="positionX" :positionY="positionY" :positionZ="positionZ" :rotationX="rotationX" :rotationY="rotationY" :rotationZ="rotationZ" />
           <Model v-else-if="animatedModel == 'drago'" modelName="drago" :positionX="positionX" :positionY="positionY" :positionZ="positionZ" :rotationX="rotationX" :rotationY="rotationY" :rotationZ="rotationZ" />
           <Model v-else-if="animatedModel == 'draco'" modelName="draco" iteration="3" :positionX="positionX" :positionY="positionY" :positionZ="positionZ" :rotationX="rotationX" :rotationY="rotationY" :rotationZ="rotationZ" />
-          <Model v-else-if="animatedModel == 'dracorisz'" modelName="dracorisz" :positionX="positionX" :positionY="positionY" :positionZ="positionZ" :rotationX="rotationX" :rotationY="rotationY" :rotationZ="rotationZ" /> -->
+          <Model v-else-if="animatedModel == 'dracorisz'" modelName="dracorisz" :positionX="positionX" :positionY="positionY" :positionZ="positionZ" :rotationX="rotationX" :rotationY="rotationY" :rotationZ="rotationZ" />
         </Suspense>
-        <!-- <Edges color="#ffffff" /> -->
+        <Edges color="#ffffff" />
         <TresDirectionalLight :intensity="3" :position="[10, 5, 0]" />
         <TresAmbientLight :intensity="2" />
-        <!-- <TresGridHelper /> -->
-      </TresCanvas>
+        <TresGridHelper />
+      </TresCanvas> -->
     </template>
   </AppLayout>
 </template>

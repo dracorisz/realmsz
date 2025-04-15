@@ -4,94 +4,34 @@ environments:
     production:
         memory: 1024
         cli-memory: 512
-        runtime: 'php-8.4:al2'
         domain: realmsz.com
-        dns:
-            -
-                type: A
-                name: realmsz.com
-                value: ${AWS_ALB_DNS}
-            -
-                type: AAAA
-                name: realmsz.com
-                value: ${AWS_ALB_DNS}
-            -
-                type: CNAME
-                name: www.realmsz.com
-                value: realmsz.com
+        runtime: 'php-8.4:al2'
         ignore:
-            - /node_modules
-            - /node_modules/**
-            - /tests
-            - /.git
-            - /.github
-            - /storage/logs/*
-            - /.gitattributes
-            - /.gitignore
-            - /.editorconfig
-            - /phpunit.xml
-            - /vite.config.js
-            - /postcss.config.cjs
-            - /tailwind.config.js
-            - /pnpm-lock.yaml
-            - /.npm
-            - /.pnpm-store
-            - /public/hot
-            - /storage/framework/cache/**
-            - /storage/framework/sessions/**
-            - /storage/framework/views/**
+            - node_modules
+            - .git
+            - tests
         build:
-            - 'if exist node_modules rmdir /s /q node_modules'
-            - 'if exist public\build rmdir /s /q public\build'
-            - 'composer install --no-dev --optimize-autoloader'
-            - 'xcopy /E /I /Y public\build\* public\'
+            - 'composer install'
+            - 'php artisan optimize:clear'
     staging:
         memory: 1024
         cli-memory: 512
         runtime: 'php-8.4:al2'
-        domain: staging.realmsz.com
-        dns:
-            -
-                type: CNAME
-                name: staging.realmsz.com
-                value: https://beautiful-grass-z8jq8cprfpbi.on-vapor.com
         ignore:
-            - /node_modules
-            - /node_modules/**
-            - /tests
-            - /files/*
-            - /files
-            - /.git
-            - /.github
-            - /storage/framework/cache/*
-            - /storage/framework/sessions/*
-            - /storage/framework/views/*
-            - /storage/logs/*
-            - /.env.*
-            - /.gitattributes
-            - /.gitignore
-            - /.editorconfig
-            - /.prettierrc
-            - /phpunit.xml
-            - /server.php
-            - /vite.config.js
-            - /postcss.config.cjs
-            - /tailwind.config.js
-            - /pnpm-lock.yaml
-            - /package.json
-            - /package-lock.json
-            - /.npm
-            - /.pnpm-store
-            - /public/hot
-            - /public/storage
+            - node_modules
+            - .git
+            - tests
         build:
-            - 'if exist node_modules rmdir /s /q node_modules'
-            - 'if exist public\build rmdir /s /q public\build'
-            - 'composer install --no-dev --optimize-autoloader'
-            - 'pnpm install'
-            - 'pnpm run build'
-            - 'php artisan config:cache'
-            - 'php artisan route:cache'
-            - 'php artisan view:cache'
-            - 'php artisan storage:link'
-            - 'xcopy /E /I /Y public\build\* public\'
+            - 'composer install'
+            - 'php artisan optimize:clear'
+    vanity:
+        memory: 1024
+        cli-memory: 512
+        runtime: 'php-8.4:al2'
+        ignore:
+            - node_modules
+            - .git
+            - tests
+        build:
+            - 'composer install'
+            - 'php artisan optimize:clear'

@@ -6,6 +6,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Session\TokenMismatchException;
+use Psr\Log\LogLevel;
 
 class Handler extends ExceptionHandler
 {
@@ -63,37 +64,36 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            //
-        });
-    }
-
-    public function report(Throwable $exception)
-    {
-        try {
-            parent::report($exception);
-
-            if ($this->shouldReport($exception)) {
-                $this->logToSlack('Exception reported:', [
-                    'exception' => $exception->getMessage(),
-                    'file' => $exception->getFile(),
-                    'line' => $exception->getLine(),
-                ]);
-            }
-        } catch (\Exception $e) {
-            // Silently fail if reporting fails
-        }
+        // $this->reportable(function (Throwable $e) {
+        //     if ($this->shouldReport($e)) {
+        //         $this->logToSlack('Exception reported:', [
+        //             'exception' => $e->getMessage(),
+        //             'file' => $e->getFile(),
+        //             'line' => $e->getLine(),
+        //         ]);
+        //     }
+        // });
     }
 
     public function render($request, Throwable $exception)
     {
-        try {
-            if ($exception instanceof TokenMismatchException) {
-                return redirect()->route('login')->with('error', 'Your session has expired. Please log in again.');
-            }
-            return parent::render($request, $exception);
-        } catch (\Exception $e) {
-            return response()->view('errors.500', [], 500);
+        if ($exception instanceof TokenMismatchException) {
+            return redirect()->route('login')->with('error', 'Your session has expired. Please log in again.');
         }
+        
+        return parent::render($request, $exception);
+    }
+
+    public function report(Throwable $e)
+    {
+        // if ($this->shouldReport($e)) {
+        //     $this->logToSlack('Exception reported:', [
+        //         'exception' => $e->getMessage(),
+        //         'file' => $e->getFile(),
+        //         'line' => $e->getLine(),
+        //     ]);
+        // }
+        
+        // parent::report($e);
     }
 }

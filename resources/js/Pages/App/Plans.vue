@@ -1,16 +1,16 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { router } from "@inertiajs/vue3";
-import Toggle from "@/Components/Toggle.vue";
-import AppLayout from "@/Layouts/AppLayout.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
-import TextInput from "@/Components/TextInput.vue";
-import InputLabel from "@/Components/InputLabel.vue";
-import InputError from "@/Components/InputError.vue";
-import Multiselect from "@/Components/Multiselect.vue";
-import DialogModal from "@/Components/DialogModal.vue";
-import Datepicker from "@/Components/Datepicker.vue";
-import AutoResizeTextarea from "@/Components/AutoResizeTextarea.vue";
+import Toggle from "../../Components/Toggle.vue";
+import AppLayout from "../../Layouts/AppLayout.vue";
+import PrimaryButton from "../../Components/PrimaryButton.vue";
+import TextInput from "../../Components/TextInput.vue";
+import InputLabel from "../../Components/InputLabel.vue";
+import InputError from "../../Components/InputError.vue";
+import Multiselect from "../../Components/Multiselect.vue";
+import DialogModal from "../../Components/DialogModal.vue";
+import Datepicker from "../../Components/Datepicker.vue";
+import AutoResizeTextarea from "../../Components/AutoResizeTextarea.vue";
 import { useToast } from "vue-toastification";
 import axios from "axios";
 import colors from "tailwindcss/colors";

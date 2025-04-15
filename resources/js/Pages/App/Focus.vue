@@ -2,6 +2,8 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 
+const assetUrl = import.meta.env.VITE_ASSET_URL;
+
 defineProps({
   items: Array,
 });
@@ -63,7 +65,7 @@ defineProps({
           <span>{{ items[1].title }}</span>
         </div>
       </div>
-      <img :src="'images/backgrounds/avatar.jpg'" alt="Sidebar Background Image" class="absolute inset-0 z-[-1] h-full w-full object-cover" />
+      <img :src="`${assetUrl}/images/backgrounds/avatar.jpg`" alt="Sidebar Background Image" class="absolute inset-0 z-[-1] h-full w-full object-cover" />
     </div>
   </AppLayout>
 </template>

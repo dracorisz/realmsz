@@ -12,6 +12,7 @@ use App\Http\Controllers\IconController;
 use Inertia\Inertia;
 use App\Models\Item;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 class ItemController extends Controller
@@ -40,7 +41,7 @@ class ItemController extends Controller
         $icons = (new IconController)->index();
 
         return Inertia::render('App/Plans', [
-            'items' => Item::with(['category', 'priority', 'status'])->orderBy('status_id', 'asc')->orderBy('date', 'asc')->get(),
+            'items' => Item::with(['category', 'priority', 'status'])->where('organization_id', Auth::user()->organization_id)->orWhere('organization_id', 0)->orderBy('status_id', 'asc')->orderBy('date', 'asc')->get(),
             'statuses' => $statuses,
             'priorities' => $priorities,
             'categories' => $categories,
@@ -53,7 +54,7 @@ class ItemController extends Controller
         $icons = (new IconController)->index();
 
         return Inertia::render('App/Focus', [
-            'items' => Item::with(['category', 'priority', 'status'])->where('archived', 0)->where('status_id', 1)->orderBy('date', 'ASC')->get(),
+            'items' => Item::with(['category', 'priority', 'status'])->where('organization_id', Auth::user()->organization_id)->orWhere('organization_id', 0)->where('archived', 0)->where('status_id', 1)->orderBy('date', 'ASC')->get(),
             'icons' => $icons,
         ]);
     }

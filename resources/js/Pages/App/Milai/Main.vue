@@ -5,10 +5,13 @@ import KeyboardHint from "@/Components/KeyboardHint.vue";
 import { router } from "@inertiajs/vue3";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import process from 'process';
 import PrismResponse from "@/Components/PrismResponse.vue";
 import TypingDots from "@/Components/TypingDots.vue";
 import { marked } from "marked";
 import axios from "axios";
+
+const assetUrl = import.meta.env.VITE_ASSET_URL;
 
 const props = defineProps({
   chats: Array,
@@ -273,7 +276,7 @@ const stopTextToSpeech = () => {
         <transition name="fade">
           <div class="flex h-full items-center justify-center will-change-transform">
             <div class="flex w-full max-w-xl flex-col gap-2">
-              <img :src="'images/milai04.png'" class="mx-auto mb-10 animate-spinPulse rounded-full opacity-90 saturate-[0.95] as-[200px]" />
+              <img :src="`${assetUrl}/images/milai04.png`" class="mx-auto mb-10 animate-spinPulse rounded-full opacity-90 saturate-[0.95] as-[200px]" />
               <div class="flex flex-col-reverse items-center justify-start gap-5">
                 <div class="flex items-center justify-start gap-5">
                   <KeyboardHint shortcut="/" label="Focus Input" />
@@ -492,15 +495,15 @@ const stopTextToSpeech = () => {
         </div>
       </transition>
     </teleport>
-    <div>
+    <!-- <div>
       <PrimaryButton @click="toggleWebSearch">Web Search</PrimaryButton>
       <PrimaryButton @click="toggleMaps">Maps</PrimaryButton>
       <div v-if="webSearchEnabled">Web Search Content</div>
       <div v-if="mapsEnabled">Maps Content</div>
-    </div>
+    </div> -->
     <div>
       <PrimaryButton @click="startTextToSpeech">Enable Text-to-Speech</PrimaryButton>
-      <PrimaryButton @click="stopTextToSpeech">Disable Text-to-Speech</PrimaryButton>
+      <!-- <PrimaryButton @click="stopTextToSpeech">Disable Text-to-Speech</PrimaryButton> -->
       <div v-for="message in chatMessages" :key="message.id">
         <p>{{ message.text }}</p>
       </div>
