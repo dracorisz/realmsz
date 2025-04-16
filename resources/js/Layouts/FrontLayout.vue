@@ -2,7 +2,6 @@
 import { Head } from "@inertiajs/vue3";
 import Navigation from "@/Components/Navigation.vue";
 import FrontFooter from "@/Components/FrontFooter.vue";
-import process from 'process';
 
 const assetUrl = import.meta.env.VITE_ASSET_URL;
 

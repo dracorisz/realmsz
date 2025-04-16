@@ -7,6 +7,15 @@
   <meta name="csrf-token" content="{{ csrf_token() }}" />
   <meta http-equiv="X-UA-Compatible" content="IE=Edge"> 
 
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-EKWP0G51QH"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-EKWP0G51QH');
+  </script>
+
   <title inertia>Realmsz</title>
 
   <meta name="author" content="Realmsz Team" />

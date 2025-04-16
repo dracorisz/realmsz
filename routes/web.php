@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NetworkController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\PartnershipController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 
@@ -21,6 +22,7 @@ use Illuminate\Support\Facades\DB;
 Route::get('/', function () { return Inertia::render('Front/Welcome'); })->name('landing');
 Route::get('/ecosystem', function () { return Inertia::render('Front/Ecosystem'); })->name('ecosystem');
 Route::get('/partnership', function () { return Inertia::render('Front/Partnership'); })->name('partnership');
+Route::post('/partnership', [PartnershipController::class, 'store'])->name('partnership.store');
 Route::get('/roadmap', function () { return Inertia::render('Front/Roadmap'); })->name('roadmap');
 Route::get('/ipo', function () { return Inertia::render('Front/IPO'); })->name('ipo');
 Route::get('/ico', function () { return Inertia::render('Front/ICO'); })->name('ico');

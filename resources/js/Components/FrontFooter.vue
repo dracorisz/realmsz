@@ -66,9 +66,10 @@ const year = new Date().getFullYear();
         <div v-if="$page.props.jetstream.hasTermsAndPrivacyPolicyFeature" class="mt-2 flex items-center gap-3 md:mt-0">
           <Link :href="route('terms')" class="text-xs text-white/70 hover:text-white">Terms Of Service</Link>
           <Link :href="route('policy')" class="text-xs text-white/70 hover:text-white">Privacy Policy</Link>
+          <Link :href="route('roadmap')" class="text-xs text-white/70 hover:text-white after:ml-1 after:text-warning after:content-['*']">Changelog</Link>
         </div>
       </div>
-      <div class="flex w-full items-center justify-center text-zx text-white/50">v0.0.5-init</div>
+      <div class="flex w-full items-center justify-center text-zx text-white/50">v0.0.6-beta</div>
     </div>
   </div>
 </template>

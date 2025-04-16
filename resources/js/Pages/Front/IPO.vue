@@ -1,5 +1,23 @@
 <script setup>
 import FrontLayout from "@/Layouts/FrontLayout.vue";
+import { onMounted } from "vue";
+import { gsap } from "gsap";
+
+onMounted(() => {
+  const heading = document.querySelector(".heading-1");
+  const description = document.querySelectorAll("p");
+  const listItems = document.querySelectorAll("li");
+
+  // Initial setup
+  gsap.set([heading, ...description, ...listItems], { opacity: 0, y: 20 });
+
+  // Animate elements in sequence
+  const timeline = gsap.timeline();
+  timeline
+    .to(heading, { duration: 1, opacity: 1, y: 0, ease: "power2.out" })
+    .to(description, { duration: 0.8, opacity: 1, y: 0, stagger: 0.2, ease: "power2.out" }, "-=0.5")
+    .to(listItems, { duration: 0.6, opacity: 1, y: 0, stagger: 0.1, ease: "power2.out" }, "-=0.3");
+});
 </script>
 
 <template>

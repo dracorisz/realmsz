@@ -5,6 +5,7 @@ environments:
         memory: 1024
         cli-memory: 512
         domain: realmsz.com
+        atomic: true
         runtime: 'php-8.4:al2'
         ignore:
             - node_modules
@@ -13,9 +14,11 @@ environments:
         build:
             - 'composer install'
             - 'php artisan optimize:clear'
+            - 'php artisan event:cache'
     staging:
         memory: 1024
         cli-memory: 512
+        atomic: true
         runtime: 'php-8.4:al2'
         ignore:
             - node_modules
@@ -24,6 +27,7 @@ environments:
         build:
             - 'composer install'
             - 'php artisan optimize:clear'
+            - 'php artisan event:cache'
     vanity:
         memory: 1024
         cli-memory: 512

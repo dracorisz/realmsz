@@ -5,7 +5,6 @@ import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import ApplicationMark from "@/Components/ApplicationMark.vue";
 import AppBanner from "@/Components/AppBanner.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import process from 'process';
 const page = usePage();
 const assetUrl = import.meta.env.VITE_ASSET_URL;
 
@@ -31,9 +30,10 @@ const canAccess = (allowedRoles) => {
 </script>
 
 <template>
+  <Head :title="title" />
   <div id="dragref" class="relative flex h-screen w-full overflow-hidden bg-black" :class="sidebarPosition ? 'flex-row' : 'flex-row-reverse'">
     
-    <Head :title="title" />
+   
     <AppBanner />
     <nav class="relative z-50 flex h-full flex-col bg-black bg-gradient-to-br from-primary/10 to-accent/5 transition-all duration-300 ease-in-out" :class="expandNav ? 'aw-[233px]' : 'aw-[55px]'">
       <div class="flex h-full w-full flex-col items-start justify-start">
@@ -55,7 +55,7 @@ const canAccess = (allowedRoles) => {
           <div class="relative z-40 flex h-full w-full flex-col gap-5">
             <div class="flex w-full items-center">
               <div class="flex w-full items-center gap-3 text-sm text-white" :class="!expandNav ? 'flex-col' : 'justify-start'">
-                <img class="rounded-full object-cover ah-[36px]" :src="page.props.auth.user.profile_photo_url" :alt="page.props.auth.user.name" />
+                <!-- <img class="rounded-full object-cover ah-[36px]" :src="page.props.auth.user.profile_photo_url" :alt="page.props.auth.user.name" /> -->
                 <div :class="expandNav ? 'mr-auto flex flex-col text-xs' : 'hidden'">
                   <span>{{ page.props.auth.user.name.split(" ")[0] }}</span>
                   <span>{{ page.props.auth.user.name.split(" ")[1] }}</span>

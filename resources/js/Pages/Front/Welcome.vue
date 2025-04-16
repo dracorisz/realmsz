@@ -3,44 +3,223 @@ import { ref } from "vue";
 import { Link } from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import FrontLayout from "@/Layouts/FrontLayout.vue";
+import { onMounted } from "vue";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const canRegister = ref(true);
+const assetUrl = import.meta.env.VITE_ASSET_URL;
+
+const modules = [
+  {
+    name: "Focus",
+    description: "Streamline your workflow and boost productivity with our task management system.",
+    icon: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+  },
+  {
+    name: "Plans",
+    description: "Create and manage your projects with advanced planning tools.",
+    icon: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+  },
+  {
+    name: "Profile",
+    description: "Build your professional identity with customizable profiles.",
+    icon: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+  },
+  {
+    name: "Network",
+    description: "Connect and collaborate with professionals in your field.",
+    icon: "M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+  },
+  {
+    name: "Milai",
+    description: "Leverage AI-powered tools for content creation and analysis.",
+    icon: "M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+  },
+  {
+    name: "Studio",
+    description: "Create and edit multimedia content with professional tools.",
+    icon: "M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+  },
+  {
+    name: "Finance",
+    description: "Manage your financial assets and track investments.",
+    icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+  },
+  {
+    name: "Crypto",
+    description: "Trade and manage your cryptocurrency portfolio.",
+    icon: "M13 10V3L4 14h7v7l9-11h-7z"
+  },
+  {
+    name: "Websites",
+    description: "Build and host your professional websites.",
+    icon: "M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"
+  },
+  {
+    name: "Storage",
+    description: "Secure cloud storage for all your digital assets.",
+    icon: "M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+  }
+];
+
+onMounted(() => {
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Hero section animation
+  gsap.from(".hero-title", {
+    duration: 1,
+    y: 50,
+    opacity: 0,
+    ease: "power2.out"
+  });
+
+  gsap.from(".hero-description", {
+    duration: 1,
+    y: 30,
+    opacity: 0,
+    delay: 0.3,
+    ease: "power2.out"
+  });
+
+  // Module animations
+  gsap.utils.toArray(".module-card").forEach((card, i) => {
+    gsap.from(card, {
+      scrollTrigger: {
+        trigger: card,
+        start: "top bottom-=100",
+        toggleActions: "play none none reverse"
+      },
+      duration: 0.8,
+      y: 50,
+      opacity: 0,
+      delay: i * 0.1,
+      ease: "power2.out"
+    });
+  });
+});
 </script>
 
 <template>
   <FrontLayout title="Welcome" :hasHero="true">
     <template #content>
-      <div class="z-10 h-full w-full px-10 py-20 text-white">
-        <div class="relative z-40 m-auto flex max-w-7xl flex-col items-start justify-start gap-5 p-10 md:items-center md:text-center">
-          <div class="flex flex-col gap-0">
-            <h2 class="heading-0 text-gradient">Enter the Realmsz of</h2>
-            <h2 class="heading-0 text-accent saturate-[1.1]">Infinite Possibilities</h2>
+      <div class="min-h-screen bg-black text-white">
+        <!-- Hero Section -->
+        <div class="relative py-20 md:py-32">
+          <div class="absolute inset-0 overflow-hidden">
+            <img 
+              :src="`${assetUrl}/images/backgrounds/background03.jpg`" 
+              alt="Welcome Background" 
+              class="w-full h-full object-cover opacity-30"
+            >
           </div>
-          <div class="flex gap-3">
-            <Link v-if="canRegister" :href="route('register')">
-              <PrimaryButton>Early Access</PrimaryButton>
-            </Link>
-            <PrimaryButton :onlyIcon="true">
-              <template #icon>
-                <svg class="icons" width="24" height="24" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor">
-                  <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                  <path d="M7.5 11C7.22386 11 7 10.7761 7 10.5C7 10.2239 7.22386 10 7.5 10C7.77614 10 8 10.2239 8 10.5C8 10.7761 7.77614 11 7.5 11Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                  <path d="M13 18C12.4477 18 12 17.5523 12 17C12 16.4477 12.4477 16 13 16C13.5523 16 14 16.4477 14 17C14 17.5523 13.5523 18 13 18Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                  <path d="M11 7.01L11.01 6.99889" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                  <path d="M8 16.01L8.01 15.9989" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                  <path d="M16 9.01L16.01 8.99889" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                  <path d="M17 14.01L17.01 13.9989" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                  <path d="M13 12.01L13.01 11.9989" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                </svg>
-              </template>
-            </PrimaryButton>
+          <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+              <h1 class="hero-title text-4xl md:text-6xl font-bold mb-6">
+                Welcome to Realmsz
+              </h1>
+              <p class="hero-description text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto">
+                Your all-in-one platform for productivity, creativity, and digital asset management.
+              </p>
+            </div>
           </div>
         </div>
-        <div class="mx-auto max-w-7xl items-center justify-center px-10 py-44 text-center">
-          <span class="mx-auto block max-w-xl text-sm text-white">Realmsz combines 10 essential modules in one place: Focus, Plans, Profile, Network, Milai, Studio, Finance, Crypto, Websites, and Storage. Streamline your workflow, create content, connect with your community, and manage your digital assets. Get started by creating an account and exploring each module!</span>
+
+        <!-- Modules Section -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-24">
+          <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">10 Essential Modules</h2>
+            <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+              Realmsz combines 10 powerful modules in one place to streamline your digital life.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div v-for="(module, index) in modules" :key="index" class="module-card bg-white/5 p-6 rounded-2xl hover:bg-white/10 transition-colors">
+              <div class="flex items-center mb-4">
+                <div class="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                  <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="module.icon" />
+                  </svg>
+                </div>
+                <h3 class="text-xl font-bold ml-4">{{ module.name }}</h3>
+              </div>
+              <p class="text-gray-300">
+                {{ module.description }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Partner Section -->
+          <div class="mt-16 text-center">
+            <div class="inline-flex items-center space-x-4 mb-8">
+              <div class="h-px w-16 bg-gray-600"></div>
+              <p class="text-gray-400 text-sm uppercase tracking-wider">Strategic Partnership</p>
+              <div class="h-px w-16 bg-gray-600"></div>
+            </div>
+            <a 
+              href="https://dracoscopia.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-600/20 to-blue-600/20 hover:from-purple-600/30 hover:to-blue-600/30 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-purple-500/20"
+            >
+              <span class="mr-3 text-lg">Dracoscopia</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+            <p class="mt-4 text-gray-400 text-sm max-w-md mx-auto">
+              Our strategic partnership with Dracoscopia brings together cutting-edge AI technology and blockchain solutions.
+            </p>
+          </div>
+
+          <!-- Call to Action -->
+          <div class="mt-16 text-center">
+            <div class="inline-flex items-center space-x-4 mb-8">
+              <div class="h-px w-16 bg-gray-600"></div>
+              <p class="text-gray-400 text-sm uppercase tracking-wider">Ready to Get Started?</p>
+              <div class="h-px w-16 bg-gray-600"></div>
+            </div>
+            <a 
+              href="https://realmsz.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-blue-500/20"
+            >
+              <span class="mr-3 text-lg">Get Started</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+            <p class="mt-4 text-gray-400 text-sm max-w-md mx-auto">
+              Join thousands of users who are already experiencing the power of our integrated platform.
+            </p>
+          </div>
         </div>
       </div>
     </template>
   </FrontLayout>
 </template>
+
+<style scoped>
+.hero-title {
+  background: linear-gradient(to right, #fff, #94a3b8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.module-card {
+  transition: transform 0.3s ease;
+}
+
+.module-card:hover {
+  transform: translateY(-5px);
+}
+
+@media (max-width: 768px) {
+  .module-card {
+    text-align: center;
+  }
+}
+</style>
 
