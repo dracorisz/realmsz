@@ -1,91 +1,241 @@
 <script setup>
-import FrontLayout from "@/Layouts/FrontLayout.vue";
+import { Link, Head } from '@inertiajs/vue3';
+import { onMounted, ref } from 'vue';
+import FrontLayout from '@/Layouts/FrontLayout.vue';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import {
+  DocumentTextIcon,
+  ShieldCheckIcon,
+  UserGroupIcon,
+  CurrencyDollarIcon,
+  ScaleIcon,
+  ExclamationTriangleIcon,
+  LockClosedIcon,
+  ServerIcon,
+  ChevronDownIcon,
+  ChevronUpIcon
+} from '@heroicons/vue/24/outline';
+
+gsap.registerPlugin(ScrollTrigger);
+
+const lastUpdated = ref('December 1, 2023');
+const activeSection = ref(null);
+
+const toggleSection = (index) => {
+  activeSection.value = activeSection.value === index ? null : index;
+};
+
+const terms = [
+  {
+    title: 'User Agreement',
+    icon: UserGroupIcon,
+    content: [
+      'By accessing our platform, you agree to these terms of service',
+      'You must be at least 18 years old to use our services',
+      'You are responsible for maintaining the security of your account',
+      'Multiple accounts per user are not permitted'
+    ],
+    details: 'This section outlines the basic rules and requirements for using our platform. It includes age restrictions, account security responsibilities, and usage limitations.'
+  },
+  {
+    title: 'Privacy & Security',
+    icon: ShieldCheckIcon,
+    content: [
+      'We protect your personal information using industry-standard encryption',
+      'Your data will never be sold to third parties',
+      'You can request deletion of your account and data at any time',
+      'We use cookies to enhance your browsing experience'
+    ],
+    details: 'Our commitment to protecting your privacy and securing your data. Learn about our encryption standards, data handling practices, and your rights regarding personal information.'
+  },
+  {
+    title: 'Financial Terms',
+    icon: CurrencyDollarIcon,
+    content: [
+      'All transactions are processed in USD',
+      'Refunds are processed within 14 business days',
+      'We charge a 2.5% processing fee for all transactions',
+      'Subscription cancellations must be made 7 days before billing'
+    ],
+    details: 'Important information about financial transactions, including currency, fees, refund policies, and subscription management.'
+  },
+  {
+    title: 'Content Policy',
+    icon: DocumentTextIcon,
+    content: [
+      'Users retain ownership of their created content',
+      'We reserve the right to remove inappropriate content',
+      'Content must not infringe on intellectual property rights',
+      'Sharing of explicit or harmful content is prohibited'
+    ],
+    details: 'Guidelines for content creation and sharing on our platform, including intellectual property rights and content moderation policies.'
+  },
+  {
+    title: 'Data Protection',
+    icon: LockClosedIcon,
+    content: [
+      'Your data is stored in secure, encrypted servers',
+      'Regular backups are performed to prevent data loss',
+      'We comply with GDPR and similar regulations',
+      'Third-party access is strictly controlled'
+    ],
+    details: 'Information about how we protect your data, including storage practices, backup procedures, and compliance with data protection regulations.'
+  },
+  {
+    title: 'Platform Usage',
+    icon: ServerIcon,
+    content: [
+      'The platform may experience occasional maintenance downtime',
+      'We reserve the right to modify or discontinue features',
+      'API usage is subject to rate limiting',
+      'Automated scraping is not permitted without approval'
+    ],
+    details: 'Guidelines for platform usage, including maintenance schedules, feature updates, API usage policies, and automation restrictions.'
+  }
+];
+
+onMounted(() => {
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Simple fade-in animation for hero section
+  gsap.from(".hero-section", {
+    duration: 1,
+    opacity: 0,
+    y: 20,
+    ease: "power2.out"
+  });
+
+  // Simple fade-in animation for sections
+  const sections = ["#terms-content", "#contact"];
+  sections.forEach(section => {
+    gsap.from(section, {
+      scrollTrigger: {
+        trigger: section,
+        start: "top center+=100",
+        toggleActions: "play none none reverse"
+      },
+      duration: 0.8,
+      opacity: 0,
+      y: 30,
+      ease: "power2.out"
+    });
+  });
+
+  // Simple hover effects for cards
+  const cards = gsap.utils.toArray(".term-card");
+  cards.forEach(card => {
+    card.addEventListener("mouseenter", () => {
+      gsap.to(card, {
+        duration: 0.3,
+        y: -5,
+        scale: 1.02,
+        ease: "power2.out"
+      });
+    });
+
+    card.addEventListener("mouseleave", () => {
+      gsap.to(card, {
+        duration: 0.3,
+        y: 0,
+        scale: 1,
+        ease: "power2.out"
+      });
+    });
+  });
+});
 </script>
 
 <template>
-  <FrontLayout title="Terms of Service">
-    <template #content>
-      <div class="relative flex h-full w-full flex-col items-center justify-start gap-10 px-5 py-20 text-white">
-      <div class="flex w-full max-w-4xl flex-col items-center justify-center gap-5">
-        <h1 class="text-4xl font-bold text-white">Terms of Service</h1>
-        <p class="text-center text-white/70">Last updated: {{ new Date().toLocaleDateString() }}</p>
-      </div>
+  <Head title="Terms of Service | Realmsz" />
+  <FrontLayout>
+    <div class="min-h-screen bg-gradient-to-b from-dragon-dark-900 to-dragon-dark-800">
+      <!-- Hero Section -->
+      <section class="relative py-20 px-4 sm:px-6 lg:px-8">
+        <div class="absolute inset-0 overflow-hidden">
+          <div class="absolute inset-0 z-0">
+            <img src="https://dracoscopia.com/images/backgrounds/terms.jpg" alt="Terms Background" class="w-full h-full object-cover opacity-20" />
+          </div>
+          <div class="relative mx-auto max-w-7xl px-6 lg:px-8">
+            <div class="mx-auto max-w-2xl text-center">
+              <h1 class="hero-title text-4xl font-bold tracking-tight text-teal-400 sm:text-6xl">Terms of Service</h1>
+              <p class="hero-subtitle mt-6 text-lg leading-8 text-blue-400">
+                Please read these terms carefully before using our platform.
+              </p>
+              <p class="mt-2 text-sm text-gray-400">Last updated: {{ lastUpdated }}</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <div class="flex w-full max-w-4xl flex-col gap-10">
-        <div class="terms-section">
-          <h2 class="text-2xl font-bold text-accent">1. Acceptance of Terms</h2>
-          <p class="mt-5 text-white/80">
-            By accessing and using Realmsz ("the Service"), you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.
-          </p>
+      <!-- Terms Content -->
+      <div class="mx-auto max-w-7xl px-6 pb-24 lg:px-8">
+        <div class="grid gap-8 md:grid-cols-2">
+          <template v-for="(section, index) in terms" :key="index">
+            <div 
+              class="card-dragon p-6 rounded-lg cursor-pointer transition-all duration-300"
+              @click="toggleSection(index)"
+            >
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-4">
+                  <component :is="section.icon" class="section-icon h-8 w-8 text-teal-400" />
+                  <h2 class="text-2xl font-semibold text-white">{{ section.title }}</h2>
+                </div>
+                <component 
+                  :is="activeSection === index ? ChevronUpIcon : ChevronDownIcon"
+                  class="h-6 w-6 text-teal-400 transition-transform duration-300"
+                  :class="{ 'rotate-180': activeSection === index }"
+                />
+              </div>
+              
+              <div 
+                class="overflow-hidden transition-all duration-300"
+                :class="{ 'max-h-0': activeSection !== index, 'max-h-[500px]': activeSection === index }"
+              >
+                <p class="text-gray-400 mb-4">{{ section.details }}</p>
+                <ul class="space-y-3">
+                  <li 
+                    v-for="(item, itemIndex) in section.content" 
+                    :key="itemIndex" 
+                    class="content-item text-gray-300 flex items-start"
+                  >
+                    <span class="mr-2 mt-1 block h-2 w-2 rounded-full bg-teal-400"></span>
+                    <span>{{ item }}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </template>
         </div>
 
-        <div class="terms-section">
-          <h2 class="text-2xl font-bold text-accent">2. Description of Service</h2>
-          <p class="mt-5 text-white/80">
-            Realmsz provides a digital platform for managing tasks, projects, and personal development. The Service includes features such as task management, project planning, and various productivity tools.
-          </p>
-        </div>
-
-        <div class="terms-section">
-          <h2 class="text-2xl font-bold text-accent">3. User Accounts</h2>
-          <p class="mt-5 text-white/80">
-            To access certain features of the Service, you must register for an account. You are responsible for maintaining the confidentiality of your account information and for all activities that occur under your account.
-          </p>
-        </div>
-
-        <div class="terms-section">
-          <h2 class="text-2xl font-bold text-accent">4. Privacy Policy</h2>
-          <p class="mt-5 text-white/80">
-            Your use of the Service is also governed by our Privacy Policy. Please review our Privacy Policy, which also governs the Site and informs users of our data collection practices.
-          </p>
-        </div>
-
-        <div class="terms-section">
-          <h2 class="text-2xl font-bold text-accent">5. Intellectual Property</h2>
-          <p class="mt-5 text-white/80">
-            The Service and its original content, features, and functionality are owned by Realmsz and are protected by international copyright, trademark, patent, trade secret, and other intellectual property laws.
-          </p>
-        </div>
-
-        <div class="terms-section">
-          <h2 class="text-2xl font-bold text-accent">6. Limitation of Liability</h2>
-          <p class="mt-5 text-white/80">
-            In no event shall Realmsz, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses.
-          </p>
-        </div>
-
-        <div class="terms-section">
-          <h2 class="text-2xl font-bold text-accent">7. Changes to Terms</h2>
-          <p class="mt-5 text-white/80">
-            We reserve the right to modify or replace these Terms at any time. If a revision is material, we will provide at least 30 days' notice prior to any new terms taking effect.
-          </p>
-        </div>
-
-        <div class="terms-section">
-          <h2 class="text-2xl font-bold text-accent">8. Contact Information</h2>
-          <p class="mt-5 text-white/80">
-            If you have any questions about these Terms, please contact us at support@realmsz.com.
+        <!-- Contact Section -->
+        <div class="mt-16 text-center">
+          <p class="text-gray-300">
+            If you have any questions about these terms, please
+            <Link :href="route('contact')" class="text-teal-400 hover:text-teal-300 underline">contact us</Link>.
           </p>
         </div>
       </div>
     </div>
-    </template>
   </FrontLayout>
 </template>
 
-<style scoped lang="pcss">
-.terms-section {
-  @apply relative rounded-2xl border border-white/5 bg-black/30 p-5 backdrop-blur-sm;
-  background-image: linear-gradient(34deg, hsla(0, 0%, 55%, 0.13), hsla(0, 0%, 21%, 0.21));
+<style scoped>
+.card-dragon {
+  @apply bg-dragon-dark-700/50 border border-dragon-dark-600 backdrop-blur-sm
+         hover:border-teal-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-teal-500/10;
 }
 
-.terms-section::before {
-  @apply absolute inset-0 z-[-1] rounded-2xl opacity-0 transition-opacity duration-300 ease-linear content-[""];
-  background-image: linear-gradient(to right, hsl(211, 100%, 10%), hsl(179, 100%, 10%));
+.card-dragon:hover {
+  @apply transform -translate-y-1;
 }
 
-.terms-section:hover::before {
-  opacity: 1;
+.content-item {
+  @apply transition-all duration-300;
 }
-</style> 
+
+.content-item:hover {
+  @apply transform translate-x-2 text-teal-400;
+}
+</style>
 

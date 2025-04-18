@@ -1,292 +1,195 @@
 <script setup>
-import { Link, useForm } from "@inertiajs/vue3";
-import FrontLayout from "@/Layouts/FrontLayout.vue";
-import { onMounted, ref } from "vue";
-import { gsap } from "gsap";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
-import InputError from "@/Components/InputError.vue";
-import TextInput from "@/Components/TextInput.vue";
-import InputLabel from "@/Components/InputLabel.vue";
+import { Link, Head } from '@inertiajs/vue3';
+import FrontLayout from '@/Layouts/FrontLayout.vue';
 
-const assetUrl = import.meta.env.VITE_ASSET_URL;
+const partnershipTypes = [
+  {
+    name: 'Technology Partners',
+    icon: '💻',
+    description: 'Integrate your technology with our platform',
+    benefits: [
+      'API Access',
+      'Technical Support',
+      'Co-marketing Opportunities',
+      'Revenue Sharing'
+    ]
+  },
+  {
+    name: 'Content Partners',
+    icon: '📚',
+    description: 'Share your content with our community',
+    benefits: [
+      'Content Distribution',
+      'Audience Growth',
+      'Monetization Options',
+      'Analytics Tools'
+    ]
+  },
+  {
+    name: 'Service Partners',
+    icon: '🛠️',
+    description: 'Offer your services to our users',
+    benefits: [
+      'Service Marketplace',
+      'Lead Generation',
+      'Client Management',
+      'Payment Processing'
+    ]
+  },
+  {
+    name: 'Enterprise Partners',
+    icon: '🏢',
+    description: 'Custom solutions for large organizations',
+    benefits: [
+      'Custom Development',
+      'Dedicated Support',
+      'Enterprise Features',
+      'Security Compliance'
+    ]
+  }
+];
 
-const form = useForm({
-  name: "",
-  email: "",
-  message: "",
-});
-
-const submit = () => {
-  form.post(route('partnership.store'), {
-    preserveScroll: true,
-    onSuccess: () => {
-      form.reset();
-      // Show success message
-      alert('Your partnership inquiry has been sent successfully!');
-    },
-    onError: () => {
-      // Show error message
-      alert('There was an error sending your inquiry. Please try again.');
-    }
-  });
-};
-
-const elements = ref(null);
-
-onMounted(() => {
-  // Wait for next tick to ensure DOM is ready
-  setTimeout(() => {
-    const container = document.querySelector(".form-container");
-    const form = document.querySelector(".form");
-    const stage = document.querySelector(".form-inner-container");
-    const toggle = document.querySelector(".form-toggle");
-    const heading = document.querySelector(".heading-1");
-    const description = document.querySelector(".heading-3");
-    const links = document.querySelectorAll(".heading-3 a");
-    const cards = document.querySelectorAll(".card");
-
-    // Only proceed if elements exist
-    if (!heading && !description && !links.length && !cards.length) return;
-
-    // Initial setup
-    gsap.set([heading, description, links, cards].filter(Boolean), { opacity: 0, y: 20 });
-    gsap.set(form, { perspective: 500, rotateX: "50deg", rotateY: "40deg", rotateZ: "-20deg", z: 0, scale: 1 });
-    gsap.set(stage, { opacity: 0 });
-
-    // Animate elements in sequence
-    const timeline = gsap.timeline();
-    timeline
-      .to(heading, { duration: 1, opacity: 1, y: 0, ease: "power2.out" })
-      .to(description, { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "-=0.5")
-      .to(links, { duration: 0.5, opacity: 1, y: 0, stagger: 0.1, ease: "power2.out" }, "-=0.3")
-      .to(cards, { duration: 0.8, opacity: 1, y: 0, stagger: 0.2, ease: "power2.out" }, "-=0.3")
-      .to(stage, { duration: 1, opacity: 1, ease: "power2.out" }, "-=0.2");
-
-    let hover = gsap
-      .timeline({
-        repeat: -1,
-        yoyo: true,
-      })
-      .to(form, { duration: 1, y: -20, z: 0 });
-
-    const toCenter = gsap.timeline({ paused: true, duration: 1 })
-      .to(form, { duration: 1, rotateX: 0, rotateZ: 0, y: 0, scale: 1, ease: "back.out(3)" }, 0)
-      .to(stage, { duration: 1, y: 20, ease: "back.out(3)" }, 0)
-      .to(stage, { duration: 1, y: 10, ease: "back.out(1)" }, 0);
-
-    let centered = false;
-
-    if (toggle) {
-      toggle.addEventListener("click", (e) => {
-        e.stopPropagation();
-        container.classList.toggle("open");
-
-        if (centered) {
-          toCenter.reverse();
-          hover.play();
-          centered = false;
-        } else {
-          hover.pause();
-          toCenter.play();
-          centered = true;
-        }
-      });
-    }
-
-    if (form) {
-      form.addEventListener("focusin", () => {
-        container.classList.add("open");
-        hover.pause();
-        toCenter.play();
-        centered = true;
-      });
-
-      form.addEventListener("focusout", () => {
-        container.classList.remove("open");
-        toCenter.reverse();
-        hover.play();
-        centered = false;
-      });
-    }
-  }, 100);
-});
+const partnershipProcess = [
+  {
+    step: 1,
+    title: 'Initial Contact',
+    description: 'Reach out to discuss partnership opportunities'
+  },
+  {
+    step: 2,
+    title: 'Evaluation',
+    description: 'We review your proposal and requirements'
+  },
+  {
+    step: 3,
+    title: 'Agreement',
+    description: 'Define terms and sign partnership agreement'
+  },
+  {
+    step: 4,
+    title: 'Integration',
+    description: 'Technical integration and setup'
+  },
+  {
+    step: 5,
+    title: 'Launch',
+    description: 'Public announcement and go-live'
+  }
+];
 </script>
 
 <template>
-  <FrontLayout title="Partnership" :hasHero="true">
-    <template #content>
-      <div class="m-auto flex h-full w-full max-w-7xl flex-col bg-black px-4 md:px-10 py-10 md:py-20 text-white">
-        <!-- Hero Section -->
-        <div class="relative mb-8 md:mb-16">
-          <img :src="`${assetUrl}/images/backgrounds/background03.jpg`" alt="Partnership Hero" class="w-full h-64 md:h-96 object-cover rounded-2xl opacity-80">
-          <div class="absolute inset-0 flex items-center justify-center bg-black/50 rounded-2xl">
-            <h2 class="heading-1 text-3xl md:text-6xl text-center px-4">Partnership Opportunities</h2>
+  <Head title="Partnerships | Realmsz" />
+  <FrontLayout>
+    <div class="min-h-screen bg-gradient-to-b from-dragon-dark-900 to-dragon-dark-800">
+      <!-- Hero Section -->
+      <section class="relative py-20 px-4 sm:px-6 lg:px-8">
+        <div class="absolute inset-0 overflow-hidden">
+          <div class="absolute inset-0 z-0">
+            <img src="https://dracoscopia.com/images/backgrounds/partnership.jpg" alt="Partnership Background" class="w-full h-full object-cover opacity-20" />
+          </div>
+          <div class="max-w-7xl mx-auto text-center">
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-teal-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
+              Partnership Program
+            </h1>
+            <p class="mt-6 text-xl sm:text-2xl text-blue-400 max-w-3xl mx-auto">
+              Join forces with Realmsz to create innovative solutions
+            </p>
           </div>
         </div>
+      </section>
 
-        <!-- Navigation Links -->
-        <div class="heading-3 mb-8 md:mb-16 text-center md:text-left">
-          <Link :href="route('roadmap')" class="text-white/70 transition-colors hover:text-blue-400" :class="route().current('roadmap')">Roadmap</Link>
-          <span class="mx-2">,</span>
-          <Link :href="route('ipo')" class="text-white/70 transition-colors hover:text-blue-400" :class="route().current('ipo')">IPO</Link>
-          <span class="mx-2">, and</span>
-          <Link :href="route('ico')" class="text-white/70 transition-colors hover:text-blue-400" :class="route().current('ico')">ICO</Link>
-          <span class="ml-2">for investors and shareholders.</span>
-        </div>
-
-        <!-- Partnership Types -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 mb-8 md:mb-16">
-          <div class="card bg-white/5 p-4 md:p-6 rounded-2xl hover:bg-white/10 transition-colors">
-            <h3 class="text-lg md:text-xl font-bold mb-4">Strategic Partnerships</h3>
-            <ul class="space-y-2">
-              <li class="text-sm md:text-base">• Long-term collaboration</li>
-              <li class="text-sm md:text-base">• Joint development projects</li>
-              <li class="text-sm md:text-base">• Resource sharing</li>
-              <li class="text-sm md:text-base">• Market expansion</li>
-            </ul>
-          </div>
-          <div class="card bg-white/5 p-4 md:p-6 rounded-2xl hover:bg-white/10 transition-colors">
-            <h3 class="text-lg md:text-xl font-bold mb-4">Technology Integration</h3>
-            <ul class="space-y-2">
-              <li class="text-sm md:text-base">• API integration</li>
-              <li class="text-sm md:text-base">• Cross-platform solutions</li>
-              <li class="text-sm md:text-base">• Technical collaboration</li>
-              <li class="text-sm md:text-base">• Innovation partnerships</li>
-            </ul>
-          </div>
-          <div class="card bg-white/5 p-4 md:p-6 rounded-2xl hover:bg-white/10 transition-colors">
-            <h3 class="text-lg md:text-xl font-bold mb-4">Community Partnerships</h3>
-            <ul class="space-y-2">
-              <li class="text-sm md:text-base">• Community engagement</li>
-              <li class="text-sm md:text-base">• Educational initiatives</li>
-              <li class="text-sm md:text-base">• Social impact projects</li>
-              <li class="text-sm md:text-base">• Local partnerships</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Contact Form -->
-        <div class="form-container relative mb-8 md:mb-16">
-          <div class="form-inner-container">
-            <form @submit.prevent="submit" class="form bg-white/5 p-6 md:p-8 rounded-2xl">
-              <h3 class="text-xl md:text-2xl font-bold mb-6">Contact Us</h3>
+      <!-- Partnership Types -->
+      <section class="py-20 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+          <h2 class="text-3xl font-bold text-white text-center mb-12">Partnership Types</h2>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div v-for="type in partnershipTypes" :key="type.name" 
+                 class="bg-dragon-dark-700/50 p-6 rounded-xl border border-dragon-dark-600">
+              <div class="flex items-center gap-4 mb-4">
+                <span class="text-4xl">{{ type.icon }}</span>
+                <h3 class="text-xl font-semibold text-white">{{ type.name }}</h3>
+              </div>
               
-              <div class="mb-4">
-                <InputLabel for="name" value="Name" />
-                <TextInput
-                  id="name"
-                  type="text"
-                  class="mt-1 block w-full bg-white/10 border-white/20 text-white"
-                  v-model="form.name"
-                  required
-                  autofocus
-                />
-                <InputError class="mt-2" :message="form.errors.name" />
-              </div>
-
-              <div class="mb-4">
-                <InputLabel for="email" value="Email" />
-                <TextInput
-                  id="email"
-                  type="email"
-                  class="mt-1 block w-full bg-white/10 border-white/20 text-white"
-                  v-model="form.email"
-                  required
-                />
-                <InputError class="mt-2" :message="form.errors.email" />
-              </div>
-
-              <div class="mb-6">
-                <InputLabel for="message" value="Message" />
-                <textarea
-                  id="message"
-                  class="mt-1 block w-full bg-white/10 border-white/20 text-white rounded-md shadow-sm"
-                  v-model="form.message"
-                  required
-                  rows="4"
-                ></textarea>
-                <InputError class="mt-2" :message="form.errors.message" />
-              </div>
-
-              <div class="flex items-center justify-end">
-                <PrimaryButton
-                  class="ml-4"
-                  :class="{ 'opacity-25': form.processing }"
-                  :disabled="form.processing"
-                >
-                  Submit
-                </PrimaryButton>
-              </div>
-            </form>
+              <p class="text-gray-400 mb-6">{{ type.description }}</p>
+              
+              <ul class="space-y-3">
+                <li v-for="benefit in type.benefits" :key="benefit" 
+                    class="flex items-center text-gray-300">
+                  <span class="text-teal-400 mr-2">✓</span>
+                  {{ benefit }}
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
+      </section>
 
-        <!-- Website Link -->
-        <div class="flex justify-center mb-8">
-          <a 
-            href="https://dracoscopia.com" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors duration-300 transform hover:scale-105"
-          >
-            <span class="mr-2">Visit Dracoscopia Website</span>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>
-          </a>
+      <!-- Partnership Process -->
+      <section class="py-20 px-4 sm:px-6 lg:px-8 bg-dragon-dark-800/50">
+        <div class="max-w-7xl mx-auto">
+          <h2 class="text-3xl font-bold text-white text-center mb-12">Partnership Process</h2>
+          
+          <div class="relative">
+            <div class="absolute left-0 top-0 h-full w-0.5 bg-dragon-dark-600"></div>
+            
+            <div class="space-y-12">
+              <div v-for="step in partnershipProcess" :key="step.step" class="relative pl-8">
+                <div class="absolute left-[-2px] top-0 h-4 w-4 rounded-full bg-teal-500"></div>
+                
+                <div class="bg-dragon-dark-700/50 p-6 rounded-xl border border-dragon-dark-600">
+                  <div class="flex items-center gap-4 mb-4">
+                    <span class="text-2xl font-bold text-teal-400">Step {{ step.step }}</span>
+                    <h3 class="text-xl font-semibold text-white">{{ step.title }}</h3>
+                  </div>
+                  
+                  <p class="text-gray-400">{{ step.description }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </section>
 
-        <!-- Version Info -->
-        <div class="mt-8 text-center text-xs text-gray-400">
-          Version 1.0.0-beta
+      <!-- CTA Section -->
+      <section class="py-20 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto text-center">
+          <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6">
+            Ready to Partner with Us?
+          </h2>
+          <p class="text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
+            Contact our partnership team to discuss opportunities
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              :href="route('contact')"
+              class="btn-dragon"
+            >
+              Contact Us
+            </Link>
+            <a
+              href="mailto:partnerships@realmsz.com"
+              class="btn-dragon-outline"
+            >
+              Email Partnerships
+            </a>
+          </div>
         </div>
-      </div>
-    </template>
+      </section>
+    </div>
   </FrontLayout>
 </template>
 
-<style scoped lang="pcss">
-.form-container {
-  transform-style: preserve-3d;
+<style scoped>
+.btn-dragon {
+  @apply px-6 py-3 bg-gradient-to-r from-teal-500 to-blue-600 text-white font-semibold 
+         rounded-lg shadow-xl hover:shadow-teal-500/25 transition-all duration-300;
 }
 
-.form-inner-container {
-  @apply relative opacity-0 transition-all duration-[1.5s] ease-in-out will-change-transform;
-  transform-style: preserve-3d;
-}
-
-.open .form-inner-container {
-  @apply opacity-100;
-}
-
-.form-toggle {
-  @apply invisible absolute -right-3 -top-3 rounded-2xl;
-}
-
-.open .form-toggle {
-  @apply visible -right-3 -top-3 cursor-pointer rounded-2xl;
-}
-
-.form {
-  @apply absolute left-0 z-30 w-full rounded-2xl bg-[#1e1e1e] bg-gradient-to-br from-black/50 to-[#1e1e1e] p-6 md:p-10;
-}
-
-.open .form-inner-container {
-  @apply !ml-0 opacity-100;
-}
-
-.open .form {
-  @apply !scale-100;
-}
-
-@media (max-width: 768px) {
-  .form {
-    @apply p-4;
-  }
-  
-  .form-inner-container {
-    @apply transform-none;
-  }
+.btn-dragon-outline {
+  @apply px-6 py-3 border-2 border-teal-500 text-teal-500 font-semibold 
+         rounded-lg hover:bg-teal-500/10 transition-all duration-300;
 }
 </style>
 

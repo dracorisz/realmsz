@@ -10,7 +10,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Http\Traits\HasProfilePhoto;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens;
     use HasFactory;
@@ -77,5 +77,32 @@ class User extends Authenticatable
     public function items()
     {
         return $this->belongsToMany(Item::class);
+    }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
+    public function activeSubscription()
+    {
+        return $this->subscriptions()
+            ->where('status', 'active')
+            ->where(function ($query) {
+                $query->whereNull('ends_at')
+                    ->orWhere('ends_at', '>', now());
+            })
+            ->first();
+    }
+
+    public function hasActiveSubscription()
+    {
+        return $this->activeSubscription() !== null;
+    }
+
+    public function hasFeature($feature)
+    {
+        $subscription = $this->activeSubscription();
+        return $subscription && $subscription->hasFeature($feature);
     }
 }

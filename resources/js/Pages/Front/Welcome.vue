@@ -1,225 +1,411 @@
 <script setup>
-import { ref } from "vue";
-import { Link } from "@inertiajs/vue3";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
+import { ref, onMounted } from "vue";
+import { Link, Head } from "@inertiajs/vue3";
 import FrontLayout from "@/Layouts/FrontLayout.vue";
-import { onMounted } from "vue";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Autoplay, EffectFade, Navigation, Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/effect-fade';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
-const canRegister = ref(true);
-const assetUrl = import.meta.env.VITE_ASSET_URL;
+// Import icons
+import { 
+  ComputerDesktopIcon,
+  SparklesIcon,
+  CurrencyDollarIcon,
+  ShieldCheckIcon,
+  GlobeAltIcon,
+  CubeIcon,
+  ChartBarIcon,
+  UserGroupIcon,
+  ArrowRightIcon
+} from '@heroicons/vue/24/outline';
 
-const modules = [
+const modules = [Autoplay, EffectFade, Navigation, Pagination];
+
+const features = [
   {
-    name: "Focus",
-    description: "Streamline your workflow and boost productivity with our task management system.",
-    icon: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+    title: 'AI-Powered Development',
+    description: 'Leverage cutting-edge AI for website creation, content generation, and smart contract development.',
+    icon: SparklesIcon,
+    image: 'https://dracoscopia.com/images/ai/3.png'
   },
   {
-    name: "Plans",
-    description: "Create and manage your projects with advanced planning tools.",
-    icon: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+    title: 'Blockchain Integration',
+    description: 'Comprehensive blockchain integration with support for multiple networks and smart contract deployment.',
+    icon: CubeIcon,
+    image: 'https://dracoscopia.com/com.png'
   },
   {
-    name: "Profile",
-    description: "Build your professional identity with customizable profiles.",
-    icon: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+    title: 'Security & Compliance',
+    description: 'Enterprise-grade security with KYC/AML integration and regulatory compliance for all blockchain operations.',
+    icon: ShieldCheckIcon,
+    image: 'https://dracoscopia.com/new.png'
   },
   {
-    name: "Network",
-    description: "Connect and collaborate with professionals in your field.",
-    icon: "M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+    title: 'NFT Marketplace',
+    description: 'Create, buy, and sell NFTs with our integrated marketplace. Support for multiple blockchains.',
+    icon: CurrencyDollarIcon,
+    image: 'https://dracoscopia.com/ee.png'
   },
   {
-    name: "Milai",
-    description: "Leverage AI-powered tools for content creation and analysis.",
-    icon: "M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+    title: 'Web3 Solutions',
+    description: 'Build and deploy decentralized applications with our comprehensive Web3 development tools.',
+    icon: GlobeAltIcon,
+    image: 'https://dracoscopia.com/tt.png'
   },
   {
-    name: "Studio",
-    description: "Create and edit multimedia content with professional tools.",
-    icon: "M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+    title: 'Analytics & Insights',
+    description: 'Advanced analytics and reporting tools for tracking performance and making data-driven decisions.',
+    icon: ChartBarIcon,
+    image: 'https://dracoscopia.com/images/ai/4.png'
+  }
+];
+
+const testimonials = [
+  {
+    name: 'Alex Johnson',
+    role: 'Blockchain Developer',
+    content: 'Realmsz has revolutionized how we develop and deploy blockchain applications. The AI integration is game-changing.',
+    image: 'https://dracoscopia.com/tt.png'
   },
   {
-    name: "Finance",
-    description: "Manage your financial assets and track investments.",
-    icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+    name: 'Sarah Chen',
+    role: 'NFT Artist',
+    content: 'The NFT marketplace and creation tools are exceptional. It\'s made my workflow so much more efficient.',
+    image: 'https://dracoscopia.com/ee.png'
   },
   {
-    name: "Crypto",
-    description: "Trade and manage your cryptocurrency portfolio.",
-    icon: "M13 10V3L4 14h7v7l9-11h-7z"
+    name: 'Michael Rodriguez',
+    role: 'Web3 Entrepreneur',
+    content: 'The comprehensive suite of tools and the supportive community have been invaluable for my startup.',
+    image: 'https://dracoscopia.com/com.png'
+  }
+];
+
+const teamMembers = [
+  {
+    name: 'Scopia Rewainde',
+    role: 'CEO',
+    image: 'https://dracoscopia.com/scopia.png',
+    email: 'scopia@realmsz.com'
   },
   {
-    name: "Websites",
-    description: "Build and host your professional websites.",
-    icon: "M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"
+    name: 'Dragol Rewainde',
+    role: 'CTO',
+    image: 'https://dracoscopia.com/dragol.png',
+    email: 'dragol@realmsz.com'
   },
   {
-    name: "Storage",
-    description: "Secure cloud storage for all your digital assets.",
-    icon: "M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+    name: 'Mila Milai',
+    role: 'Admin & AI',
+    image: 'https://dracoscopia.com/milai.png',
+    email: 'mila@realmsz.com'
+  }
+];
+
+const plans = [
+  {
+    name: 'Starter',
+    price: '$9',
+    period: '/month',
+    description: 'Perfect for individuals and small teams',
+    features: [
+      '5 Projects',
+      '10GB Storage',
+      'Basic Analytics',
+      'Email Support',
+      'Community Access'
+    ],
+    popular: false,
+    savings: null
+  },
+  {
+    name: 'Professional',
+    price: '$29',
+    period: '/month',
+    description: 'Ideal for growing businesses',
+    features: [
+      'Unlimited Projects',
+      '50GB Storage',
+      'Advanced Analytics',
+      'Priority Support',
+      'API Access',
+      'Custom Domain'
+    ],
+    popular: true,
+    savings: 'Save 20%'
+  },
+  {
+    name: 'Enterprise',
+    price: '$99',
+    period: '/month',
+    description: 'For large organizations',
+    features: [
+      'Unlimited Projects',
+      '500GB Storage',
+      'Custom Analytics',
+      '24/7 Support',
+      'Advanced API',
+      'Custom Domain',
+      'Dedicated Account Manager',
+      'SLA Guarantee'
+    ],
+    popular: false,
+    savings: 'Save 30%'
   }
 ];
 
 onMounted(() => {
   gsap.registerPlugin(ScrollTrigger);
 
-  // Hero section animation
-  gsap.from(".hero-title", {
-    duration: 1,
-    y: 50,
-    opacity: 0,
-    ease: "power2.out"
-  });
-
-  gsap.from(".hero-description", {
-    duration: 1,
-    y: 30,
-    opacity: 0,
-    delay: 0.3,
-    ease: "power2.out"
-  });
-
-  // Module animations
-  gsap.utils.toArray(".module-card").forEach((card, i) => {
+  // Animate features on scroll
+  gsap.utils.toArray('.feature-card').forEach((card, i) => {
     gsap.from(card, {
       scrollTrigger: {
         trigger: card,
-        start: "top bottom-=100",
-        toggleActions: "play none none reverse"
+        start: 'top center+=100',
+        toggleActions: 'play none none reverse'
       },
       duration: 0.8,
-      y: 50,
       opacity: 0,
+      y: 50,
       delay: i * 0.1,
-      ease: "power2.out"
+      ease: 'power2.out'
     });
   });
 });
 </script>
 
 <template>
-  <FrontLayout title="Welcome" :hasHero="true">
-    <template #content>
-      <div class="min-h-screen bg-black text-white">
-        <!-- Hero Section -->
-        <div class="relative py-20 md:py-32">
-          <div class="absolute inset-0 overflow-hidden">
-            <img 
-              :src="`${assetUrl}/images/backgrounds/background03.jpg`" 
-              alt="Welcome Background" 
-              class="w-full h-full object-cover opacity-30"
-            >
-          </div>
-          <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center">
-              <h1 class="hero-title text-4xl md:text-6xl font-bold mb-6">
-                Welcome to Realmsz
-              </h1>
-              <p class="hero-description text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto">
-                Your all-in-one platform for productivity, creativity, and digital asset management.
-              </p>
+  <Head title="Welcome | Realmsz" />
+  <FrontLayout>
+    <div class="min-h-screen bg-gradient-to-b from-dragon-dark-900 to-dragon-dark-800">
+      <!-- Hero Section with Slider -->
+      <section class="relative h-screen">
+        <Swiper
+          :modules="modules"
+          :slides-per-view="1"
+          :effect="'fade'"
+          :autoplay="{ delay: 5000, disableOnInteraction: false }"
+          :pagination="{ clickable: true }"
+          :navigation="true"
+          class="h-full"
+        >
+          <SwiperSlide v-for="(feature, index) in features" :key="index">
+            <div class="absolute inset-0">
+              <img :src="feature.image" alt="Hero Background" class="w-full h-full object-cover opacity-20" />
+              <div class="absolute inset-0 bg-gradient-to-b from-dragon-dark-900/80 to-dragon-dark-800/50"></div>
             </div>
-          </div>
-        </div>
-
-        <!-- Modules Section -->
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-24">
-          <div class="text-center mb-16">
-            <h2 class="text-3xl md:text-4xl font-bold mb-4">10 Essential Modules</h2>
-            <p class="text-xl text-gray-300 max-w-3xl mx-auto">
-              Realmsz combines 10 powerful modules in one place to streamline your digital life.
-            </p>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div v-for="(module, index) in modules" :key="index" class="module-card bg-white/5 p-6 rounded-2xl hover:bg-white/10 transition-colors">
-              <div class="flex items-center mb-4">
-                <div class="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
-                  <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="module.icon" />
-                  </svg>
+            <div class="relative h-full flex items-center justify-center text-center px-4 sm:px-6 lg:px-8">
+              <div class="max-w-7xl mx-auto">
+                <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-teal-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
+                  {{ feature.title }}
+                </h1>
+                <p class="mt-6 text-xl sm:text-2xl text-blue-400 max-w-3xl mx-auto">
+                  {{ feature.description }}
+                </p>
+                <div class="mt-8 flex justify-center gap-4">
+                  <Link :href="route('register')" class="btn-dragon">
+                    Get Started
+                  </Link>
+                  <Link :href="route('contact')" class="btn-dragon-outline">
+                    Learn More
+                  </Link>
                 </div>
-                <h3 class="text-xl font-bold ml-4">{{ module.name }}</h3>
               </div>
-              <p class="text-gray-300">
-                {{ module.description }}
-              </p>
             </div>
-          </div>
+          </SwiperSlide>
+        </Swiper>
+      </section>
 
-          <!-- Partner Section -->
-          <div class="mt-16 text-center">
-            <div class="inline-flex items-center space-x-4 mb-8">
-              <div class="h-px w-16 bg-gray-600"></div>
-              <p class="text-gray-400 text-sm uppercase tracking-wider">Strategic Partnership</p>
-              <div class="h-px w-16 bg-gray-600"></div>
-            </div>
-            <a 
-              href="https://dracoscopia.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-600/20 to-blue-600/20 hover:from-purple-600/30 hover:to-blue-600/30 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-purple-500/20"
-            >
-              <span class="mr-3 text-lg">Dracoscopia</span>
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-            </a>
-            <p class="mt-4 text-gray-400 text-sm max-w-md mx-auto">
-              Our strategic partnership with Dracoscopia brings together cutting-edge AI technology and blockchain solutions.
-            </p>
-          </div>
-
-          <!-- Call to Action -->
-          <div class="mt-16 text-center">
-            <div class="inline-flex items-center space-x-4 mb-8">
-              <div class="h-px w-16 bg-gray-600"></div>
-              <p class="text-gray-400 text-sm uppercase tracking-wider">Ready to Get Started?</p>
-              <div class="h-px w-16 bg-gray-600"></div>
-            </div>
-            <a 
-              href="https://realmsz.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-blue-500/20"
-            >
-              <span class="mr-3 text-lg">Get Started</span>
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-            </a>
-            <p class="mt-4 text-gray-400 text-sm max-w-md mx-auto">
-              Join thousands of users who are already experiencing the power of our integrated platform.
-            </p>
+      <!-- Features Section -->
+      <section class="relative py-20 px-4 sm:px-6 lg:px-8">
+          <div class="absolute inset-0 overflow-hidden">
+          <div class="absolute inset-0 z-0">
+            <img src="https://dracoscopia.com/images/backgrounds/background04.jpg" alt="Features Background" class="w-full h-full object-cover opacity-10" />
           </div>
         </div>
+        <div class="max-w-7xl mx-auto relative z-10">
+          <h2 class="text-3xl font-bold text-white text-center mb-12">Our Features</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div v-for="feature in features" :key="feature.title" class="feature-card">
+              <div class="aspect-w-16 aspect-h-9 mb-6">
+                <img :src="feature.image" :alt="feature.title" class="w-full h-full object-cover rounded-lg" />
+              </div>
+              <div class="p-6">
+                <component :is="feature.icon" class="h-8 w-8 text-teal-400 mb-4" />
+                <h3 class="text-xl font-semibold text-white mb-2">{{ feature.title }}</h3>
+                <p class="text-gray-400">{{ feature.description }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Testimonials Section -->
+      <section class="relative py-20 px-4 sm:px-6 lg:px-8 bg-dragon-dark-800/50">
+        <div class="absolute inset-0 overflow-hidden">
+          <div class="absolute inset-0 z-0">
+            <img src="https://dracoscopia.com/images/backgrounds/background03.jpg" alt="Testimonials Background" class="w-full h-full object-cover opacity-10" />
+          </div>
+        </div>
+        <div class="max-w-7xl mx-auto relative z-10">
+          <h2 class="text-3xl font-bold text-white text-center mb-12">What Our Users Say</h2>
+          <Swiper
+            :modules="modules"
+            :slides-per-view="1"
+            :space-between="30"
+            :autoplay="{ delay: 5000, disableOnInteraction: false }"
+            :pagination="{ clickable: true }"
+            :breakpoints="{
+              640: { slidesPerView: 2 },
+              1024: { slidesPerView: 3 }
+            }"
+            class="pb-12"
+          >
+            <SwiperSlide v-for="testimonial in testimonials" :key="testimonial.name">
+              <div class="bg-dragon-dark-700/50 p-6 rounded-xl border border-dragon-dark-600">
+                <div class="flex items-center gap-4 mb-4">
+                  <img :src="testimonial.image" :alt="testimonial.name" class="w-12 h-12 rounded-full" />
+                  <div>
+                    <h4 class="text-white font-semibold">{{ testimonial.name }}</h4>
+                    <p class="text-teal-400 text-sm">{{ testimonial.role }}</p>
+                  </div>
+                </div>
+                <p class="text-gray-400">{{ testimonial.content }}</p>
+              </div>
+            </SwiperSlide>
+          </Swiper>
+        </div>
+      </section>
+
+      <!-- Compact Team Section -->
+      <!-- <section class="relative py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+          <h2 class="text-2xl font-bold text-white text-center mb-8">Our Team</h2>
+          <div class="flex justify-center gap-8">
+            <div v-for="member in teamMembers" :key="member.name" class="text-center">
+              <img :src="member.image" :alt="member.name" class="w-16 h-16 rounded-full mx-auto mb-2" />
+              <h3 class="text-white font-semibold">{{ member.name }}</h3>
+              <p class="text-teal-400 text-sm">{{ member.role }}</p>
+            </div>
+          </div>
+            </div>
+      </section> -->
+
+      <!-- Add this section before the CTA section -->
+      <section class="py-24 bg-dragon-dark-800/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="text-center">
+            <h2 class="text-3xl font-bold text-white sm:text-4xl">Simple, Transparent Pricing</h2>
+            <p class="mt-4 text-xl text-gray-400">Choose the perfect plan for your needs</p>
+          </div>
+          <div class="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            <div v-for="plan in plans" :key="plan.name"
+                 class="bg-dragon-dark-700/50 p-8 rounded-xl border border-dragon-dark-600 backdrop-blur-sm
+                        transition-all duration-300 transform hover:-translate-y-1"
+                 :class="{ 'ring-2 ring-teal-500': plan.popular }">
+              <div class="text-center">
+                <h3 class="text-2xl font-bold text-white">{{ plan.name }}</h3>
+                <div class="mt-4 flex items-center justify-center">
+                  <span class="text-4xl font-bold text-white">{{ plan.price }}</span>
+                  <span class="text-gray-400 ml-2">{{ plan.period }}</span>
+                </div>
+                <p class="mt-2 text-gray-400">{{ plan.description }}</p>
+                <div v-if="plan.savings" class="mt-2">
+                  <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-teal-500/10 text-teal-400">
+                    {{ plan.savings }}
+                  </span>
+                </div>
+              </div>
+              <div class="mt-8 space-y-4">
+                <div v-for="feature in plan.features" :key="feature"
+                     class="flex items-center text-gray-400">
+                  <svg class="h-5 w-5 text-teal-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  {{ feature }}
+                </div>
+              </div>
+              <div class="mt-8 text-center">
+                <Link :href="route('register')" 
+                      class="w-full inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg 
+                             text-white bg-teal-500 hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-offset-2 
+                             focus:ring-teal-500 transition-all duration-300">
+                  Get Started
+                  <ArrowRightIcon class="ml-2 h-5 w-5" />
+                </Link>
+              </div>
+            </div>
+          </div>
+          <div class="mt-12 text-center">
+            <p class="text-gray-400">Need a custom plan? <Link :href="route('contact')" class="text-teal-400 hover:text-teal-300">Contact us</Link></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA Section -->
+      <section class="relative py-20 px-4 sm:px-6 lg:px-8">
+        <div class="absolute inset-0 overflow-hidden">
+          <div class="absolute inset-0 z-0">
+            <img src="https://dracoscopia.com/images/backgrounds/background04.jpg" alt="CTA Background" class="w-full h-full object-cover opacity-10" />
+          </div>
+            </div>
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+          <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6">
+            Ready to Get Started?
+          </h2>
+          <p class="text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
+            Join our community of innovators and start building the future of blockchain technology
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link :href="route('register')" class="btn-dragon">
+              Start Free Trial
+            </Link>
+            <Link :href="route('contact')" class="btn-dragon-outline">
+              Contact Us
+            </Link>
+          </div>
+        </div>
+      </section>
       </div>
-    </template>
   </FrontLayout>
 </template>
 
 <style scoped>
-.hero-title {
-  background: linear-gradient(to right, #fff, #94a3b8);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.btn-dragon {
+  @apply px-6 py-3 bg-gradient-to-r from-teal-500 to-blue-600 text-white font-semibold 
+         rounded-lg shadow-xl hover:shadow-teal-500/25 transition-all duration-300
+         hover:from-teal-600 hover:to-blue-700 transform hover:-translate-y-0.5;
 }
 
-.module-card {
-  transition: transform 0.3s ease;
+.btn-dragon-outline {
+  @apply px-6 py-3 border-2 border-teal-500 text-teal-500 font-semibold 
+         rounded-lg hover:bg-teal-500/10 transition-all duration-300
+         hover:border-teal-400 hover:text-teal-400 transform hover:-translate-y-0.5;
 }
 
-.module-card:hover {
-  transform: translateY(-5px);
+.feature-card {
+  @apply bg-dragon-dark-700/50 border border-dragon-dark-600 backdrop-blur-sm
+         hover:border-teal-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-teal-500/10
+         transform hover:-translate-y-1;
 }
 
-@media (max-width: 768px) {
-  .module-card {
-    text-align: center;
-  }
+:deep(.swiper-button-next),
+:deep(.swiper-button-prev) {
+  @apply text-teal-400 hover:text-teal-300;
+}
+
+:deep(.swiper-pagination-bullet) {
+  @apply bg-gray-400;
+}
+
+:deep(.swiper-pagination-bullet-active) {
+  @apply bg-teal-400;
 }
 </style>
 

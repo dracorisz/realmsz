@@ -48,4 +48,9 @@ return [
         'redirect' => env('FACEBOOK_REDIRECT_URL'),
     ],
 
+    'dracoscopia' => [
+        'api_url' => env('DRACOSCOPIA_API_URL'),
+        'api_key' => env('DRACOSCOPIA_API_KEY'),
+    ],
+
 ];

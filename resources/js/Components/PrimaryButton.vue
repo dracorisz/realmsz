@@ -97,14 +97,14 @@ const inlineStyles = computed(() => {
 </script>
 
 <template>
-  <Link v-if="type === 'link'" @mouseenter="hoverState = true" @mouseleave="hoverState = false" :href="route(href)" :class="['button group', disabled && 'disabled', onlyIcon ? 'justify-center rounded-full px-px as-[36px]' : 'rounded-2xl px-3']" :style="inlineStyles">
-    <span v-if="$slots.icon" :class="['group-hover:animate-wave will-change-transform flex items-center justify-center as-[24px]', !onlyIcon && 'mr-2']">
+  <Link v-if="type === 'link'" @mouseenter="hoverState = true" @mouseleave="hoverState = false" :href="route(href)" :class="['button group', disabled && 'disabled', onlyIcon ? 'justify-center rounded-full px-px aspect-square w-[36px]' : 'rounded-2xl px-3']" :style="inlineStyles">
+    <span v-if="$slots.icon" :class="['group-hover:animate-wave will-change-transform flex items-center justify-center aspect-square w-[24px]', !onlyIcon && 'mr-2']">
       <slot name="icon" />
     </span>
     <slot v-if="!onlyIcon" />
   </Link>
-  <button v-else :type="type" @mouseenter="hoverState = true" @mouseleave="hoverState = false" :class="['button group', disabled && 'disabled', onlyIcon ? 'justify-center rounded-full px-px as-[36px]' : 'rounded-2xl px-3']" :style="inlineStyles">
-    <span v-if="$slots.icon" :class="['group-hover:animate-wave will-change-transform flex items-center justify-center as-[24px]', !onlyIcon && 'mr-2']">
+  <button v-else :type="type" @mouseenter="hoverState = true" @mouseleave="hoverState = false" :class="['button group', disabled && 'disabled', onlyIcon ? 'justify-center rounded-full px-px aspect-square w-[36px]' : 'rounded-2xl px-3']" :style="inlineStyles">
+    <span v-if="$slots.icon" :class="['group-hover:animate-wave will-change-transform flex items-center justify-center aspect-square w-[24px]', !onlyIcon && 'mr-2']">
       <slot name="icon" />
     </span>
     <slot v-if="!onlyIcon" />
@@ -113,6 +113,12 @@ const inlineStyles = computed(() => {
 
 <style scoped lang="pcss">
 .button {
-  @apply flex items-center border text-xs backdrop-blur-3xl transition-colors duration-300 ease-in-out ah-[36px];
+  @apply flex items-center border border-dragon text-xs backdrop-blur-3xl transition-colors duration-300 ease-in-out h-[36px];
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center px-4 py-2 bg-dragon-primary-600 text-white font-medium rounded-lg 
+         hover:bg-dragon-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-dragon-primary-500 
+         transition-all duration-200 h-[36px];
 }
 </style>

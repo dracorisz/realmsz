@@ -9,6 +9,8 @@ use App\Http\Controllers\StatusController;
 use App\Http\Controllers\PriorityController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\PromptController;
+use App\Http\Controllers\Api\PlanController;
+use App\Http\Controllers\Api\SubscriptionController;
 use App\Models\Priority;
 
 // use App\Http\Controllers\TagController;
@@ -73,4 +75,14 @@ Route::middleware('auth:sanctum')->group(function () {
   });
   
   Route::post('/prompts', [PromptController::class, 'store'])->name('prompts.store');
+});
+
+// Public routes
+Route::get('/plans', [PlanController::class, 'index']);
+
+// Subscription routes
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/subscriptions', [SubscriptionController::class, 'create']);
+    Route::get('/subscriptions/success', [SubscriptionController::class, 'success'])->name('subscription.success');
+    Route::get('/subscriptions/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
 });

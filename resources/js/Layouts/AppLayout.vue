@@ -25,7 +25,7 @@ const logout = () => {
 };
 
 const canAccess = (allowedRoles) => {
-  return allowedRoles.includes(page.props.auth.user.role);
+  return page.props.auth?.user?.role ? allowedRoles.includes(page.props.auth.user.role) : false;
 };
 </script>
 
@@ -57,8 +57,8 @@ const canAccess = (allowedRoles) => {
               <div class="flex w-full items-center gap-3 text-sm text-white" :class="!expandNav ? 'flex-col' : 'justify-start'">
                 <!-- <img class="rounded-full object-cover ah-[36px]" :src="page.props.auth.user.profile_photo_url" :alt="page.props.auth.user.name" /> -->
                 <div :class="expandNav ? 'mr-auto flex flex-col text-xs' : 'hidden'">
-                  <span>{{ page.props.auth.user.name.split(" ")[0] }}</span>
-                  <span>{{ page.props.auth.user.name.split(" ")[1] }}</span>
+                  <span>{{ page.props.auth?.user?.name?.split(" ")[0] || 'User' }}</span>
+                  <span>{{ page.props.auth?.user?.name?.split(" ")[1] || '' }}</span>
                 </div>
                 <PrimaryButton v-if="expandNav" :onlyIcon="true" class="w-full" color="#1a1a1a" opacity="100" hoverOpacity="100" @click="userNav = !userNav">
                   <template #icon>

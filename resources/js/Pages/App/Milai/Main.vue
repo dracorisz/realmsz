@@ -628,7 +628,7 @@ const stopTextToSpeech = () => {
 }
 
 :deep(.answer a) {
-  @apply text-accent/90 transition-colors hover:text-accent hover:underline;
+  @apply text-accent-500/90 transition-colors hover:text-accent-500 hover:underline;
 }
 
 .expand-enter-active,

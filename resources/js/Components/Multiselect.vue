@@ -84,13 +84,13 @@ onMounted(() => {
       No options found.
     </template>
     <template #singleLabel="data">
-      <div :style="{ color: inlineSelect && getColor(data.option) }" :class="['flex items-center gap-2 ah-[43px]', inlineSelect ? '!text-xs' : '!text-sm']">
+      <div :style="{ color: inlineSelect && getColor(data.option) }" :class="['flex items-center gap-2 h-[43px]', inlineSelect ? '!text-xs' : '!text-sm']">
         <span v-if="inlineSelect" v-html="getIcon(data.option)" />
         <span>{{ getOptionName(data.option) }}</span>
       </div>
     </template>
     <template #option="data">
-      <div :style="{ color: inlineSelect && getColor(data.option.id) }" :class="['flex items-center gap-2 ah-[43px]', inlineSelect ? '!text-xs' : '!text-sm']">
+      <div :style="{ color: inlineSelect && getColor(data.option.id) }" :class="['flex items-center gap-2 h-[43px]', inlineSelect ? '!text-xs' : '!text-sm']">
         <span v-if="inlineSelect" v-html="getIcon(data.option.id)" />
         <span>{{ getOptionName(data.option.id) }}</span>
       </div>
@@ -114,7 +114,7 @@ onMounted(() => {
 :deep(.multiselect__element),
 :deep(.multiselect__tags-wrap),
 :deep(.multiselect) {
-  @apply ah-[43px] overflow-hidden rounded-xl capitalize text-xs text-white bg-transparent leading-none border-[#2a2a2a] flex items-center justify-start w-full font-normal;
+  @apply h-[43px] overflow-hidden rounded-xl capitalize text-xs text-white bg-transparent leading-none border-[#2a2a2a] flex items-center justify-start w-full font-normal;
 }
 
 :deep(.multiselect__content),

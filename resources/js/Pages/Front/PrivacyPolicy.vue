@@ -1,98 +1,96 @@
 <script setup>
-import FrontLayout from "@/Layouts/FrontLayout.vue";
+import { Link, Head } from '@inertiajs/vue3';
+import {
+  ShieldCheckIcon,
+  DocumentTextIcon,
+  UserIcon,
+  LockClosedIcon,
+  ShareIcon,
+  TrashIcon,
+  CheckIcon
+} from '@heroicons/vue/24/outline';
+import FrontLayout from '@/Layouts/FrontLayout.vue';
 </script>
 
 <template>
-  <FrontLayout title="Privacy Policy">
-    <template #content>
-      <div class="relative flex h-full w-full flex-col items-center justify-start gap-10 px-5 py-20 text-white">
-      <div class="flex w-full max-w-4xl flex-col items-center justify-center gap-5">
-        <h1 class="text-4xl font-bold text-white">Privacy Policy</h1>
-        <p class="text-center text-white/70">Last updated: {{ new Date().toLocaleDateString() }}</p>
-      </div>
-
-      <div class="flex w-full max-w-4xl flex-col gap-10">
-        <div class="privacy-section">
-          <h2 class="text-2xl font-bold text-accent">1. Information We Collect</h2>
-          <p class="mt-5 text-white/80">
-            We collect information that you provide directly to us, including but not limited to your name, email address, and any other information you choose to provide. We also automatically collect certain information about your device and how you interact with our Service.
-          </p>
+  <Head title="Privacy Policy | Realmsz" />
+  <FrontLayout>
+    <div class="min-h-screen bg-gradient-to-b from-dragon-dark-900 to-dragon-dark-800">
+      <!-- Hero Section -->
+      <section class="relative py-20 px-4 sm:px-6 lg:px-8">
+        <div class="absolute inset-0 overflow-hidden">
+          <div class="absolute inset-0 z-0">
+            <img src="https://dracoscopia.com/images/backgrounds/privacy.jpg" alt="Privacy Background" class="w-full h-full object-cover opacity-20" />
+          </div>
+          <div class="max-w-7xl mx-auto">
+            <div class="text-center">
+              <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-teal-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
+                Privacy Policy
+              </h1>
+              <p class="mt-6 text-xl sm:text-2xl text-blue-400 max-w-3xl mx-auto">
+                How we protect and handle your personal information
+              </p>
+            </div>
+          </div>
         </div>
+      </section>
 
-        <div class="privacy-section">
-          <h2 class="text-2xl font-bold text-accent">2. How We Use Your Information</h2>
-          <p class="mt-5 text-white/80">
-            We use the information we collect to provide, maintain, and improve our Service, to communicate with you, to monitor and analyze trends, and to personalize your experience. We may also use your information to detect, prevent, and address technical issues.
-          </p>
-        </div>
+      <!-- Privacy Content Section -->
+      <section class="py-20 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto">
+          <div class="space-y-12">
+            <div v-for="(section, index) in privacyPolicy" :key="index" class="card-dragon p-8 rounded-xl">
+              <div class="flex items-center mb-6">
+                <component :is="section.icon" class="w-8 h-8 text-teal-400 mr-4" />
+                <h2 class="text-2xl font-bold text-white">{{ section.title }}</h2>
+              </div>
+              <div class="space-y-4">
+                <p v-for="(paragraph, pIndex) in section.content" :key="pIndex" class="text-gray-400">
+                  {{ paragraph }}
+                </p>
+                <ul v-if="section.list" class="mt-4 space-y-2">
+                  <li v-for="(item, iIndex) in section.list" :key="iIndex" class="flex items-start">
+                    <CheckIcon class="w-5 h-5 text-teal-400 mt-1 mr-2 flex-shrink-0" />
+                    <span class="text-gray-400">{{ item }}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
 
-        <div class="privacy-section">
-          <h2 class="text-2xl font-bold text-accent">3. Information Sharing</h2>
-          <p class="mt-5 text-white/80">
-            We do not share your personal information with third parties except as described in this policy. We may share your information with service providers who perform services on our behalf, with law enforcement when required by law, or in connection with a business transfer.
-          </p>
+          <!-- Last Updated -->
+          <div class="mt-12 text-center text-gray-400">
+            Last updated: {{ lastUpdated }}
+          </div>
         </div>
+      </section>
 
-        <div class="privacy-section">
-          <h2 class="text-2xl font-bold text-accent">4. Data Security</h2>
-          <p class="mt-5 text-white/80">
-            We implement appropriate technical and organizational measures to protect your personal information against unauthorized or unlawful processing, accidental loss, destruction, or damage.
+      <!-- Contact Section -->
+      <section class="py-20 px-4 sm:px-6 lg:px-8 bg-dragon-dark-800/50">
+        <div class="max-w-4xl mx-auto text-center">
+          <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6">
+            Privacy Concerns?
+          </h2>
+          <p class="text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
+            Contact our data protection team for any questions about your privacy
           </p>
+          <Link href="/contact" class="btn-dragon-large">
+            Contact Us
+          </Link>
         </div>
-
-        <div class="privacy-section">
-          <h2 class="text-2xl font-bold text-accent">5. Your Rights</h2>
-          <p class="mt-5 text-white/80">
-            You have the right to access, correct, or delete your personal information. You may also have the right to object to or restrict certain processing of your information, and to receive your information in a portable format.
-          </p>
-        </div>
-
-        <div class="privacy-section">
-          <h2 class="text-2xl font-bold text-accent">6. Cookies and Tracking</h2>
-          <p class="mt-5 text-white/80">
-            We use cookies and similar tracking technologies to track activity on our Service and hold certain information. You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent.
-          </p>
-        </div>
-
-        <div class="privacy-section">
-          <h2 class="text-2xl font-bold text-accent">7. Children's Privacy</h2>
-          <p class="mt-5 text-white/80">
-            Our Service is not intended for use by children under the age of 13. We do not knowingly collect personal information from children under 13. If you are a parent or guardian and you are aware that your child has provided us with personal information, please contact us.
-          </p>
-        </div>
-
-        <div class="privacy-section">
-          <h2 class="text-2xl font-bold text-accent">8. Changes to This Policy</h2>
-          <p class="mt-5 text-white/80">
-            We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last updated" date.
-          </p>
-        </div>
-
-        <div class="privacy-section">
-          <h2 class="text-2xl font-bold text-accent">9. Contact Us</h2>
-          <p class="mt-5 text-white/80">
-            If you have any questions about this Privacy Policy, please contact us at privacy@realmsz.com.
-          </p>
-        </div>
-      </div>
+      </section>
     </div>
-    </template>
   </FrontLayout>
 </template>
 
-
-<style scoped lang="pcss">
-.privacy-section {
-  @apply relative rounded-2xl border border-white/5 bg-black/30 p-5 backdrop-blur-sm;
-  background-image: linear-gradient(34deg, hsla(0, 0%, 55%, 0.13), hsla(0, 0%, 21%, 0.21));
+<style scoped>
+.btn-dragon-large {
+  @apply px-8 py-4 text-lg bg-gradient-to-r from-teal-500 to-blue-600 text-white font-semibold 
+         rounded-lg shadow-xl hover:shadow-teal-500/25 transition-all duration-300 hover:-translate-y-1;
 }
 
-.privacy-section::before {
-  @apply absolute inset-0 z-[-1] rounded-2xl opacity-0 transition-opacity duration-300 ease-linear content-[""];
-  background-image: linear-gradient(to right, hsl(211, 100%, 10%), hsl(179, 100%, 10%));
-}
-
-.privacy-section:hover::before {
-  opacity: 1;
+.card-dragon {
+  @apply bg-dragon-dark-700/50 border border-dragon-dark-600 backdrop-blur-sm
+         hover:border-teal-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-teal-500/10;
 }
 </style> 

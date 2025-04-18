@@ -14,7 +14,6 @@ environments:
         build:
             - 'composer install'
             - 'php artisan optimize:clear'
-            - 'php artisan event:cache'
     staging:
         memory: 1024
         cli-memory: 512
