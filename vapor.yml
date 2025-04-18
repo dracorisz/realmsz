@@ -10,7 +10,6 @@ environments:
         ignore:
             - node_modules
             - .git
-            - tests
         build:
             - 'composer install'
             - 'php artisan optimize:clear'
