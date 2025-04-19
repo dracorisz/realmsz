@@ -2,8 +2,8 @@ id: 70740
 name: realmsz-dev
 environments:
     production:
-        memory: 1024
-        cli-memory: 512
+        memory: 2048
+        cli-memory: 2048
         domain: realmsz.com
         atomic: true
         runtime: 'php-8.4:al2'

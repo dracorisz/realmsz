@@ -8,10 +8,35 @@ module.exports = {
     "./resources/**/*.vue",
   ],
   plugins: [
-    require('@tailwindcss/forms'),
-    require('@tailwindcss/typography'),
+    require("@tailwindcss/forms"),
+    require("@tailwindcss/typography"),
     require('@tailwindcss/aspect-ratio'),
-  ],
+    function ({ matchUtilities, theme }) {
+      matchUtilities(
+        {
+          aw: (value) => ({
+            width: value,
+            maxWidth: value,
+            minWidth: value,
+          }),
+          ah: (value) => ({
+            height: value,
+            maxHeight: value,
+            minHeight: value,
+          }),
+          as: (value) => ({
+            width: value,
+            maxWidth: value,
+            minWidth: value,
+            height: value,
+            maxHeight: value,
+            minHeight: value,
+          }),
+        },
+        { values: theme("spacing") },
+      );
+    },
+  ], 
   safelist: [
     {
       pattern: /bg-(dragon|black|white|primary|accent|warning|success)|border-(dragon|black|white|primary|accent|warning|success)|text-(dragon|black|white|primary|accent|warning|success)/,
@@ -56,6 +81,7 @@ module.exports = {
           800: '#5b21b6',
           900: '#4c1d95',
           950: '#2e1065',
+          DEFAULT: '#8b5cf6',
         },
         dragon: {
           primary: {
@@ -70,6 +96,7 @@ module.exports = {
             800: '#075985',
             900: '#0c4a6e',
             950: '#082f49',
+            DEFAULT: '#0ea5e9',
           },
           secondary: {
             50: '#f0fdfa',
@@ -83,6 +110,7 @@ module.exports = {
             800: '#115e59',
             900: '#134e4a',
             950: '#042f2e',
+            DEFAULT: '#14b8a6',
           },
           dark: {
             50: '#f8fafc',
@@ -96,8 +124,17 @@ module.exports = {
             800: '#1e293b',
             900: '#0f172a',
             950: '#020617',
+            DEFAULT: '#0ea5e9',
           },
         },
+        transparent: "transparent",
+        current: "currentColor",
+        black: "#000000",
+        white: "#ffffff",
+        primary: "#00449f",
+        // accent: "#00c2c5",
+        warning: "#ff0033",
+        success: "#22c55e",
       },
       borderColor: {
         'dragon': {

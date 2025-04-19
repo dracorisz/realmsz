@@ -61,6 +61,6 @@ import FrontLayout from '@/Layouts/FrontLayout.vue';
 
 <style scoped>
 .btn-dragon {
-  @apply inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-dragon-primary hover:bg-dragon-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-dragon-primary transition-all duration-300 shadow-lg hover:shadow-dragon-primary/30;
+  @apply inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-dragon-primary hover:bg-dragon-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-dragon-primary transition-all duration-300 shadow-lg hover:shadow-dragon-primary/30;
 }
 </style> 

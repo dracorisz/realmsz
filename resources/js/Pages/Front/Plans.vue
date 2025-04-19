@@ -144,7 +144,7 @@ const faqs = [
   },
   {
     question: 'What happens if I exceed my plan limits?',
-    answer: 'We'll notify you when you're approaching your limits. You can upgrade your plan or purchase additional credits as needed.'
+    answer: 'We will notify you when you are approaching your limits. You can upgrade your plan or purchase additional credits as needed.'
   },
   {
     question: 'How does the AI image generation work?',
@@ -152,7 +152,7 @@ const faqs = [
   },
   {
     question: 'Can I cancel my subscription?',
-    answer: 'Yes, you can cancel your subscription at any time. You'll continue to have access until the end of your billing period.'
+    answer: 'Yes, you can cancel your subscription at any time. You will continue to have access until the end of your billing period.'
   },
   {
     question: 'Do you offer custom enterprise solutions?',
@@ -358,9 +358,9 @@ const faqs = [
   </FrontLayout>
 </template>
 
-<style scoped>
+<style scoped lang="pcss">
 .btn-dragon {
-  @apply inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-dragon-primary hover:bg-dragon-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-dragon-primary transition-all duration-300 shadow-lg hover:shadow-dragon-primary/30;
+  @apply inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-dragon-primary hover:bg-dragon-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-dragon-primary transition-all duration-300 shadow-lg hover:shadow-dragon-primary/30;
 }
 
 .scale-102 {
