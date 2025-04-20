@@ -22,8 +22,8 @@ const showEmailForm = ref(false);
 
 const contactTypes = [
   { value: 'general', label: 'General Inquiry', icon: '📧', email: 'scopia@realmsz.com' },
-  { value: 'support', label: 'Technical Support', icon: '🛠️', email: 'scopia@realmsz.com' },
-  { value: 'partnership', label: 'Partnership', icon: '🤝', email: 'scopia@realmsz.com' },
+  { value: 'support', label: 'Technical Support', icon: '🛠️', email: 'filip@realmsz.com' },
+  { value: 'partnership', label: 'Partnership', icon: '🤝', email: 'mila@realmsz.com' },
   { value: 'investor', label: 'Investor Relations', icon: '💰', email: 'suzy@realmsz.com' }
 ];
 
@@ -115,23 +115,22 @@ onMounted(() => {
   });
 
   // Animate contact cards
-  gsap.from('.contact-card', {
-    opacity: 0,
-    x: -50,
-    duration: 0.5,
-    stagger: 0.2,
-    scrollTrigger: {
-      trigger: '.contact-cards',
-      start: 'top bottom-=100',
-      toggleActions: 'play none none reverse'
-    }
-  });
+  // gsap.from('.contact-card', {
+  //   opacity: 0,
+  //   x: -50,
+  //   duration: 0.5,
+  //   stagger: 0.2,
+  //   scrollTrigger: {
+  //     trigger: '.contact-cards',
+  //     start: 'top bottom-=100',
+  //     toggleActions: 'play none none reverse'
+  //   }
+  // });
 });
 </script>
 
 <template>
-  <Head title="Contact Us | Realmsz" />
-  <FrontLayout>
+  <FrontLayout title="Contact Us | Realmsz Digital Asset Management">
     <div class="min-h-screen bg-gradient-to-b from-dragon-dark-900 to-dragon-dark-800">
       <!-- Hero Section -->
       <section class="relative py-20 px-4 sm:px-6 lg:px-8">
@@ -317,14 +316,14 @@ onMounted(() => {
                     FAQ
                   </Link>
                   <a
-                    href="mailto:support@realmsz.com"
+                    href="mailto:dracorisz@realmsz.com"
                     class="flex items-center text-gray-300 hover:text-teal-400 transition-colors duration-300"
                   >
                     <span class="mr-2">🛠️</span>
                     Support
                   </a>
                   <a
-                    href="mailto:contact@realmsz.com"
+                    href="mailto:scopia@realmsz.com"
                     class="flex items-center text-gray-300 hover:text-teal-400 transition-colors duration-300"
                   >
                     <span class="mr-2">📚</span>

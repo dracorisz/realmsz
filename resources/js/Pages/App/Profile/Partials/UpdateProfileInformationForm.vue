@@ -17,6 +17,7 @@ const form = useForm({
   name: props.user.name,
   email: props.user.email,
   photo: null,
+  show_in_network: props.user.show_in_network,
 });
 
 const verificationLinkSent = ref(null);
@@ -110,6 +111,18 @@ const clearPhotoFileInput = () => {
           </p>
           <div v-show="verificationLinkSent" class="mt-2 text-sm text-success">A new verification link has been sent to your email address.</div>
         </div>
+      </div>
+      <div class="col-span-6 sm:col-span-4">
+        <div class="flex items-center">
+          <input
+            id="show_in_network"
+            v-model="form.show_in_network"
+            type="checkbox"
+            class="h-4 w-4 rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          />
+          <InputLabel for="show_in_network" value="Show me in network" class="ml-2" />
+        </div>
+        <p class="mt-1 text-sm text-gray-500">Allow other users to find and connect with you in the network.</p>
       </div>
     </template>
     <template #actions>

@@ -79,8 +79,7 @@ const partnershipProcess = [
 </script>
 
 <template>
-  <Head title="Partnerships | Realmsz" />
-  <FrontLayout>
+  <FrontLayout title="Partnerships | Realmsz Digital Asset Management">
     <div class="min-h-screen bg-gradient-to-b from-dragon-dark-900 to-dragon-dark-800">
       <!-- Hero Section -->
       <section class="relative py-20 px-4 sm:px-6 lg:px-8">

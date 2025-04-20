@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Http\Traits\HasProfilePhoto;
+use Illuminate\Database\Eloquent\Concerns\HasTimestamps;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -17,6 +18,7 @@ class User extends Authenticatable implements MustVerifyEmail
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
+    use HasTimestamps;
 
     /**
      * The attributes that are mass assignable.
@@ -24,14 +26,11 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array<int, string>
      */
     protected $fillable = [
-        'name', // backwards compatibility
-        'organization_id',
+        'name',
         'email',
-        'role',
         'password',
-        'subscription_status',
-        'renewal_date',
-        'payment_method',
+        'role',
+        'show_in_network',
     ];
 
     /**
@@ -53,6 +52,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'show_in_network' => 'boolean',
     ];
 
     /**
@@ -92,6 +92,7 @@ class User extends Authenticatable implements MustVerifyEmail
                 $query->whereNull('ends_at')
                     ->orWhere('ends_at', '>', now());
             })
+            ->with('plan')
             ->first();
     }
 
@@ -104,5 +105,47 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $subscription = $this->activeSubscription();
         return $subscription && $subscription->hasFeature($feature);
+    }
+
+    protected function getSubscriptionAttribute()
+    {
+        return $this->activeSubscription();
+    }
+
+    public function connections()
+    {
+        return $this->hasMany(UserConnection::class);
+    }
+
+    public function connectedUsers()
+    {
+        return $this->hasMany(UserConnection::class, 'connection_id');
+    }
+
+    public function pendingConnections()
+    {
+        return $this->connections()->where('status', 'pending');
+    }
+
+    public function acceptedConnections()
+    {
+        return $this->connections()->where('status', 'accepted');
+    }
+
+    public function sentConnectionRequests()
+    {
+        return $this->belongsToMany(User::class, 'user_connections', 'user_id', 'connection_id')
+            ->wherePivot('status', 'pending');
+    }
+
+    public function receivedConnectionRequests()
+    {
+        return $this->belongsToMany(User::class, 'user_connections', 'connection_id', 'user_id')
+            ->wherePivot('status', 'pending');
+    }
+
+    public function hasConnection(User $user)
+    {
+        return $this->connections()->where('id', $user->id)->exists();
     }
 }

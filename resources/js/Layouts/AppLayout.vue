@@ -5,6 +5,10 @@ import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import ApplicationMark from "@/Components/ApplicationMark.vue";
 import AppBanner from "@/Components/AppBanner.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import Dropdown from '@/Components/Dropdown.vue';
+import DropdownLink from '@/Components/DropdownLink.vue';
+import NavLink from '@/Components/NavLink.vue';
+import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 const page = usePage();
 const assetUrl = import.meta.env.VITE_ASSET_URL;
 
@@ -19,12 +23,16 @@ defineProps({
 const expandNav = ref(true);
 const userNav = ref(true);
 const sidebarPosition = ref(true);
+const showingNavigationDropdown = ref(false);
 
 const logout = () => {
-  router.post(route("logout"));
+  router.post(route('logout'));
 };
 
 const canAccess = (allowedRoles) => {
+  // console.log(page.props);
+  // console.log(page.props.auth?.user?.role);
+  // console.log(allowedRoles);
   return page.props.auth?.user?.role ? allowedRoles.includes(page.props.auth.user.role) : false;
 };
 </script>
@@ -55,7 +63,7 @@ const canAccess = (allowedRoles) => {
           <div class="relative z-40 flex h-full w-full flex-col gap-5">
             <div class="flex w-full items-center">
               <div class="flex w-full items-center gap-3 text-sm text-white" :class="!expandNav ? 'flex-col' : 'justify-start'">
-                <!-- <img class="rounded-full object-cover ah-[36px]" :src="page.props.auth.user.profile_photo_url" :alt="page.props.auth.user.name" /> -->
+                <img class="rounded-full object-cover ah-[36px]" :src="page.props.auth.user.profile_photo_url" :alt="page.props.auth.user.name" />
                 <div :class="expandNav ? 'mr-auto flex flex-col text-xs' : 'hidden'">
                   <span>{{ page.props.auth?.user?.name?.split(" ")[0] || 'User' }}</span>
                   <span>{{ page.props.auth?.user?.name?.split(" ")[1] || '' }}</span>
@@ -106,7 +114,7 @@ const canAccess = (allowedRoles) => {
                 </template>
                 <div :class="expandNav ? 'inline-block' : 'hidden'">Profile</div>
               </PrimaryButton>
-              <PrimaryButton v-if="canAccess(['manager'])" :opaque="true" :onlyIcon="!expandNav" class="w-full" color="#00c2c5" opacity="30" hoverOpacity="50" type="link" href="network" :toggled="route().current('network')">
+              <PrimaryButton v-if="canAccess(['suzy'])" :opaque="true" :onlyIcon="!expandNav" class="w-full" color="#00c2c5" opacity="30" hoverOpacity="50" type="link" href="network" :toggled="route().current('network')">
                 <template #icon>
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="icons" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -197,8 +205,8 @@ const canAccess = (allowedRoles) => {
               </form>
             </div>
           </div>
-          <!-- <img :src="`${process.env.VITE_ASSET_URL}/images/backgrounds/background04.jpg`" alt="Sidebar Background Image" class="absolute inset-0 z-0 h-full w-full object-cover opacity-20" /> -->
-          <img v-if="hasHero" :src="`${assetUrl}/images/milai.jpg`" class="opacity-50 absolute w-full h-full object-cover z-0 inset-0" />
+          <img :src="`https://dracoscopia.com/images/backgrounds/background04.jpg`" alt="Sidebar Background Image" class="absolute inset-0 z-0 h-full w-full object-cover opacity-20" />
+          <img v-if="hasHero" :src="`https://dracoscopia.com/images/milai.jpg`" class="opacity-50 absolute w-full h-full object-cover z-0 inset-0" />
         </div>
       </div>
     </nav>

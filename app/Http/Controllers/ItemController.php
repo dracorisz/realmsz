@@ -120,7 +120,7 @@ class ItemController extends Controller
             $item = Item::find($request->id);
             $item->status_id = $request->status_id;
             $item->save();
-            return 'Status updated.';
+            return response('Status updated.', 200);
         } catch (Exception $e) {
             $this->logToSlack('Exception during item\'s status change:', ['exception' => $e->getMessage()]);
         }

@@ -155,7 +155,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <FrontLayout>
+  <FrontLayout title="IPO Platform | Realmsz Digital Asset Management">
     <div class="min-h-screen bg-gradient-to-b from-dragon-dark-900 to-dragon-dark-800">
       <!-- Hero Section -->
       <section class="relative py-20 px-4 sm:px-6 lg:px-8">
@@ -264,7 +264,7 @@ onMounted(() => {
       </section>
 
       <!-- Team Section -->
-      <section class="py-20 px-4 sm:px-6 lg:px-8 bg-dragon-dark-800/50">
+      <!-- <section class="py-20 px-4 sm:px-6 lg:px-8 bg-dragon-dark-800/50">
         <div class="max-w-7xl mx-auto">
           <h2 class="text-3xl font-bold text-white text-center mb-12">Management Team</h2>
           
@@ -281,7 +281,7 @@ onMounted(() => {
             </div>
           </div>
         </div>
-      </section>
+      </section> -->
 
       <!-- CTA Section -->
       <section class="py-20 px-4 sm:px-6 lg:px-8">
@@ -305,6 +305,30 @@ onMounted(() => {
             >
               Email Investor Relations
             </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Disclaimer Section -->
+      <section class="py-12 px-4 sm:px-6 lg:px-8 bg-dragon-dark-800/50">
+        <div class="max-w-4xl mx-auto">
+          <div class="bg-dragon-dark-700/50 p-8 rounded-xl border-2 border-red-500/50">
+            <h3 class="text-2xl font-bold text-red-400 mb-6">⚠️ Important Disclaimer</h3>
+            <div class="space-y-4 text-gray-400">
+              <p class="text-lg">This website and the information contained herein are not intended to be a source of advice or credit analysis with respect to the material presented, and the information and/or documents contained in this website do not constitute investment advice.</p>
+              
+              <p class="text-lg">This website is for informational purposes only and does not constitute an offer to sell, a solicitation to buy, or a recommendation for any security, or as an offer to provide investment advisory or other services by Realmsz.</p>
+              
+              <p class="text-lg">Investing in securities involves risks, and there is always the potential of losing money when you invest in securities. Before investing, consider your investment objectives and Realmsz's fees and expenses.</p>
+              
+              <p class="text-lg">Past performance does not guarantee future results, and the likelihood of investment outcomes are hypothetical in nature. Not an offer, solicitation of an offer, or advice to buy or sell securities in jurisdictions where Realmsz is not registered.</p>
+              
+              <p class="text-lg">The information provided on this website is not intended for distribution to, or use by, any person or entity in any jurisdiction or country where such distribution or use would be contrary to law or regulation or which would subject Realmsz to any registration requirement within such jurisdiction or country.</p>
+              
+              <p class="text-lg">Please consult with your financial advisor before making any investment decisions. Realmsz does not provide tax, legal, or investment advice.</p>
+              
+              <p class="text-lg font-semibold text-red-400">By accessing this website, you acknowledge and agree to the terms of this disclaimer.</p>
+            </div>
           </div>
         </div>
       </section>

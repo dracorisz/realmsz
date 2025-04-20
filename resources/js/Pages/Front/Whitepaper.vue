@@ -84,20 +84,41 @@ const teamMembers = [
     name: 'Scopia Rewainde',
     role: 'Chief Executive Officer',
     image: 'https://dracoscopia.com/scopia.png',
-    email: 'scopia@realmsz.com'
+    email: 'scopia@realmsz.com',
+    website: 'https://dracoscopia.com'
   },
   {
-    name: 'Dragol Rewainde',
-    role: 'Chief Technology Officer',
-    image: 'https://dracoscopia.com/dragol.png',
-    email: 'dragol@realmsz.com'
+    name: 'Phillip Nnadi',
+    role: 'Marketing Expert',
+    image: 'https://dracoscopia.com/seypro.png',
+    email: 'filip@realmsz.com',
+    website: 'https://sey-pro.com'
   },
   {
     name: 'Mila Milai',
     role: 'Administrator & AI',
     image: 'https://dracoscopia.com/milai.png',
-    email: 'mila@realmsz.com'
-  }
+    email: 'mila@realmsz.com',
+    website: 'https://websitedesignsnyc.com/'
+  },
+  {
+    name: 'Alex Nnadi',
+    role: 'Art Director',
+    image: 'https://dracoscopia.com/logo.png',
+    email: 'suzy@realmsz.com'
+  },
+  {
+    name: 'Dragol Rewainde',
+    role: 'Enthusiast',
+    image: 'https://dracoscopia.com/dragol.png',
+    email: 'dragol@realmsz.com'
+  },
+  {
+    name: 'Join Our Team',
+    role: 'We are looking for talented individuals to help shape the future of Realmsz',
+    image: 'https://dracoscopia.com/images/ai/8.png',
+    email: 'scopia@realmsz.com'
+  } 
 ];
 
 const advisors = [
@@ -117,14 +138,14 @@ const advisors = [
 </script>
 
 <template>
-  <Head title="Whitepaper | Realmsz" />
-  <FrontLayout>
+  <FrontLayout title="Whitepaper | Realmsz Digital Asset Management">
     <div class="min-h-screen bg-gradient-to-b from-dragon-dark-900 to-dragon-dark-800">
       <!-- Hero Section -->
       <section class="relative py-20 px-4 sm:px-6 lg:px-8">
+        
         <div class="absolute inset-0 overflow-hidden">
           <div class="absolute inset-0 z-0">
-            <img src="https://dracoscopia.com/images/backgrounds/whitepaper.jpg" alt="Whitepaper Background" class="w-full h-full object-cover opacity-20" />
+            <img src="https://dracoscopia.com/images/ai/8.png" alt="Whitepaper Background" class="w-full h-full object-cover opacity-20" />
           </div>
           <div class="absolute inset-0 bg-gradient-to-b from-dragon-dark-900/80 to-dragon-dark-800/50"></div>
         </div>
@@ -142,11 +163,7 @@ const advisors = [
 
       <!-- Table of Contents -->
       <section class="relative py-20 px-4 sm:px-6 lg:px-8">
-        <div class="absolute inset-0 overflow-hidden">
-          <div class="absolute inset-0 z-0">
-            <img src="https://dracoscopia.com/images/backgrounds/contents.jpg" alt="Contents Background" class="w-full h-full object-cover opacity-10" />
-          </div>
-        </div>
+        
         <div class="max-w-7xl mx-auto relative z-10">
           <h2 class="text-3xl font-bold text-white text-center mb-12">Table of Contents</h2>
           
@@ -173,7 +190,7 @@ const advisors = [
       <section class="relative py-20 px-4 sm:px-6 lg:px-8 bg-dragon-dark-800/50">
         <div class="absolute inset-0 overflow-hidden">
           <div class="absolute inset-0 z-0">
-            <img src="https://dracoscopia.com/ty.png" alt="Team Background" class="w-full h-full object-cover opacity-10" />
+            <img src="https://dracoscopia.com/rt.png" alt="Team Background" class="w-full h-full object-cover opacity-30" />
           </div>
         </div>
         <div class="max-w-7xl mx-auto relative z-10">
@@ -181,60 +198,30 @@ const advisors = [
           
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div v-for="member in teamMembers" :key="member.name" 
-                 class="bg-dragon-dark-700/50 p-6 rounded-xl border border-dragon-dark-600">
-              <div class="aspect-w-1 aspect-h-1 mb-6">
+                 class="bg-dragon-dark-700/50 p-6 rounded-xl border border-dragon-dark-600 col-span-1 self-center items-center justify-center flex flex-col gap-0" :class="member.name === 'Join Our Team' ? 'py-16' : ''">
+              <div v-if="member.name !== 'Join Our Team'" class="as-[90px] mb-6">
                 <img :src="member.image" :alt="member.name" 
                      class="w-full h-full object-cover rounded-lg">
               </div>
               
-              <h3 class="text-xl font-semibold text-white mb-2">{{ member.name }}</h3>
-              <p class="text-teal-400">{{ member.role }}</p>
-              <a :href="`mailto:${member.email}`" class="text-gray-400 hover:text-teal-400 transition-colors">
+              <h3 class="text-xl font-semibold text-white mb-2" :class="member.name !== 'Join Our Team' ? '' : 'm-auto text-center'">{{ member.name }}</h3>
+              <p class="text-teal-400" :class="member.name !== 'Join Our Team' ? '' : 'm-auto text-center'">{{ member.role }}</p>
+              <a :href="`mailto:${member.email}`" class="text-gray-400 hover:text-teal-400 transition-colors" :class="member.name !== 'Join Our Team' ? '' : ' w-full mx-auto text-center mt-3'">
                 {{ member.email }}
+              </a>
+              <a v-if="member.website" :href="member.website" class="text-gray-400 hover:text-teal-400 transition-colors" :class="member.name !== 'Join Our Team' ? '' : 'm-auto text-center'">
+                {{ member.website }}
               </a>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Join Team Section -->
-      <section class="relative py-20 px-4 sm:px-6 lg:px-8">
-        <div class="absolute inset-0 overflow-hidden">
-          <div class="absolute inset-0 z-0">
-            <img src="https://dracoscopia.com/images/ai/8.png" alt="Join Background" class="w-full h-full object-cover opacity-10" />
-          </div>
-        </div>
-        <div class="max-w-4xl mx-auto text-center relative z-10">
-          <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6">
-            Join Our Team
-          </h2>
-          <p class="text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
-            We're looking for talented individuals to help shape the future of Realmsz
-          </p>
-          <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              :href="route('contact')"
-              class="btn-dragon"
-            >
-              Contact Us
-            </Link>
-            <a
-              href="mailto:scopia@realmsz.com"
-              class="btn-dragon-outline"
-            >
-              Email Careers
-            </a>
-          </div>
-        </div>
-      </section>
+      
 
       <!-- CTA Section -->
-      <section class="relative py-20 px-4 sm:px-6 lg:px-8 bg-dragon-dark-800/50">
-        <div class="absolute inset-0 overflow-hidden">
-          <div class="absolute inset-0 z-0">
-            <img src="https://dracoscopia.com/images/backgrounds/cta.jpg" alt="CTA Background" class="w-full h-full object-cover opacity-10" />
-          </div>
-        </div>
+      <section class="relative py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-bl from-dragon-dark-800/5 to-dragon-dark-900/90">
+        
         <div class="max-w-4xl mx-auto text-center relative z-10">
           <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6">
             Download Full Whitepaper

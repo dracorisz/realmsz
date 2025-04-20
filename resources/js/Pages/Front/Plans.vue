@@ -166,7 +166,7 @@ const faqs = [
 </script>
 
 <template>
-  <FrontLayout>
+  <FrontLayout title="Plans & Pricing | Realmsz Digital Asset Management Platform">
     <div class="min-h-screen bg-gradient-to-b from-dragon-dark-900 to-dragon-dark-800">
       <!-- Hero Section with Enhanced Animation -->
       <section class="relative py-20 px-4 sm:px-6 lg:px-8">

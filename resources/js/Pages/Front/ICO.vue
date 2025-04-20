@@ -21,8 +21,8 @@ const tokenMetrics = {
   initialPrice: '$0.10',
   hardCap: '$1,000,000',
   softCap: '$500,000',
-  startDate: 'May 1, 2024',
-  endDate: 'June 30, 2024'
+  startDate: 'January 1, 2025',
+  endDate: 'December 31, 2025'
 };
 
 // Token Distribution
@@ -74,8 +74,8 @@ const phases = [
   {
     id: 1,
     name: 'Private Sale',
-    startDate: 'May 1, 2024',
-    endDate: 'May 15, 2024',
+    startDate: 'January 1, 2025',
+    endDate: 'March 31, 2025',
     bonus: '30%',
     price: '$0.07',
     minContribution: '$1,000',
@@ -84,8 +84,8 @@ const phases = [
   {
     id: 2,
     name: 'Pre-Sale',
-    startDate: 'May 16, 2024',
-    endDate: 'May 31, 2024',
+    startDate: 'April 1, 2025',
+    endDate: 'June 30, 2025',
     bonus: '20%',
     price: '$0.08',
     minContribution: '$500',
@@ -94,8 +94,8 @@ const phases = [
   {
     id: 3,
     name: 'Public Sale',
-    startDate: 'June 1, 2024',
-    endDate: 'June 30, 2024',
+    startDate: 'July 1, 2025',
+    endDate: 'September 30, 2025',
     bonus: '10%',
     price: '$0.09',
     minContribution: '$100',
@@ -176,8 +176,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <Head title="ICO" />
-  <FrontLayout>
+  <FrontLayout title="ICO Platform | Realmsz Digital Asset Management">
     <div class="min-h-screen bg-gradient-to-b from-dragon-dark-900 to-dragon-dark-800">
       <!-- Hero Section -->
       <div class="relative overflow-hidden">

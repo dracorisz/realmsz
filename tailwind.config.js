@@ -132,7 +132,6 @@ module.exports = {
         black: "#000000",
         white: "#ffffff",
         primary: "#00449f",
-        // accent: "#00c2c5",
         warning: "#ff0033",
         success: "#22c55e",
       },
@@ -207,7 +206,7 @@ module.exports = {
         },
       },
       backgroundImage: {
-        'dragon-pattern': "url('/images/dragon-pattern.svg')",
+        'dragon-pattern': "url('/images/')",
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-dragon': 'linear-gradient(45deg, var(--tw-gradient-stops))',
       },

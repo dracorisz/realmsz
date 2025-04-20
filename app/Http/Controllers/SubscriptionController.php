@@ -102,18 +102,89 @@ class SubscriptionController extends Controller
         }
 
         switch ($event->type) {
+            case 'checkout.session.completed':
+                $session = $event->data->object;
+                $this->handleCheckoutSessionCompleted($session);
+                break;
             case 'customer.subscription.deleted':
                 $subscription = $event->data->object;
-                Subscription::where('stripe_subscription_id', $subscription->id)
-                    ->update(['status' => 'cancelled']);
+                $this->handleSubscriptionDeleted($subscription);
                 break;
             case 'customer.subscription.updated':
                 $subscription = $event->data->object;
-                Subscription::where('stripe_subscription_id', $subscription->id)
-                    ->update(['status' => $subscription->status]);
+                $this->handleSubscriptionUpdated($subscription);
+                break;
+            case 'invoice.payment_succeeded':
+                $invoice = $event->data->object;
+                $this->handleInvoicePaymentSucceeded($invoice);
+                break;
+            case 'invoice.payment_failed':
+                $invoice = $event->data->object;
+                $this->handleInvoicePaymentFailed($invoice);
                 break;
         }
 
-        return response('', 200);
+        return response($event->type, 200);
+    }
+
+    protected function handleCheckoutSessionCompleted($session)
+    {
+        $user = \App\Models\User::find($session->metadata->user_id);
+        if (!$user) return;
+
+        $subscription = \App\Models\Subscription::create([
+            'user_id' => $user->id,
+            'plan_id' => $session->metadata->plan_id,
+            'stripe_subscription_id' => $session->subscription,
+            'stripe_customer_id' => $session->customer,
+            'status' => 'active',
+            'trial_ends_at' => now()->addDays(14),
+        ]);
+
+        // Send confirmation email
+        $user->notify(new \App\Notifications\SubscriptionActivated($subscription));
+    }
+
+    protected function handleSubscriptionDeleted($subscription)
+    {
+        \App\Models\Subscription::where('stripe_subscription_id', $subscription->id)
+            ->update([
+                'status' => 'cancelled',
+                'ends_at' => now(),
+            ]);
+    }
+
+    protected function handleSubscriptionUpdated($subscription)
+    {
+        \App\Models\Subscription::where('stripe_subscription_id', $subscription->id)
+            ->update(['status' => $subscription->status]);
+    }
+
+    protected function handleInvoicePaymentSucceeded($invoice)
+    {
+        $subscription = \App\Models\Subscription::where('stripe_subscription_id', $invoice->subscription)
+            ->first();
+        
+        if ($subscription) {
+            $subscription->update([
+                'status' => 'active',
+                'ends_at' => null,
+            ]);
+        }
+    }
+
+    protected function handleInvoicePaymentFailed($invoice)
+    {
+        $subscription = \App\Models\Subscription::where('stripe_subscription_id', $invoice->subscription)
+            ->first();
+        
+        if ($subscription) {
+            $subscription->update([
+                'status' => 'past_due',
+            ]);
+            
+            // Notify user about failed payment
+            $subscription->user->notify(new \App\Notifications\PaymentFailed($subscription));
+        }
     }
 } 

@@ -2,6 +2,7 @@
 import { ref, onMounted } from "vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
+import AIImageGenerator from "@/Components/AIImageGenerator.vue";
 // import process from 'process';
 // import { OrbitControls, Stars } from "@tresjs/cientos";
 // import { TresCanvas, useRenderLoop } from "@tresjs/core";
@@ -193,7 +194,10 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 
 <template>
   <AppLayout title="Studio">
-    <template v-if="currentCard == 'start'">
+    <div class="flex h-full w-full items-center justify-center p-5">
+      <AIImageGenerator />
+    </div>
+    <!-- <template v-if="currentCard == 'start'">
       <div class="flex h-full w-full items-center justify-center p-5">
         <div class="flex h-full w-full gap-5 text-xs">
           <div class="crypto-gradient w-1/6 " @click="currentCard = 'design'">
@@ -232,14 +236,14 @@ import AppLayout from "@/Layouts/AppLayout.vue";
         <div class="flex items-center justify-start gap-5">
           <div class="flex flex-col">
             <div class="flex w-full flex-col items-start gap-3">
-              <!-- <PrimaryButton @click="changeModel('modelIdle')">Idle</PrimaryButton> -->
-              <!-- <PrimaryButton @click="changeModel('modelWarmup')">Warmup</PrimaryButton> -->
-              <!-- <PrimaryButton @click="changeModel('modelDance')">Dance</PrimaryButton> -->
-              <!-- <PrimaryButton @click="changeModel('modelThink')">Think</PrimaryButton> -->
+              <PrimaryButton @click="changeModel('modelIdle')">Idle</PrimaryButton>
+              <PrimaryButton @click="changeModel('modelWarmup')">Warmup</PrimaryButton>
+              <PrimaryButton @click="changeModel('modelDance')">Dance</PrimaryButton>
+              <PrimaryButton @click="changeModel('modelThink')">Think</PrimaryButton>
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
       <!-- <TresCanvas v-bind="gl">
         
         <TresPerspectiveCamera :position="[camPosX, camPosY, camPosZ]" :zoom="5.8" ref="camera" />
@@ -264,7 +268,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
         <TresAmbientLight :intensity="2" />
         <TresGridHelper />
       </TresCanvas> -->
-    </template>
+    <!-- </template> -->
   </AppLayout>
 </template>
 

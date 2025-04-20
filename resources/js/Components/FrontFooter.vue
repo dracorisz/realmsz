@@ -69,7 +69,7 @@ const year = new Date().getFullYear();
           <Link :href="route('roadmap')" class="text-xs text-white/70 hover:text-white after:ml-1 after:text-warning after:content-['*']">Changelog</Link>
         </div>
       </div>
-      <div class="flex w-full items-center justify-center text-zx text-white/50">v0.0.6-beta</div>
+      <div class="flex w-full items-center justify-center text-zx text-white/50">v0.0.7</div>
     </div>
   </div>
 </template>

@@ -47,15 +47,15 @@ class HandleInertiaRequests extends Middleware
                     'name' => $user->name,
                     'email' => $user->email,
                     'profile_photo_url' => $user->profile_photo_url,
-                    'current_team' => $user->currentTeam,
-                    'all_teams' => $user->allTeams(),
+                    'role' => $user->role,
+                    // 'all_teams' => $user->allTeams(),
                 ] : null,
             ],
-            'jetstream' => [
-                'hasTeamFeatures' => Features::hasTeamFeatures(),
-                'hasApiFeatures' => Features::hasApiFeatures(),
-                'canCreateTeams' => Features::optionEnabled(Features::teams(), 'create'),
-            ],
+            // 'jetstream' => [
+            //     'hasTeamFeatures' => Features::hasTeamFeatures(),
+            //     'hasApiFeatures' => Features::hasApiFeatures(),
+            //     'canCreateTeams' => Features::optionEnabled(Features::teams(), 'create'),
+            // ],
             'flash' => [
                 'message' => fn () => $request->session()->get('message'),
                 'type' => fn () => $request->session()->get('type'),

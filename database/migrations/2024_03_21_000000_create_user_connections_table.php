@@ -8,19 +8,19 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('subscriptions', function (Blueprint $table) {
+        Schema::create('user_connections', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('package_id')->constrained()->onDelete('cascade');
-            $table->string('status')->default('active');
-            $table->timestamp('trial_ends_at')->nullable();
-            $table->timestamp('ends_at')->nullable();
+            $table->foreignId('connection_id')->constrained('users')->onDelete('cascade');
+            $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
             $table->timestamps();
+
+            $table->unique(['user_id', 'connection_id']);
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('subscriptions');
+        Schema::dropIfExists('user_connections');
     }
 }; 

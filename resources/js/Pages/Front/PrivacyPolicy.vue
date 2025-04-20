@@ -13,8 +13,7 @@ import FrontLayout from '@/Layouts/FrontLayout.vue';
 </script>
 
 <template>
-  <Head title="Privacy Policy | Realmsz" />
-  <FrontLayout>
+  <FrontLayout title="Privacy Policy | Realmsz Digital Asset Management">
     <div class="min-h-screen bg-gradient-to-b from-dragon-dark-900 to-dragon-dark-800">
       <!-- Hero Section -->
       <section class="relative py-20 px-4 sm:px-6 lg:px-8">

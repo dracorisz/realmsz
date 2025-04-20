@@ -16,9 +16,20 @@ class CheckSubscription
             return redirect()->route('login');
         }
 
+        // Allow access for suzy role without subscription check
+        if ($user->role === 'suzy') {
+            return $next($request);
+        }
+
         // Check if user has an active subscription
-        if (!$user->subscriptions()->where('status', 'active')->exists()) {
-            return redirect()->route('packages.index')
+        if (!$user->hasActiveSubscription()) {
+            // If user is on the waiting page or subscription pages, allow access
+            if ($request->is('subscription/*') || $request->is('packages/*') || $request->is('waiting')) {
+                return $next($request);
+            }
+            
+            // For all other protected routes, redirect to waiting page
+            return redirect()->route('waiting')
                 ->with('error', 'You need an active subscription to access this feature.');
         }
 

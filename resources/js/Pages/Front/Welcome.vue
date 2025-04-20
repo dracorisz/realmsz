@@ -181,8 +181,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <Head title="Welcome | Realmsz" />
-  <FrontLayout>
+  <FrontLayout title="Welcome to Realmsz | Digital Asset Management Platform">
     <div class="min-h-screen bg-gradient-to-b from-dragon-dark-900 to-dragon-dark-800">
       <!-- Hero Section with Slider -->
       <section class="relative h-screen">
@@ -282,20 +281,6 @@ onMounted(() => {
           </Swiper>
         </div>
       </section>
-
-      <!-- Compact Team Section -->
-      <!-- <section class="relative py-12 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-7xl mx-auto">
-          <h2 class="text-2xl font-bold text-white text-center mb-8">Our Team</h2>
-          <div class="flex justify-center gap-8">
-            <div v-for="member in teamMembers" :key="member.name" class="text-center">
-              <img :src="member.image" :alt="member.name" class="w-16 h-16 rounded-full mx-auto mb-2" />
-              <h3 class="text-white font-semibold">{{ member.name }}</h3>
-              <p class="text-teal-400 text-sm">{{ member.role }}</p>
-            </div>
-          </div>
-            </div>
-      </section> -->
 
       <!-- Add this section before the CTA section -->
       <section class="py-24 bg-dragon-dark-800/50">

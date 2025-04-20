@@ -11,9 +11,11 @@ import Multiselect from "../../Components/Multiselect.vue";
 import DialogModal from "../../Components/DialogModal.vue";
 import Datepicker from "../../Components/Datepicker.vue";
 import AutoResizeTextarea from "../../Components/AutoResizeTextarea.vue";
+import Loader from "../../Components/Loader.vue";
 import { useToast } from "vue-toastification";
 import axios from "axios";
 import colors from "tailwindcss/colors";
+import ImageGenerator from '../../Components/ImageGenerator.vue';
 
 const props = defineProps({
   items: Array,
@@ -24,6 +26,9 @@ const props = defineProps({
 });
 
 const toast = useToast();
+const isLoading = ref(false);
+const isSharing = ref(false);
+const shareEmail = ref('');
 
 const activeRow = ref({
   id: 0,
@@ -49,7 +54,7 @@ const modal = ref({
 const request = ref("");
 const errors = ref({ title: "" });
 
-const actions = (evt, row, action, status, priority) => {
+const actions = async (evt, row, action, status, priority) => {
   if (evt) {
     evt.stopImmediatePropagation();
     evt.stopPropagation();
@@ -90,6 +95,9 @@ const actions = (evt, row, action, status, priority) => {
     case "archive":
       request.value = "item.archive";
       break;
+    case "share":
+      request.value = "item.share";
+      break;
   }
 
   if (status) {
@@ -97,31 +105,90 @@ const actions = (evt, row, action, status, priority) => {
     toggleStatus(null, row);
   }
 
-  if (!["status", "archive", "duplicate", "date", "priority"].includes(action)) modal.value.active = true;
-  else callAction();
+  if (!["status", "archive", "duplicate", "date", "priority", "share"].includes(action)) modal.value.active = true;
+  else await callAction();
 };
 
-const callAction = () => {
+const callAction = async () => {
   event.preventDefault();
+  isLoading.value = true;
   let formData = new FormData();
   Object.entries(activeRow.value).forEach(([key, value]) => {
     formData.append(key, value);
   });
 
-  axios({
-    method: "post",
-    url: route(request.value),
-    data: formData,
-    headers: { "Content-Type": "multipart/form-data" },
-  })
-    .then((response) => {
-      toast.success(response.data);
-      closeModal();
-    })
-    .catch((err) => {
-      console.log(err);
-      if (err.response) errors.value.title = err.response.data.message;
+  try {
+    const response = await axios({
+      method: "post",
+      url: route(request.value),
+      data: formData,
+      headers: { "Content-Type": "multipart/form-data" },
     });
+    
+    let successMessage = '';
+    if (typeof response.data === 'string') {
+      successMessage = response.data;
+    } else if (response.data.message) {
+      successMessage = response.data.message;
+    } else if (response.data.success) {
+      successMessage = response.data.success;
+    } else {
+      successMessage = 'Operation completed successfully';
+    }
+    
+    toast.success(successMessage);
+    closeModal();
+    router.reload({ only: ['items'] });
+  } catch (err) {
+    console.error('Operation failed:', err);
+    let errorMessage = '';
+    if (err.response) {
+      if (typeof err.response.data === 'string') {
+        errorMessage = err.response.data;
+      } else if (err.response.data.message) {
+        errorMessage = err.response.data.message;
+      } else if (err.response.data.error) {
+        errorMessage = err.response.data.error;
+      } else {
+        errorMessage = 'An error occurred';
+      }
+    } else {
+      errorMessage = 'Network error occurred';
+    }
+    
+    toast.error(errorMessage);
+    errors.value.title = errorMessage;
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+const shareItem = async (item) => {
+  if (!shareEmail.value) {
+    toast.error('Please enter an email address');
+    return;
+  }
+
+  isSharing.value = true;
+  try {
+    const response = await axios.post(route('item.share'), {
+      item_id: item.id,
+      email: shareEmail.value
+    });
+
+    if (response.data.success) {
+      toast.success('Item shared successfully');
+      shareEmail.value = '';
+      closeModal();
+    } else {
+      toast.error(response.data.message || 'Failed to share item');
+    }
+  } catch (err) {
+    console.error('Error sharing item:', err);
+    toast.error(err.response?.data?.message || 'Error sharing item');
+  } finally {
+    isSharing.value = false;
+  }
 };
 
 const search = ref("");
@@ -174,14 +241,6 @@ const finalItems = computed(() => {
 
   return base;
 });
-
-// const saveState = () => {
-//   axios.post(route("items.save"), { items: finalItems.value }).then((respons) => {
-//       toast.success("State saved");
-//     }).catch((error) => {
-//       console.error("Error saving state");
-//     });
-// };
 
 const updateSearch = () => {
   // saveState();
@@ -327,9 +386,37 @@ const toggleMoreActions = (evt, id) => {
 };
 
 const statusPopups = ref([]);
-const toggleStatus = (evt, id) => {
-  if (evt) evt.stopPropagation();
-  statusPopups.value[id] = !statusPopups.value[id];
+const toggleStatus = async (evt, row) => {
+  if (evt) {
+    evt.stopImmediatePropagation();
+    evt.stopPropagation();
+  }
+
+  const item = props.items.find((i) => i.id === row);
+  if (!item) return;
+
+  try {
+    const response = await axios.post(route('item.status'), {
+      id: item.id,
+      status_id: item.status_id
+    });
+
+    if (response.data.success) {
+      toast.success('Status updated successfully');
+      // Update the item's status in the local state
+      const updatedItem = props.items.find(i => i.id === item.id);
+      if (updatedItem) {
+        updatedItem.status_id = item.status_id;
+      }
+      // Force a reload of the items
+      router.reload({ only: ['items'] });
+    } else {
+      toast.error(response.data.message || 'Failed to update status');
+    }
+  } catch (error) {
+    console.error('Error updating status:', error);
+    toast.error(error.response?.data?.message || 'Error updating status');
+  }
 };
 
 const rowDatepicker = ref([]);
@@ -607,6 +694,21 @@ onUnmounted(() => {
     scrollContainer.value.removeEventListener("scroll", updateFadeOpacity);
   }
 });
+
+const showImageGenerator = ref(false);
+const selectedItemForImage = ref(null);
+
+const openImageGenerator = (item) => {
+  selectedItemForImage.value = item;
+  showImageGenerator.value = true;
+};
+
+const handleImageGenerated = (imageUrl) => {
+  if (selectedItemForImage.value) {
+    selectedItemForImage.value.image = imageUrl;
+    showImageGenerator.value = false;
+  }
+};
 </script>
 
 <template>
@@ -717,14 +819,24 @@ onUnmounted(() => {
             </template>
             <span>Export</span>
           </PrimaryButton>
-          <PrimaryButton @click="actions($event, -1, 'create')" color="#1a1a1a" opacity="100" hoverOpacity="100">
+          <!-- , 'update', 'delete', 'share' -->
+          <PrimaryButton 
+            v-for="action in ['add']" 
+            :key="action"
+            @click="actions($event, -1, action)"
+            :disabled="isLoading"
+            class="relative"
+          >
+            <template v-if="isLoading">
+              <Loader class="absolute left-2" />
+            </template>
             <template #icon>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icons">
                 <line x1="12" y1="5" x2="12" y2="19"></line>
                 <line x1="5" y1="12" x2="19" y2="12"></line>
               </svg>
             </template>
-            <span>Add Item</span>
+            <span>{{ isLoading ? 'Processing...' : action.charAt(0).toUpperCase() + action.slice(1) }}</span>
           </PrimaryButton>
         </div>
       </div>
@@ -916,10 +1028,31 @@ onUnmounted(() => {
     <div class="fade-mask" :style="{ opacity: fadeOpacity }"></div>
     <DialogModal :show="modal.active" @close="closeModal">
       <template #header>
-        <span>{{ modal.title + " " + activeRow.title }}</span>
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-medium text-white">
+            {{ modal.title }}
+            <span v-if="activeRow.title" class="text-primary">{{ activeRow.title }}</span>
+          </h2>
+          <button
+            type="button"
+            class="text-gray-400 hover:text-white transition-colors duration-200"
+            @click="closeModal"
+          >
+            <span class="sr-only">Close</span>
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
       </template>
+
       <template #content>
-        <form id="dialogForm">
+        <div v-if="modal.text" class="mt-4">
+          <p class="text-sm text-white/70">
+            {{ modal.text }}
+          </p>
+        </div>
+        <form id="dialogForm" @submit.prevent="callAction">
           <input name="id" v-model="activeRow.id" type="number" hidden disabled />
           <div class="flex flex-col gap-5 text-sm text-white">
             <span v-if="modal.text && modal.text.length > 0">{{ modal.text }}</span>
@@ -929,7 +1062,7 @@ onUnmounted(() => {
                   <Transition name="fade">
                     <div v-if="imageIcons" class="relative z-20 flex flex-col items-center gap-1">
                       <div class="relative z-20 flex items-center gap-1">
-                        <PrimaryButton tooltip="Upload" :onlyIcon="true">
+                        <PrimaryButton tooltip="Upload" :onlyIcon="true" @click="openImageGenerator(activeRow)">
                           <template #icon>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="icons" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                               <line x1="12" x2="12" y1="5" y2="19"></line>
@@ -937,17 +1070,7 @@ onUnmounted(() => {
                             </svg>
                           </template>
                         </PrimaryButton>
-                        <PrimaryButton tooltip="Camera" :onlyIcon="true">
-                          <template #icon>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="icons" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
-                              <circle cx="12" cy="13" r="4" />
-                            </svg>
-                          </template>
-                        </PrimaryButton>
-                      </div>
-                      <div class="relative z-20 flex items-center gap-1">
-                        <PrimaryButton tooltip="Generate" :onlyIcon="true">
+                        <PrimaryButton tooltip="Generate" :onlyIcon="true" @click="openImageGenerator(activeRow)">
                           <template #icon>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="icons" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                               <path d="M10.5 9C10.5 9 10.5 7 9.5 5C13.5 5 16 7.49997 16 7.49997C16 7.49997 19.5 7 22 12C21 17.5 16 18 16 18L12 20.5C12 20.5 12 19.5 12 17.5C9.5 16.5 6.99998 14 7 12.5C7.00001 11 10.5 9 10.5 9ZM10.5 9C10.5 9 11.5 8.5 12.5 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -956,19 +1079,10 @@ onUnmounted(() => {
                             </svg>
                           </template>
                         </PrimaryButton>
-                        <PrimaryButton tooltip="Delete" :onlyIcon="true">
-                          <template #icon>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="as-[18px]">
-                              <polyline points="3 6 5 6 21 6"></polyline>
-                              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                              <line x1="10" y1="11" x2="10" y2="17"></line>
-                              <line x1="14" y1="11" x2="14" y2="17"></line>
-                            </svg>
-                          </template>
-                        </PrimaryButton>
                       </div>
                     </div>
                   </Transition>
+                  <img v-if="activeRow.image" :src="activeRow.image" alt="Item image" class="h-full w-full object-cover rounded-xl" />
                 </div>
                 <div class="flex w-full flex-col gap-5">
                   <div class="flex w-full flex-col gap-1">
@@ -1030,10 +1144,27 @@ onUnmounted(() => {
           </div>
         </form>
       </template>
+
       <template #footer>
-        <PrimaryButton type="button" color="#ff0033" class="mr-auto" @click="closeModal">Close</PrimaryButton>
-        <PrimaryButton v-if="modal.button == 'Delete' && !activeRow.archived" type="button" @click="actions($event, activeRow.id, 'archive')" class="mr-3">Archive</PrimaryButton>
-        <PrimaryButton type="button" v-if="modal.button != ''" @click="callAction">{{ modal.button }}</PrimaryButton>
+        <div class="flex justify-end gap-3">
+          <button
+            type="button"
+            class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"
+            @click="closeModal"
+            :disabled="isLoading"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            form="dialogForm"
+            class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"
+            :disabled="isLoading"
+          >
+            <Loader v-if="isLoading" class="mr-2" />
+            {{ modal.button }}
+          </button>
+        </div>
       </template>
     </DialogModal>
     <DialogModal :show="settingsModal" @close="settingsModal = false">
@@ -1115,6 +1246,44 @@ onUnmounted(() => {
       </template>
       <template #footer>
         <PrimaryButton type="button" class="ml-auto mr-3" @click="settingsModal = false">Close</PrimaryButton>
+      </template>
+    </DialogModal>
+    <!-- Add sharing functionality -->
+    <div v-if="modal.active && modal.button === 'Share'" class="mt-4">
+      <InputLabel for="shareEmail" value="Share with email" />
+      <div class="flex gap-2">
+        <TextInput
+          id="shareEmail"
+          v-model="shareEmail"
+          type="email"
+          class="mt-1 block w-full"
+          placeholder="Enter email address"
+        />
+        <PrimaryButton 
+          @click="shareItem(activeRow)"
+          :disabled="isSharing || !shareEmail"
+          class="mt-1"
+        >
+          <template v-if="isSharing">
+            <Loader class="mr-2" />
+          </template>
+          Share
+        </PrimaryButton>
+      </div>
+    </div>
+    <DialogModal :show="showImageGenerator" @close="showImageGenerator = false">
+      <template #header>
+        <span>Generate or Upload Image</span>
+      </template>
+      <template #content>
+        <ImageGenerator 
+          v-if="selectedItemForImage"
+          :item="selectedItemForImage"
+          @imageGenerated="handleImageGenerated"
+        />
+      </template>
+      <template #footer>
+        <PrimaryButton type="button" class="ml-auto mr-3" @click="showImageGenerator = false">Close</PrimaryButton>
       </template>
     </DialogModal>
   </AppLayout>
@@ -1221,6 +1390,91 @@ tr:not(.head-row) {
   pointer-events: none;
   background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
   z-index: 10;
+}
+
+/* Add loading animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Add modal styles */
+.modal-header {
+  @apply flex items-center justify-between px-6 py-4 border-b border-white/10;
+}
+
+.modal-content {
+  @apply px-6 py-4;
+}
+
+.modal-footer {
+  @apply px-6 py-4 border-t border-white/10;
+}
+
+/* Improve status button styles */
+.status-button {
+  @apply relative flex items-center justify-center p-2 rounded-full transition-colors duration-200;
+}
+
+.status-button:hover {
+  @apply bg-opacity-20;
+}
+
+.status-button.active {
+  @apply ring-2 ring-offset-2 ring-offset-gray-800;
+}
+
+/* Modal transitions */
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+/* Button hover effects */
+button:not(:disabled):hover {
+  @apply transform scale-105 transition-transform duration-200;
+}
+
+/* Form input styles */
+input:disabled,
+textarea:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+/* Toast notification styles */
+.toast-success {
+  @apply bg-green-500 text-white;
+}
+
+.toast-error {
+  @apply bg-red-500 text-white;
+}
+
+/* Status popup styles */
+.status-popup {
+  @apply absolute right-0 top-0 bg-black/80 rounded-lg p-2 shadow-lg;
+}
+
+.status-popup-enter-active,
+.status-popup-leave-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.status-popup-enter-from,
+.status-popup-leave-to {
+  opacity: 0;
+  transform: translateX(10px);
 }
 </style>
 
