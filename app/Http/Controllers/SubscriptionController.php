@@ -6,6 +6,7 @@ use App\Models\Plan;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
 
@@ -24,33 +25,52 @@ class SubscriptionController extends Controller
 
     public function createCheckoutSession(Request $request)
     {
-        $plan = Plan::findOrFail($request->plan_id);
-        $billingCycle = $request->billing_cycle;
+        try {
+            $plan = Plan::findOrFail($request->plan_id);
+            $billingCycle = $request->billing_cycle;
 
-        $session = Session::create([
-            'payment_method_types' => ['card'],
-            'line_items' => [[
-                'price_data' => [
-                    'currency' => 'usd',
-                    'product_data' => [
-                        'name' => $plan->name,
+            $session = Session::create([
+                'payment_method_types' => ['card'],
+                'line_items' => [[
+                    'price_data' => [
+                        'currency' => 'usd',
+                        'product_data' => [
+                            'name' => $plan->name,
+                        ],
+                        'unit_amount' => $billingCycle === 'annual' 
+                            ? $plan->annual_price * 100 
+                            : $plan->monthly_price * 100,
+                        'recurring' => [
+                            'interval' => $billingCycle === 'annual' ? 'year' : 'month',
+                        ],
                     ],
-                    'unit_amount' => $billingCycle === 'annual' 
-                        ? $plan->annual_price * 100 
-                        : $plan->monthly_price * 100,
-                    'recurring' => [
-                        'interval' => $billingCycle === 'annual' ? 'year' : 'month',
-                    ],
-                ],
-                'quantity' => 1,
-            ]],
-            'mode' => 'subscription',
-            'success_url' => route('subscription.success') . '?session_id={CHECKOUT_SESSION_ID}',
-            'cancel_url' => route('plans'),
-            'customer_email' => Auth::user()->email,
-        ]);
+                    'quantity' => 1,
+                ]],
+                'mode' => 'subscription',
+                'success_url' => route('subscriptions.success') . '?session_id={CHECKOUT_SESSION_ID}',
+                'cancel_url' => route('subscriptions.plans'),
+                'customer_email' => Auth::user()->email,
+            ]);
 
-        return response()->json(['sessionId' => $session->id]);
+            Log::info('Stripe checkout session created', [
+                'user_id' => Auth::id(),
+                'plan_id' => $plan->id,
+                'billing_cycle' => $billingCycle,
+                'session_id' => $session->id
+            ]);
+
+            return response()->json(['url' => $session->url]);
+        } catch (\Exception $e) {
+            Log::error('Stripe checkout session creation failed', [
+                'error' => $e->getMessage(),
+                'user_id' => Auth::id(),
+                'plan_id' => $request->plan_id
+            ]);
+            
+            return response()->json([
+                'error' => 'Failed to create checkout session. Please try again.'
+            ], 500);
+        }
     }
 
     public function success(Request $request)

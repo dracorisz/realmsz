@@ -26,6 +26,7 @@ onMounted(() => {
 </script>
 
 <template>
+  <!-- Temporarily hidden
   <ActionSection>
     <template #title>Recent Activity</template>
     <template #description>View your recent network interactions and profile updates.</template>
@@ -53,5 +54,6 @@ onMounted(() => {
       </div>
     </template>
   </ActionSection>
+  -->
 </template>
 

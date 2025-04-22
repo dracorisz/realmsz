@@ -46,17 +46,14 @@ export default defineConfig({
   // ssr: {
   //   noExternal: ["@inertiajs/server"],
   // },
-  // build: {
-  //   rollupOptions: {
-  //     output: {
-  //       manualChunks: {
-  //         vendor: ["vue", "@inertiajs/vue3"],
-  //         gsap: ["gsap"],
-  //         fontawesome: ["@fortawesome/fontawesome-svg-core", "@fortawesome/free-brands-svg-icons", "@fortawesome/free-solid-svg-icons", "@fortawesome/free-regular-svg-icons"],
-  //         heroicons: ["@heroicons/vue"],
-  //       },
-  //     },
-  //   },
-  // },
+  build: {
+    rollupOptions: {
+      output: {
+        entryFileNames: '[name].js',
+        chunkFileNames: '[name].js',
+        assetFileNames: '[name].[ext]'
+      }
+    }
+  }
 });
 

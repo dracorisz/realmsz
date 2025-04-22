@@ -82,7 +82,9 @@ Route::get('/plans', [PlanController::class, 'index']);
 
 // Subscription routes
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/subscriptions', [SubscriptionController::class, 'create']);
-    Route::get('/subscriptions/success', [SubscriptionController::class, 'success'])->name('subscription.success');
-    Route::get('/subscriptions/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
+    Route::prefix('subscriptions')->group(function () {
+        Route::post('/', [SubscriptionController::class, 'create'])->name('subscriptions.create');
+        Route::get('/success', [SubscriptionController::class, 'success'])->name('subscriptions.success');
+        Route::get('/cancel', [SubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
+    });
 });

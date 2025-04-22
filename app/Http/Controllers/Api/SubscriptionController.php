@@ -51,8 +51,8 @@ class SubscriptionController extends Controller
                     'quantity' => 1,
                 ]],
                 'mode' => 'subscription',
-                'success_url' => route('subscription.success') . '?session_id={CHECKOUT_SESSION_ID}',
-                'cancel_url' => route('subscription.cancel'),
+                'success_url' => route('subscriptions.success') . '?session_id={CHECKOUT_SESSION_ID}',
+                'cancel_url' => route('subscriptions.cancel'),
                 'metadata' => [
                     'plan_id' => $plan->id,
                     'user_id' => $user->id,

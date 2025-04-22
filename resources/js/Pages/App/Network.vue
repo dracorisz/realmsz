@@ -59,6 +59,7 @@ const fetchConnections = async () => {
     const response = await axios.get(route("network.members"), {
       params: {
         type: activeTab.value,
+        organization_id: form.organization_id,
       },
     });
     connections.value = response.data.users;
@@ -156,7 +157,7 @@ watch(activeTab, () => {
     </template>
 
     <div class="py-12">
-      <div class="mx-auto max-w-7xl">
+      <div class="mx-auto w-full">
         <div class="overflow-hidden bg-gray-800 shadow-sm dark:bg-white sm:rounded-lg">
           <div class="p-6 text-gray-100 dark:text-gray-900">
             <!-- Tabs -->
@@ -177,7 +178,7 @@ watch(activeTab, () => {
             <div class="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               <div v-for="connection in filteredConnections" :key="connection.id" class="rounded-lg bg-white p-6 shadow dark:bg-gray-700">
                 <div class="flex items-center space-x-4">
-                  <img :src="connection.avatar || '/images/default-avatar.png'" :alt="connection.name" class="h-12 w-12 rounded-full" />
+                  <img :src="connection.avatar || 'https://dracoscopia.com/logo.png'" :alt="connection.name" class="h-12 w-12 rounded-full" />
                   <div>
                     <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
                       {{ connection.name }}
@@ -185,21 +186,18 @@ watch(activeTab, () => {
                     <p class="text-sm text-gray-500 dark:text-gray-400">
                       {{ connection.email }}
                     </p>
+                    <p v-if="connection.organization" class="text-sm text-indigo-600 dark:text-indigo-400">
+                      {{ connection.organization.name }}
+                    </p>
                   </div>
                 </div>
                 <div class="mt-4">
-                  <p class="text-sm text-gray-600 dark:text-gray-300">
+                  <p class="text-sm text-gray-600 dark:text-gray-300 capitalize">
                     {{ connection.role }}
                   </p>
                 </div>
                 <div class="mt-4 flex space-x-2">
-                  <SecondaryButton
-                    @click="
-                      selectedUser = connection;
-                      showAddToTaskModal = true;
-                    "
-                    >Add to Task
-                  </SecondaryButton>
+                  <PrimaryButton color="accent" @click="selectedUser = connection; showAddToTaskModal = true">Add to Task</PrimaryButton>
                   <PrimaryButton v-if="connection.organization" @click="activeTab = 'organization'"> View Organization </PrimaryButton>
                 </div>
               </div>

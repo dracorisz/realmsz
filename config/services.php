@@ -62,4 +62,8 @@ return [
         'api_key' => env('DEZGO_API_KEY'),
     ],
 
+    'stripe' => [
+        'secret' => env('STRIPE_SECRET', 'whsec_pMBLWharUgzUZJ9jv9oZ9n6wL7NRoITE'),
+    ],
+
 ];

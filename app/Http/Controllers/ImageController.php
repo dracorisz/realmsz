@@ -56,9 +56,21 @@ class ImageController extends Controller
             $s3Url = config('filesystems.disks.s3.url') . '/' . $filename;
 
             // Save the image URL to the plan
-            // $plan = Plan::find($request->item_id);
-            // $plan->image = $s3Url;
-            // $plan->save();
+            $plan = Plan::find($request->item_id);
+            if (!$plan) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Plan not found'
+                ], 404);
+            }
+
+            $plan->image = $s3Url;
+            if (!$plan->save()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to save image URL to plan'
+                ], 500);
+            }
 
             return response()->json([
                 'success' => true,

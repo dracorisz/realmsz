@@ -62,12 +62,14 @@ Route::middleware(['protected'])->group(function () {
     Route::get('/plans', [ItemController::class, 'index'])->name('plans');
     
     // Subscription management
-    Route::get('/waiting', function () { return Inertia::render('Subscription/Waiting'); })->name('waiting');
-    Route::post('/subscription/checkout', [SubscriptionController::class, 'createCheckoutSession'])->name('subscription.checkout');
-    Route::get('/subscription/success', function () { return Inertia::render('Subscription/Success'); })->name('subscription.success');
-    Route::get('/subscription/cancel', function () { return Inertia::render('Subscription/Cancel'); })->name('subscription.cancel');
-    Route::post('/packages/{package}/subscribe', [PackageController::class, 'subscribe'])->name('packages.subscribe');
-    Route::post('/subscription/cancel', [PackageController::class, 'cancel'])->name('subscription.cancel');
+    Route::prefix('subscriptions')->group(function () {
+        Route::get('/', function () { return Inertia::render('App/Profile/Main'); })->name('subscriptions.plans');
+        Route::get('/waiting', function () { return Inertia::render('Subscription/Waiting'); })->name('waiting');
+        Route::post('/checkout', [SubscriptionController::class, 'createCheckoutSession'])->name('subscriptions.checkout');
+        Route::get('/success', function () { return Inertia::render('Subscription/Success'); })->name('subscriptions.success');
+        Route::get('/cancel', function () { return Inertia::render('Subscription/Cancel'); })->name('subscriptions.cancel');
+        Route::post('/cancel', [PackageController::class, 'cancel'])->name('subscriptions.cancel');
+    });
 });
 
 // Stripe Webhook

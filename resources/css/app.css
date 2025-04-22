@@ -153,6 +153,9 @@ textarea {
 }
 
 select,
+[type="tel"],
+[type="url"],
+[type="number"],
 [type="text"],
 [type="date"],
 [type="email"],
