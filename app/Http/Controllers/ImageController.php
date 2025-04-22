@@ -56,16 +56,16 @@ class ImageController extends Controller
             $s3Url = config('filesystems.disks.s3.url') . '/' . $filename;
 
             // Save the image URL to the plan
-            $plan = Plan::find($request->item_id);
-            $plan->image = $s3Url;
-            $plan->save();
+            // $plan = Plan::find($request->item_id);
+            // $plan->image = $s3Url;
+            // $plan->save();
 
             return response()->json([
                 'success' => true,
                 'image_url' => $s3Url
             ]);
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Image generation failed: ' . $e->getMessage());
+            // Log::error('Image generation failed: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'An error occurred while generating the image'
@@ -89,6 +89,7 @@ class ImageController extends Controller
             }
 
             $image = $request->file('image');
+            Log::info($image);
             $filename = 'uploads/' . Str::uuid() . '.' . $image->getClientOriginalExtension();
             
             try {
@@ -97,38 +98,37 @@ class ImageController extends Controller
                     throw new \Exception('Failed to save image to storage');
                 }
             } catch (\Exception $e) {
-                \Illuminate\Support\Facades\Log::error('S3 Upload Error: ' . $e->getMessage());
+                // \Illuminate\Support\Facades\Log::error('S3 Upload Error: ' . $e->getMessage());
                 return response()->json([
                     'success' => false,
                     'message' => 'Failed to upload image to storage: ' . $e->getMessage()
                 ], 500);
             }
-
-            $s3Url = config('filesystems.disks.s3.url') . '/' . $filename;
+            // $s3Url = config('filesystems.disks.s3.url') . '/' . $filename;
 
             // Save the image URL to the plan
-            $plan = Plan::find($request->item_id);
-            if (!$plan) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Plan not found'
-                ], 404);
-            }
+            // $plan = Plan::find($request->item_id);
+            // if (!$plan) {
+            //     return response()->json([
+            //         'success' => false,
+            //         'message' => 'Plan not found'
+            //     ], 404);
+            // }
 
-            $plan->image = $s3Url;
-            if (!$plan->save()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Failed to save image URL to plan'
-                ], 500);
-            }
+            // $plan->image = $s3Url;
+            // if (!$plan->save()) {
+            //     return response()->json([
+            //         'success' => false,
+            //         'message' => 'Failed to save image URL to plan'
+            //     ], 500);
+            // }
 
             return response()->json([
                 'success' => true,
-                'image_url' => $s3Url
+                // 'image_url' => $s3Url
             ]);
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Image upload failed: ' . $e->getMessage());
+            // \Illuminate\Support\Facades\Log::error('Image upload failed: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'An error occurred while uploading the image: ' . $e->getMessage()
@@ -175,20 +175,20 @@ class ImageController extends Controller
             ]);
 
             if ($response->getStatusCode() !== 200) {
-                \Illuminate\Support\Facades\Log::error('Dezgo API error: ' . $response->getBody());
+                // \Illuminate\Support\Facades\Log::error('Dezgo API error: ' . $response->getBody());
                 return null;
             }
 
             $data = json_decode($response->getBody(), true);
             
             if (!isset($data['image_url'])) {
-                \Illuminate\Support\Facades\Log::error('Invalid response from Dezgo API: ' . json_encode($data));
+                // \Illuminate\Support\Facades\Log::error('Invalid response from Dezgo API: ' . json_encode($data));
                 return null;
             }
 
             return $data['image_url'];
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Dezgo API call failed: ' . $e->getMessage());
+            // \Illuminate\Support\Facades\Log::error('Dezgo API call failed: ' . $e->getMessage());
             return null;
         }
     }

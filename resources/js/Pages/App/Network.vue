@@ -8,8 +8,8 @@ import SecondaryButton from "@/Components/SecondaryButton.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
 import InputError from "@/Components/InputError.vue";
-import axios from 'axios';
-import { useToast } from 'vue-toastification';
+import axios from "axios";
+import { useToast } from "vue-toastification";
 
 const props = defineProps({
   users: Object,
@@ -18,21 +18,21 @@ const props = defineProps({
 });
 
 const toast = useToast();
-const activeTab = ref('organization');
+const activeTab = ref("organization");
 const showAddMemberModal = ref(false);
 const showAddToTaskModal = ref(false);
 const showReviewModal = ref(false);
 const selectedUser = ref(null);
-const searchQuery = ref('');
+const searchQuery = ref("");
 const sortBy = ref("name");
 const sortDirection = ref("asc");
 const isLoading = ref(false);
 const connections = ref([]);
 
 const tabs = [
-  { id: 'organization', label: 'Organization' },
-  { id: 'realmsz', label: 'Realmsz (Public)' },
-  { id: 'private', label: 'Private' }
+  { id: "organization", label: "Organization" },
+  { id: "realmsz", label: "Realmsz (Public)" },
+  { id: "private", label: "Private" },
 ];
 
 const form = useForm({
@@ -56,15 +56,16 @@ const reviewForm = useForm({
 const fetchConnections = async () => {
   isLoading.value = true;
   try {
-    const response = await axios.get(route('network.index'), {
+    const response = await axios.get(route("network.members"), {
       params: {
-        type: activeTab.value
-      }
+        type: activeTab.value,
+      },
     });
-    connections.value = response.data.connections;
+    connections.value = response.data.users;
+    console.log(connections.value);
   } catch (error) {
-    console.error('Error fetching connections:', error);
-    toast.error('Failed to load connections');
+    console.error("Error fetching connections:", error);
+    toast.error("Failed to load connections");
   } finally {
     isLoading.value = false;
   }
@@ -72,13 +73,10 @@ const fetchConnections = async () => {
 
 const filteredConnections = computed(() => {
   if (!searchQuery.value) return connections.value;
-  
-  const query = searchQuery.value.toLowerCase();
-  return connections.value.filter(connection => 
-    connection.name.toLowerCase().includes(query) ||
-    connection.email.toLowerCase().includes(query) ||
-    connection.role.toLowerCase().includes(query)
-  );
+
+  // const query = searchQuery.value.toLowerCase();
+  // return connections.value.filter((connection) => connection.name.toLowerCase().includes(query) || connection.email.toLowerCase().includes(query) || connection.role.toLowerCase().includes(query));
+  return connections.value;
 });
 
 const updateVisibility = (show) => {
@@ -146,8 +144,8 @@ watch(activeTab, () => {
 
   <AppLayout>
     <template #header>
-      <div class="flex items-center justify-between">
-        <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">Network</h2>
+      <div class="flex w-full items-center justify-between">
+        <h2 class="text-xl font-semibold leading-tight text-gray-200">Network</h2>
         <div class="flex items-center space-x-4">
           <label class="flex items-center space-x-2">
             <input type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" @change="updateVisibility($event.target.checked)" />
@@ -158,21 +156,13 @@ watch(activeTab, () => {
     </template>
 
     <div class="py-12">
-      <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-        <div class="overflow-hidden bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg">
-          <div class="p-6 text-gray-900 dark:text-gray-100">
+      <div class="mx-auto max-w-7xl">
+        <div class="overflow-hidden bg-gray-800 shadow-sm dark:bg-white sm:rounded-lg">
+          <div class="p-6 text-gray-100 dark:text-gray-900">
             <!-- Tabs -->
-            <div class="border-b border-gray-200 dark:border-gray-700">
+            <div class="border-b border-gray-700 dark:border-gray-200">
               <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-                <button
-                  v-for="tab in tabs"
-                  :key="tab.id"
-                  @click="activeTab = tab.id"
-                  :class="[
-                    activeTab === tab.id ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:text-gray-300',
-                    'whitespace-nowrap border-b-2 px-1 py-4 text-sm font-medium'
-                  ]"
-                >
+                <button v-for="tab in tabs" :key="tab.id" @click="activeTab = tab.id" :class="[activeTab === tab.id ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:text-gray-300', 'whitespace-nowrap border-b-2 px-1 py-4 text-sm font-medium']">
                   {{ tab.label }}
                 </button>
               </nav>
@@ -208,10 +198,9 @@ watch(activeTab, () => {
                       selectedUser = connection;
                       showAddToTaskModal = true;
                     "
-                  >
-                    Add to Task
+                    >Add to Task
                   </SecondaryButton>
-                  <PrimaryButton v-if="connection.organization" @click="$inertia.visit(route('organizations.show', connection.organization.id))"> View Organization </PrimaryButton>
+                  <PrimaryButton v-if="connection.organization" @click="activeTab = 'organization'"> View Organization </PrimaryButton>
                 </div>
               </div>
             </div>

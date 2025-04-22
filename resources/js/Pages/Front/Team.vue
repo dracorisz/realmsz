@@ -34,7 +34,7 @@ const teamMembers = [
     name: 'Dragol Rewainde',
     role: 'Enthusiast',
     image: 'https://dracoscopia.com/dragol.png',
-    email: 'dragol@realmsz.com'
+    email: 'scopia@realmsz.com'
   },
   {
     name: 'Join Our Team',
@@ -46,22 +46,22 @@ const teamMembers = [
 
 const advisors = [
   {
-    name: 'Dr. Robert Wilson',
+    name: 'Robert Nnadi',
     role: 'Blockchain Advisor',
-    image: 'https://dracoscopia.com/tt.jpg',
-    email: 'robert@realmsz.com'
+    image: 'https://dracoscopia.com/tt.png',
+    email: 'scopia@realmsz.com'
   },
   {
-    name: 'Lisa Thompson',
+    name: 'Lisa Nnadi',
     role: 'Business Strategy Advisor',
-    image: 'https://dracoscopia.com/aes.jpg',
-    email: 'lisa@realmsz.com'
+    image: 'https://dracoscopia.com/aes.png',
+    email: 'scopia@realmsz.com'
   }
 ];
 </script>
 
 <template>
-  <FrontLayout>
+  <FrontLayout title="Team | Realmsz Digital Asset Management">
     <div class="min-h-screen bg-gradient-to-b from-dragon-dark-900 to-dragon-dark-800">
       <!-- Hero Section -->
       <section class="relative py-20 px-4 sm:px-6 lg:px-8">

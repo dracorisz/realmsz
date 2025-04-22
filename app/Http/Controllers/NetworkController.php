@@ -14,13 +14,13 @@ class NetworkController extends Controller
 	public function index(Request $request)
 	{
 		$query = User::query()
-			->with(['organization', 'items'])
-			->where('id', '!=', Auth::id());
+			->with(['organization', 'items']);
+			// ->where('id', '!=', Auth::id());
 
 		// Filter by role if specified
-		if ($request->has('role') && $request->role !== 'all') {
-			$query->where('role', $request->role);
-		}
+		// if ($request->has('role') && $request->role !== 'all') {
+		// 	$query->where('role', $request->role);
+		// }
 
 		// Filter by organization if specified
 		if ($request->has('organization_id')) {
@@ -30,7 +30,7 @@ class NetworkController extends Controller
 		}
 
 		// Filter by visibility preference
-		$query->where('show_in_network', true);
+		// $query->where('show_in_network', true);
 
 		$users = $query->paginate(12);
 		$organizations = Organization::all();
@@ -45,6 +45,41 @@ class NetworkController extends Controller
 		]);
 	}
 
+	public function members(Request $request)
+	{
+		$query = User::query()
+			->with(['organization', 'items']);
+			// ->where('id', '!=', Auth::id());
+
+		// Filter by role if specified
+		// if ($request->has('role') && $request->role !== 'all') {
+		// 	$query->where('role', $request->role);
+		// }
+
+		// Filter by organization if specified
+		// if ($request->has('organization_id')) {
+		// 	$query->whereHas('organization', function ($q) use ($request) {
+		// 		$q->where('organizations.id', $request->organization_id);
+		// 	});
+		// }
+
+		// Filter by visibility preference
+		// $query->where('show_in_network', true);
+
+		// $users = $query->paginate(12);
+		$users = $query->get();
+		$organizations = Organization::all();
+
+		return response()->json([
+			'users' => $users,
+			'organizations' => $organizations,
+			// 'filters' => [
+			// 	'role' => $request->role ?? 'all',
+			// 	'organization_id' => $request->organization_id
+			// ]
+		]);
+	}
+
 	public function updateVisibility(Request $request)
 	{
 		$request->validate([
@@ -54,7 +89,7 @@ class NetworkController extends Controller
 		$user = Auth::user();
 		User::where('id', $user->id)->update(['show_in_network' => $request->show_in_network]);
 
-		return response()->json(['message' => 'Visibility updated successfully']);
+		return 'Visibility updated successfully';
 	}
 
 	public function addToTask(Request $request)

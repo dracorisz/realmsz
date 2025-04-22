@@ -63,7 +63,7 @@ Route::middleware(['protected'])->group(function () {
     
     // Subscription management
     Route::get('/waiting', function () { return Inertia::render('Subscription/Waiting'); })->name('waiting');
-    Route::post('/subscription/checkout', [SubscriptionController::class, 'createCheckoutSession'])->name('subscription');
+    Route::post('/subscription/checkout', [SubscriptionController::class, 'createCheckoutSession'])->name('subscription.checkout');
     Route::get('/subscription/success', function () { return Inertia::render('Subscription/Success'); })->name('subscription.success');
     Route::get('/subscription/cancel', function () { return Inertia::render('Subscription/Cancel'); })->name('subscription.cancel');
     Route::post('/packages/{package}/subscribe', [PackageController::class, 'subscribe'])->name('packages.subscribe');
@@ -86,9 +86,13 @@ Route::get('/test-db', function () {
 // Network Routes
 Route::middleware(['auth'])->group(function () {
     Route::get('/network', [NetworkController::class, 'index'])->name('network');
+    Route::get('/network/members', [NetworkController::class, 'members'])->name('network.members');
     Route::post('/network/visibility', [NetworkController::class, 'updateVisibility'])->name('network.visibility');
     Route::post('/network/add-to-task', [NetworkController::class, 'addToTask'])->name('network.add-to-task');
     Route::post('/network/remove-from-task', [NetworkController::class, 'removeFromTask'])->name('network.remove-from-task');
+    
+    // User activities
+    Route::get('/user/activities', [ProfileController::class, 'activities'])->name('user.activities');
 });
 
 // New routes for image generation and upload

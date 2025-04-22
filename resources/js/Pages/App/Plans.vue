@@ -15,7 +15,7 @@ import Loader from "../../Components/Loader.vue";
 import { useToast } from "vue-toastification";
 import axios from "axios";
 import colors from "tailwindcss/colors";
-import ImageGenerator from '../../Components/ImageGenerator.vue';
+import ImageGenerator from "../../Components/ImageGenerator.vue";
 
 const props = defineProps({
   items: Array,
@@ -28,7 +28,7 @@ const props = defineProps({
 const toast = useToast();
 const isLoading = ref(false);
 const isSharing = ref(false);
-const shareEmail = ref('');
+const shareEmail = ref("");
 
 const activeRow = ref({
   id: 0,
@@ -124,38 +124,38 @@ const callAction = async () => {
       data: formData,
       headers: { "Content-Type": "multipart/form-data" },
     });
-    
-    let successMessage = '';
-    if (typeof response.data === 'string') {
+
+    let successMessage = "";
+    if (typeof response.data === "string") {
       successMessage = response.data;
     } else if (response.data.message) {
       successMessage = response.data.message;
     } else if (response.data.success) {
       successMessage = response.data.success;
     } else {
-      successMessage = 'Operation completed successfully';
+      successMessage = "Operation completed successfully";
     }
-    
+
     toast.success(successMessage);
     closeModal();
-    router.reload({ only: ['items'] });
+    router.reload({ only: ["items"] });
   } catch (err) {
-    console.error('Operation failed:', err);
-    let errorMessage = '';
+    console.error("Operation failed:", err);
+    let errorMessage = "";
     if (err.response) {
-      if (typeof err.response.data === 'string') {
+      if (typeof err.response.data === "string") {
         errorMessage = err.response.data;
       } else if (err.response.data.message) {
         errorMessage = err.response.data.message;
       } else if (err.response.data.error) {
         errorMessage = err.response.data.error;
       } else {
-        errorMessage = 'An error occurred';
+        errorMessage = "An error occurred";
       }
     } else {
-      errorMessage = 'Network error occurred';
+      errorMessage = "Network error occurred";
     }
-    
+
     toast.error(errorMessage);
     errors.value.title = errorMessage;
   } finally {
@@ -165,27 +165,27 @@ const callAction = async () => {
 
 const shareItem = async (item) => {
   if (!shareEmail.value) {
-    toast.error('Please enter an email address');
+    toast.error("Please enter an email address");
     return;
   }
 
   isSharing.value = true;
   try {
-    const response = await axios.post(route('item.share'), {
+    const response = await axios.post(route("item.share"), {
       item_id: item.id,
-      email: shareEmail.value
+      email: shareEmail.value,
     });
 
     if (response.data.success) {
-      toast.success('Item shared successfully');
-      shareEmail.value = '';
+      toast.success("Item shared successfully");
+      shareEmail.value = "";
       closeModal();
     } else {
-      toast.error(response.data.message || 'Failed to share item');
+      toast.error(response.data.message || "Failed to share item");
     }
   } catch (err) {
-    console.error('Error sharing item:', err);
-    toast.error(err.response?.data?.message || 'Error sharing item');
+    console.error("Error sharing item:", err);
+    toast.error(err.response?.data?.message || "Error sharing item");
   } finally {
     isSharing.value = false;
   }
@@ -294,7 +294,7 @@ const dragStart = (evt, item) => {
   const clone = tr.cloneNode(true);
   clone.classList.add("ghost");
   clone.innerHTML = "Release to drop...";
-  
+
   const layout = document.querySelector("#dragref");
   layout.appendChild(clone);
   evt.dataTransfer.setDragImage(clone, clone.offsetWidth / 2, clone.offsetHeight / 2);
@@ -323,8 +323,8 @@ const dragOver = (evt) => {
   evt.preventDefault();
   const dropZone = evt.target.closest("tr");
   if (!dropZone) return;
-  
-  document.querySelectorAll(".drop-zone").forEach(el => el.classList.remove("drop-zone"));
+
+  document.querySelectorAll(".drop-zone").forEach((el) => el.classList.remove("drop-zone"));
   dropZone.classList.add("drop-zone");
 };
 
@@ -340,7 +340,7 @@ const dragLeave = (evt) => {
 };
 
 const clearDragClasses = () => {
-  document.querySelectorAll(".drag-element, .drop-zone").forEach(el => {
+  document.querySelectorAll(".drag-element, .drop-zone").forEach((el) => {
     el.classList.remove("drag-element", "drop-zone");
   });
 };
@@ -394,29 +394,30 @@ const toggleStatus = async (evt, row) => {
 
   const item = props.items.find((i) => i.id === row);
   if (!item) return;
+  statusPopups.value[item.id] = !statusPopups.value[item.id];
 
-  try {
-    const response = await axios.post(route('item.status'), {
-      id: item.id,
-      status_id: item.status_id
-    });
+  // try {
+  //   const response = await axios.post(route('item.status'), {
+  //     id: item.id,
+  //     status_id: item.status_id
+  //   });
 
-    if (response.data.success) {
-      toast.success('Status updated successfully');
-      // Update the item's status in the local state
-      const updatedItem = props.items.find(i => i.id === item.id);
-      if (updatedItem) {
-        updatedItem.status_id = item.status_id;
-      }
-      // Force a reload of the items
-      router.reload({ only: ['items'] });
-    } else {
-      toast.error(response.data.message || 'Failed to update status');
-    }
-  } catch (error) {
-    console.error('Error updating status:', error);
-    toast.error(error.response?.data?.message || 'Error updating status');
-  }
+  //   if (response.data.success) {
+  //     toast.success('Status updated successfully');
+  //     // Update the item's status in the local state
+  //     const updatedItem = props.items.find(i => i.id === item.id);
+  //     if (updatedItem) {
+  //       updatedItem.status_id = item.status_id;
+  //     }
+  //     // Force a reload of the items
+  //     router.reload({ only: ['items'] });
+  //   } else {
+  //     toast.error(response.data.message || 'Failed to update status');
+  //   }
+  // } catch (error) {
+  //   console.error('Error updating status:', error);
+  //   toast.error(error.response?.data?.message || 'Error updating status');
+  // }
 };
 
 const rowDatepicker = ref([]);
@@ -795,7 +796,7 @@ const handleImageGenerated = (imageUrl) => {
           </span>
         </div>
         <Toggle v-model:active="showArchived" label="Show Archived" @update:active="toggleArchive" />
-        <div class="flex mx-auto items-center text-xs text-white/70">
+        <div class="mx-auto flex items-center text-xs text-white/70">
           <span>Showing {{ finalItems.length }} items.</span>
         </div>
         <div class="ml-auto flex items-center gap-3">
@@ -820,13 +821,7 @@ const handleImageGenerated = (imageUrl) => {
             <span>Export</span>
           </PrimaryButton>
           <!-- , 'update', 'delete', 'share' -->
-          <PrimaryButton 
-            v-for="action in ['add']" 
-            :key="action"
-            @click="actions($event, -1, action)"
-            :disabled="isLoading"
-            class="relative"
-          >
+          <PrimaryButton v-for="action in ['add']" :key="action" @click="actions($event, -1, action)" :disabled="isLoading" class="relative">
             <template v-if="isLoading">
               <Loader class="absolute left-2" />
             </template>
@@ -836,7 +831,7 @@ const handleImageGenerated = (imageUrl) => {
                 <line x1="5" y1="12" x2="19" y2="12"></line>
               </svg>
             </template>
-            <span>{{ isLoading ? 'Processing...' : action.charAt(0).toUpperCase() + action.slice(1) }}</span>
+            <span>{{ isLoading ? "Processing..." : action.charAt(0).toUpperCase() + action.slice(1) }}</span>
           </PrimaryButton>
         </div>
       </div>
@@ -1029,15 +1024,11 @@ const handleImageGenerated = (imageUrl) => {
     <DialogModal :show="modal.active" @close="closeModal">
       <template #header>
         <div class="flex items-center justify-between">
-          <h2 class="text-lg font-medium text-white">
+          <h2 class="text-sm font-medium text-white/70">
             {{ modal.title }}
-            <span v-if="activeRow.title" class="text-primary">{{ activeRow.title }}</span>
+            <span v-if="activeRow.title" class="text-white">{{ activeRow.title }}</span>
           </h2>
-          <button
-            type="button"
-            class="text-gray-400 hover:text-white transition-colors duration-200"
-            @click="closeModal"
-          >
+          <button type="button" class="text-gray-400 transition-colors duration-200 hover:text-white" @click="closeModal">
             <span class="sr-only">Close</span>
             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -1062,7 +1053,7 @@ const handleImageGenerated = (imageUrl) => {
                   <Transition name="fade">
                     <div v-if="imageIcons" class="relative z-20 flex flex-col items-center gap-1">
                       <div class="relative z-20 flex items-center gap-1">
-                        <PrimaryButton tooltip="Upload" :onlyIcon="true" @click="openImageGenerator(activeRow)">
+                        <PrimaryButton tooltip="Upload" :onlyIcon="true" @click="openImageGenerator(activeRow.id)">
                           <template #icon>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="icons" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                               <line x1="12" x2="12" y1="5" y2="19"></line>
@@ -1070,7 +1061,7 @@ const handleImageGenerated = (imageUrl) => {
                             </svg>
                           </template>
                         </PrimaryButton>
-                        <PrimaryButton tooltip="Generate" :onlyIcon="true" @click="openImageGenerator(activeRow)">
+                        <PrimaryButton tooltip="Generate" :onlyIcon="true" @click="openImageGenerator(activeRow.id)">
                           <template #icon>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="icons" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                               <path d="M10.5 9C10.5 9 10.5 7 9.5 5C13.5 5 16 7.49997 16 7.49997C16 7.49997 19.5 7 22 12C21 17.5 16 18 16 18L12 20.5C12 20.5 12 19.5 12 17.5C9.5 16.5 6.99998 14 7 12.5C7.00001 11 10.5 9 10.5 9ZM10.5 9C10.5 9 11.5 8.5 12.5 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -1082,7 +1073,7 @@ const handleImageGenerated = (imageUrl) => {
                       </div>
                     </div>
                   </Transition>
-                  <img v-if="activeRow.image" :src="activeRow.image" alt="Item image" class="h-full w-full object-cover rounded-xl" />
+                  <img v-if="activeRow.image" :src="activeRow.image" alt="Item image" class="h-full w-full rounded-xl object-cover" />
                 </div>
                 <div class="flex w-full flex-col gap-5">
                   <div class="flex w-full flex-col gap-1">
@@ -1147,20 +1138,8 @@ const handleImageGenerated = (imageUrl) => {
 
       <template #footer>
         <div class="flex justify-end gap-3">
-          <button
-            type="button"
-            class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"
-            @click="closeModal"
-            :disabled="isLoading"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            form="dialogForm"
-            class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"
-            :disabled="isLoading"
-          >
+          <button type="button" class="inline-flex items-center rounded-md border border-transparent bg-gray-800 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900" @click="closeModal" :disabled="isLoading">Cancel</button>
+          <button type="submit" form="dialogForm" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-indigo-700 focus:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-indigo-900" :disabled="isLoading">
             <Loader v-if="isLoading" class="mr-2" />
             {{ modal.button }}
           </button>
@@ -1174,23 +1153,23 @@ const handleImageGenerated = (imageUrl) => {
       <template #content>
         <div class="flex w-full flex-col">
           <div class="flex w-full items-center justify-between rounded-2xl border border-white/10 bg-black/10 px-3 py-1">
-              <div class="flex items-center gap-2 text-white/70">
-                <svg width="24" height="24" class="icons" stroke-width="2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor">
-                  <path d="M19 8C20.6569 8 22 6.65685 22 5C22 3.34315 20.6569 2 19 2C17.3431 2 16 3.34315 16 5C16 6.65685 17.3431 8 19 8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                  <path d="M21 12V15C21 18.3137 18.3137 21 15 21H9C5.68629 21 3 18.3137 3 15V9C3 5.68629 5.68629 3 9 3H12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                </svg>
-                <span>Click on icon, color or title to change it.</span>
-              </div>
-              <PrimaryButton color="#000">
-                <template #icon>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icons">
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                  </svg>
-                </template>
-                <span>Add</span>
-              </PrimaryButton>
+            <div class="flex items-center gap-2 text-white/70">
+              <svg width="24" height="24" class="icons" stroke-width="2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor">
+                <path d="M19 8C20.6569 8 22 6.65685 22 5C22 3.34315 20.6569 2 19 2C17.3431 2 16 3.34315 16 5C16 6.65685 17.3431 8 19 8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M21 12V15C21 18.3137 18.3137 21 15 21H9C5.68629 21 3 18.3137 3 15V9C3 5.68629 5.68629 3 9 3H12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              <span>Click on icon, color or title to change it.</span>
             </div>
+            <PrimaryButton color="#000">
+              <template #icon>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icons">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              </template>
+              <span>Add</span>
+            </PrimaryButton>
+          </div>
           <div class="my-5 flex w-full items-center justify-stretch">
             <span class="w-full cursor-pointer rounded-l-2xl border border-white/10 py-3 text-center text-xs transition-colors hover:bg-white/5" :class="activeTab == 'cat' && 'bg-white/10'" @click="setActiveTab('cat')">Categories</span>
             <span class="w-full cursor-pointer border-y border-white/10 py-3 text-center text-xs transition-colors hover:bg-white/5" :class="activeTab == 'sta' && 'bg-white/10'" @click="setActiveTab('sta')">Statuses</span>
@@ -1252,18 +1231,8 @@ const handleImageGenerated = (imageUrl) => {
     <div v-if="modal.active && modal.button === 'Share'" class="mt-4">
       <InputLabel for="shareEmail" value="Share with email" />
       <div class="flex gap-2">
-        <TextInput
-          id="shareEmail"
-          v-model="shareEmail"
-          type="email"
-          class="mt-1 block w-full"
-          placeholder="Enter email address"
-        />
-        <PrimaryButton 
-          @click="shareItem(activeRow)"
-          :disabled="isSharing || !shareEmail"
-          class="mt-1"
-        >
+        <TextInput id="shareEmail" v-model="shareEmail" type="email" class="mt-1 block w-full" placeholder="Enter email address" />
+        <PrimaryButton @click="shareItem(activeRow)" :disabled="isSharing || !shareEmail" class="mt-1">
           <template v-if="isSharing">
             <Loader class="mr-2" />
           </template>
@@ -1276,11 +1245,7 @@ const handleImageGenerated = (imageUrl) => {
         <span>Generate or Upload Image</span>
       </template>
       <template #content>
-        <ImageGenerator 
-          v-if="selectedItemForImage"
-          :item="selectedItemForImage"
-          @imageGenerated="handleImageGenerated"
-        />
+        <ImageGenerator v-if="selectedItemForImage" :item="selectedItemForImage" @imageGenerated="handleImageGenerated" />
       </template>
       <template #footer>
         <PrimaryButton type="button" class="ml-auto mr-3" @click="showImageGenerator = false">Close</PrimaryButton>
@@ -1405,7 +1370,7 @@ tr:not(.head-row) {
 
 /* Add modal styles */
 .modal-header {
-  @apply flex items-center justify-between px-6 py-4 border-b border-white/10;
+  @apply flex items-center justify-between border-b border-white/10 px-6 py-4;
 }
 
 .modal-content {
@@ -1413,12 +1378,12 @@ tr:not(.head-row) {
 }
 
 .modal-footer {
-  @apply px-6 py-4 border-t border-white/10;
+  @apply border-t border-white/10 px-6 py-4;
 }
 
 /* Improve status button styles */
 .status-button {
-  @apply relative flex items-center justify-center p-2 rounded-full transition-colors duration-200;
+  @apply relative flex items-center justify-center rounded-full p-2 transition-colors duration-200;
 }
 
 .status-button:hover {
@@ -1432,7 +1397,9 @@ tr:not(.head-row) {
 /* Modal transitions */
 .modal-enter-active,
 .modal-leave-active {
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
 }
 
 .modal-enter-from,
@@ -1443,13 +1410,13 @@ tr:not(.head-row) {
 
 /* Button hover effects */
 button:not(:disabled):hover {
-  @apply transform scale-105 transition-transform duration-200;
+  @apply scale-105 transform transition-transform duration-200;
 }
 
 /* Form input styles */
 input:disabled,
 textarea:disabled {
-  @apply opacity-50 cursor-not-allowed;
+  @apply cursor-not-allowed opacity-50;
 }
 
 /* Toast notification styles */
@@ -1463,12 +1430,14 @@ textarea:disabled {
 
 /* Status popup styles */
 .status-popup {
-  @apply absolute right-0 top-0 bg-black/80 rounded-lg p-2 shadow-lg;
+  @apply absolute right-0 top-0 rounded-lg bg-black/80 p-2 shadow-lg;
 }
 
 .status-popup-enter-active,
 .status-popup-leave-active {
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 
 .status-popup-enter-from,

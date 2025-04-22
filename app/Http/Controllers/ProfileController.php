@@ -88,4 +88,28 @@ class ProfileController extends Controller
             'total_storage' => Storage::sum('size'),
         ];
     }
+
+    /**
+     * Get the user's recent activities.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function activities(Request $request)
+    {
+        $activities = $request->user()->activities()
+            ->latest()
+            ->take(10)
+            ->get()
+            ->map(function ($activity) {
+                return [
+                    'id' => $activity->id,
+                    'description' => $activity->description,
+                    'icon' => $activity->icon,
+                    'created_at' => $activity->created_at->diffForHumans(),
+                ];
+            });
+
+        return response()->json(['activities' => $activities]);
+    }
 }

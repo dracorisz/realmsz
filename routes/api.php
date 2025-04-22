@@ -30,7 +30,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
   return $request->user();
 });
 
-Route::middleware(['auth:sanctum', 'role:manager'])->group(function () {
+Route::middleware(['auth:sanctum', 'role:suzy'])->group(function () {
   Route::prefix('item')->name('item.')->group(function () {
     Route::post('/store', [ItemController::class, 'store'])->name('store');
     Route::post('/duplicate', [ItemController::class, 'duplicate'])->name('duplicate');

@@ -53,7 +53,7 @@ const updateProfile = () => {
             </p>
           </div>
           <div v-if="user.membership_status !== 'active'" class="flex-shrink-0">
-            <SecondaryButton as="a" :href="route('subscription')">
+            <SecondaryButton as="a" :href="route('subscription.checkout')">
               Upgrade to Premium
             </SecondaryButton>
           </div>

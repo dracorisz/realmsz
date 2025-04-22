@@ -1,5 +1,5 @@
 <template>
-  <FrontLayout>
+  <FrontLayout title="Content Preview | Realmsz Digital Asset Management">
     <div class="relative">
       <!-- Hero Section -->
       <div class="bg-gradient-to-r from-indigo-900 to-purple-900 py-12">

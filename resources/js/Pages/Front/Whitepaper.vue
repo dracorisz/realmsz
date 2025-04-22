@@ -111,7 +111,7 @@ const teamMembers = [
     name: 'Dragol Rewainde',
     role: 'Enthusiast',
     image: 'https://dracoscopia.com/dragol.png',
-    email: 'dragol@realmsz.com'
+    email: 'scopia@realmsz.com'
   },
   {
     name: 'Join Our Team',
@@ -123,16 +123,16 @@ const teamMembers = [
 
 const advisors = [
   {
-    name: 'Dr. Robert Wilson',
+    name: 'Robert Nnadi',
     role: 'Blockchain Advisor',
-    image: 'https://dracoscopia.com/tt.jpg',
-    email: 'robert@realmsz.com'
+    image: 'https://dracoscopia.com/tt.png',
+    email: 'scopia@realmsz.com'
   },
   {
-    name: 'Lisa Thompson',
+    name: 'Lisa Nnadi',
     role: 'Business Strategy Advisor',
-    image: 'https://dracoscopia.com/aes.jpg',
-    email: 'lisa@realmsz.com'
+    image: 'https://dracoscopia.com/aes.png',
+    email: 'scopia@realmsz.com'
   }
 ];
 </script>

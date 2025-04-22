@@ -10,6 +10,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Http\Traits\HasProfilePhoto;
 use Illuminate\Database\Eloquent\Concerns\HasTimestamps;
+use App\Models\UserConnection;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -140,8 +141,15 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function receivedConnectionRequests()
     {
-        return $this->belongsToMany(User::class, 'user_connections', 'connection_id', 'user_id')
-            ->wherePivot('status', 'pending');
+        return $this->hasMany(UserConnection::class, 'receiver_id')->where('status', 'pending');
+    }
+
+    /**
+     * Get the user's activities.
+     */
+    public function activities()
+    {
+        return $this->hasMany(Activity::class);
     }
 
     public function hasConnection(User $user)

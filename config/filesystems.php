@@ -50,7 +50,7 @@ return [
             'secret' => env('AWS_SECRET_ACCESS_KEY', 'Ke9rTz1KPku+WZGXJ40cwzvjUYJxqc6G4UCqjuHI'),
             'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
             'bucket' => env('AWS_BUCKET', 'realmsz-images-bucket'),
-            'url' => env('AWS_URL'),
+            'url' => env('AWS_URL', 'https://realmsz-images-bucket.s3.us-east-1.amazonaws.com'),
             'endpoint' => env('AWS_ENDPOINT'),
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
             'throw' => false,

@@ -1,51 +1,44 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { Link } from '@inertiajs/vue3';
-import FrontLayout from '@/Layouts/FrontLayout.vue';
-import { 
-  SparklesIcon,
-  PhotoIcon,
-  DocumentTextIcon,
-  CodeBracketIcon,
-  MusicalNoteIcon,
-  VideoCameraIcon
-} from '@heroicons/vue/24/outline';
+import { ref, onMounted } from "vue";
+import { Link } from "@inertiajs/vue3";
+import FrontLayout from "@/Layouts/FrontLayout.vue";
+import { SparklesIcon, PhotoIcon, DocumentTextIcon, CodeBracketIcon, MusicalNoteIcon, VideoCameraIcon } from "@heroicons/vue/24/outline";
 
 const tools = [
   {
-    title: 'Text to Image',
-    description: 'Generate stunning images from text descriptions',
+    title: "Text to Image",
+    description: "Generate stunning images from text descriptions",
     icon: PhotoIcon,
-    endpoint: '/api/ai/text-to-image'
+    endpoint: "/api/ai/text-to-image",
   },
   {
-    title: 'Text to Code',
-    description: 'Generate code from natural language descriptions',
+    title: "Text to Code",
+    description: "Generate code from natural language descriptions",
     icon: CodeBracketIcon,
-    endpoint: '/api/ai/text-to-code'
+    endpoint: "/api/ai/text-to-code",
   },
   {
-    title: 'Text to Music',
-    description: 'Create unique music tracks from text prompts',
+    title: "Text to Music",
+    description: "Create unique music tracks from text prompts",
     icon: MusicalNoteIcon,
-    endpoint: '/api/ai/text-to-music'
+    endpoint: "/api/ai/text-to-music",
   },
   {
-    title: 'Text to Video',
-    description: 'Generate video content from text descriptions',
+    title: "Text to Video",
+    description: "Generate video content from text descriptions",
     icon: VideoCameraIcon,
-    endpoint: '/api/ai/text-to-video'
-  }
+    endpoint: "/api/ai/text-to-video",
+  },
 ];
 
-const prompt = ref('');
+const prompt = ref("");
 const loading = ref(false);
 const result = ref(null);
 const error = ref(null);
 
 const generateImage = async () => {
   if (!prompt.value) {
-    error.value = 'Please enter a prompt';
+    error.value = "Please enter a prompt";
     return;
   }
 
@@ -53,16 +46,16 @@ const generateImage = async () => {
   error.value = null;
 
   try {
-    const response = await fetch('/api/ai/text-to-image', {
-      method: 'POST',
+    const response = await fetch("/api/ai/text-to-image", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ prompt: prompt.value }),
     });
 
     if (!response.ok) {
-      throw new Error('Failed to generate image');
+      throw new Error("Failed to generate image");
     }
 
     const data = await response.json();
@@ -76,60 +69,44 @@ const generateImage = async () => {
 </script>
 
 <template>
-  <FrontLayout>
+  <FrontLayout title="AI Tools | Realmsz Digital Asset Management">
     <div class="min-h-screen bg-gradient-to-b from-dragon-dark-900 to-dragon-dark-800">
       <!-- Hero Section -->
-      <section class="relative py-20 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-7xl mx-auto text-center">
-          <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-teal-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
-            AI Tools
-          </h1>
-          <p class="mt-6 text-xl sm:text-2xl text-blue-400 max-w-3xl mx-auto">
-            Create amazing content with our AI-powered tools
-          </p>
+      <section class="relative px-4 py-20 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-7xl text-center">
+          <h1 class="bg-gradient-to-r from-teal-400 via-blue-500 to-purple-600 bg-clip-text text-4xl font-bold text-transparent sm:text-5xl md:text-6xl">AI Tools</h1>
+          <p class="mx-auto mt-6 max-w-3xl text-xl text-blue-400 sm:text-2xl">Create amazing content with our AI-powered tools</p>
         </div>
       </section>
 
       <!-- Text to Image Section -->
-      <section class="py-20 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-7xl mx-auto">
-          <h2 class="text-3xl font-bold text-white text-center mb-12">Text to Image</h2>
-          
-          <div class="max-w-2xl mx-auto">
-            <div class="bg-dragon-dark-700/50 p-6 rounded-xl border border-dragon-dark-600">
+      <section class="px-4 py-20 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-7xl">
+          <h2 class="mb-12 text-center text-3xl font-bold text-white">Text to Image</h2>
+
+          <div class="mx-auto max-w-2xl">
+            <div class="rounded-xl border border-dragon-dark-600 bg-dragon-dark-700/50 p-6">
               <div class="space-y-4">
                 <div>
-                  <label for="prompt" class="block text-sm font-medium text-gray-400 mb-2">
-                    Enter your prompt
-                  </label>
-                  <textarea
-                    id="prompt"
-                    v-model="prompt"
-                    rows="4"
-                    class="w-full bg-dragon-dark-800 border border-dragon-dark-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-teal-500"
-                    placeholder="Describe the image you want to generate..."
-                  ></textarea>
+                  <label for="prompt" class="mb-2 block text-sm font-medium text-gray-400"> Enter your prompt </label>
+                  <textarea id="prompt" v-model="prompt" rows="4" class="w-full rounded-lg border border-dragon-dark-600 bg-dragon-dark-800 px-4 py-2 text-white focus:border-teal-500 focus:outline-none" placeholder="Describe the image you want to generate..."></textarea>
                 </div>
-                
-                <div v-if="error" class="text-red-500 text-sm">
+
+                <div v-if="error" class="text-sm text-red-500">
                   {{ error }}
                 </div>
-                
-                <button
-                  @click="generateImage"
-                  :disabled="loading"
-                  class="btn-dragon w-full"
-                >
+
+                <button @click="generateImage" :disabled="loading" class="btn-dragon w-full">
                   <span v-if="loading">Generating...</span>
                   <span v-else>Generate Image</span>
                 </button>
               </div>
             </div>
-            
+
             <div v-if="result" class="mt-8">
-              <h3 class="text-xl font-semibold text-white mb-4">Generated Image</h3>
-              <div class="bg-dragon-dark-700/50 p-6 rounded-xl border border-dragon-dark-600">
-                <img :src="result" alt="Generated image" class="w-full rounded-lg">
+              <h3 class="mb-4 text-xl font-semibold text-white">Generated Image</h3>
+              <div class="rounded-xl border border-dragon-dark-600 bg-dragon-dark-700/50 p-6">
+                <img :src="result" alt="Generated image" class="w-full rounded-lg" />
               </div>
             </div>
           </div>
@@ -137,49 +114,29 @@ const generateImage = async () => {
       </section>
 
       <!-- Other AI Tools -->
-      <section class="py-20 px-4 sm:px-6 lg:px-8 bg-dragon-dark-800/50">
-        <div class="max-w-7xl mx-auto">
-          <h2 class="text-3xl font-bold text-white text-center mb-12">Other AI Tools</h2>
-          
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div v-for="tool in tools" :key="tool.title" 
-                 class="feature-card p-6 rounded-xl">
-              <component :is="tool.icon" class="w-12 h-12 text-teal-400 mb-4" />
-              <h3 class="text-xl font-semibold text-white mb-2">{{ tool.title }}</h3>
-              <p class="text-gray-400 mb-4">{{ tool.description }}</p>
-              <Link
-                :href="tool.endpoint"
-                class="btn-dragon-outline w-full"
-              >
-                Try Now
-              </Link>
+      <section class="bg-dragon-dark-800/50 px-4 py-20 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-7xl">
+          <h2 class="mb-12 text-center text-3xl font-bold text-white">Other AI Tools</h2>
+
+          <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+            <div v-for="tool in tools" :key="tool.title" class="feature-card rounded-xl p-6">
+              <component :is="tool.icon" class="mb-4 h-12 w-12 text-teal-400" />
+              <h3 class="mb-2 text-xl font-semibold text-white">{{ tool.title }}</h3>
+              <p class="mb-4 text-gray-400">{{ tool.description }}</p>
+              <Link :href="tool.endpoint" class="btn-dragon-outline w-full"> Try Now </Link>
             </div>
           </div>
         </div>
       </section>
 
       <!-- CTA Section -->
-      <section class="py-20 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-4xl mx-auto text-center">
-          <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6">
-            Ready to Create Amazing Content?
-          </h2>
-          <p class="text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
-            Start using our AI tools to bring your ideas to life
-          </p>
-          <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              :href="route('register')"
-              class="btn-dragon"
-            >
-              Get Started
-            </Link>
-            <Link
-              :href="route('pricing')"
-              class="btn-dragon-outline"
-            >
-              View Pricing
-            </Link>
+      <section class="px-4 py-20 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-4xl text-center">
+          <h2 class="mb-6 text-3xl font-bold text-white sm:text-4xl">Ready to Create Amazing Content?</h2>
+          <p class="mx-auto mb-10 max-w-2xl text-xl text-gray-400">Start using our AI tools to bring your ideas to life</p>
+          <div class="flex flex-col justify-center gap-4 sm:flex-row">
+            <Link :href="route('register')" class="btn-dragon"> Get Started </Link>
+            <Link :href="route('pricing')" class="btn-dragon-outline"> View Pricing </Link>
           </div>
         </div>
       </section>
@@ -189,20 +146,14 @@ const generateImage = async () => {
 
 <style scoped>
 .btn-dragon {
-  @apply px-6 py-3 bg-gradient-to-r from-teal-500 to-blue-600 text-white font-semibold 
-         rounded-lg shadow-xl hover:shadow-teal-500/25 transition-all duration-300
-         hover:from-teal-600 hover:to-blue-700 transform hover:-translate-y-0.5;
+  @apply transform rounded-lg bg-gradient-to-r from-teal-500 to-blue-600 px-6 py-3 font-semibold text-white shadow-xl transition-all duration-300 hover:-translate-y-0.5 hover:from-teal-600 hover:to-blue-700 hover:shadow-teal-500/25;
 }
 
 .btn-dragon-outline {
-  @apply px-6 py-3 border-2 border-teal-500 text-teal-500 font-semibold 
-         rounded-lg hover:bg-teal-500/10 transition-all duration-300
-         hover:border-teal-400 hover:text-teal-400 transform hover:-translate-y-0.5;
+  @apply transform rounded-lg border-2 border-teal-500 px-6 py-3 font-semibold text-teal-500 transition-all duration-300 hover:-translate-y-0.5 hover:border-teal-400 hover:bg-teal-500/10 hover:text-teal-400;
 }
 
 .feature-card {
-  @apply bg-dragon-dark-700/50 border border-dragon-dark-600 backdrop-blur-sm
-         hover:border-teal-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-teal-500/10
-         transform hover:-translate-y-1;
+  @apply transform border border-dragon-dark-600 bg-dragon-dark-700/50 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-teal-500/50 hover:shadow-lg hover:shadow-teal-500/10;
 }
-</style> 
+</style>

@@ -247,6 +247,7 @@ const isDropdownOpen = ref(false);
               <p class="text-gray-400">Contact:</p>
               <p class="text-gray-400">scopia@realmsz.com</p>
               <div class="mt-4">
+                <img src="https://dracoscopia.com/logo.png" alt="DRC Token" class="w-10 h-10">
                 <p class="text-gray-400">DRC Token:</p>
                 <p class="break-all text-xs text-gray-500">0x497A5...d149b</p>
               </div>

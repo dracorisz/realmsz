@@ -108,7 +108,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <FrontLayout>
+  <FrontLayout title="RealmSZ Ecosystem">
     <div class="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
       <!-- Hero Section -->
       <section class="hero-section container mx-auto px-4 py-16">

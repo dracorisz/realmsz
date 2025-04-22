@@ -47,6 +47,33 @@ return [
 
         'ses' => [
             'transport' => 'ses',
+            // 'key' => env('AWS_ACCESS_KEY_ID'),
+            // 'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            // 'region' => env('AWS_REGION', 'us-east-1'),
+            // 'version' => '2010-12-01',
+            // 'service' => 'email',
+            // 'endpoint' => env('AWS_SES_ENDPOINT', null),
+            // 'verify_peer' => false,
+            // 'verify_peer_name' => false,
+            // 'options' => [
+            //     'http' => [
+            //         'verify' => false,
+            //     ],
+            // ],
+            // 'from' => [
+            //     'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
+            //     'name' => env('MAIL_FROM_NAME', 'Example'),
+            // ],
+            // 'dkim' => [
+            //     'domain' => env('MAIL_DKIM_DOMAIN', 'example.com'),
+            //     'selector' => env('MAIL_DKIM_SELECTOR', 'default'),
+            //     'privateKey' => env('MAIL_DKIM_PRIVATE_KEY'),
+            //     'passPhrase' => env('MAIL_DKIM_PASSPHRASE'),
+            // ],
+            // 'credentials' => [
+            //     'key' => env('AWS_ACCESS_KEY_ID'),
+            //     'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            // ],
         ],
 
         'mailgun' => [

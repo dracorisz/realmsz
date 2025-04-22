@@ -4,7 +4,7 @@ import FrontLayout from '@/Layouts/FrontLayout.vue';
 </script>
 
 <template>
-  <FrontLayout>
+  <FrontLayout title="Subscription Cancelled">
     <div class="min-h-screen bg-gradient-to-b from-dragon-dark-900 to-dragon-dark-800 py-20">
       <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div class="bg-dragon-dark-700/50 rounded-2xl p-8 shadow-xl">

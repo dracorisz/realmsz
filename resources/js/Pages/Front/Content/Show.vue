@@ -1,5 +1,5 @@
 <template>
-  <FrontLayout>
+  <FrontLayout title="Content Details | Realmsz Digital Asset Management">
     <div class="relative">
       <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">

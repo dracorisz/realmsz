@@ -4,6 +4,7 @@ import { useForm } from '@inertiajs/vue3';
 import ActionSection from "@/Components/ActionSection.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
+import axios from 'axios';
 
 const props = defineProps({
   user: {
@@ -41,9 +42,15 @@ const plans = {
   }
 };
 
-const subscribe = (plan) => {
-  // This would typically redirect to a payment gateway
-  window.location.href = route('subscription.checkout', { plan: plan });
+const handleSubscription = async (plan) => {
+    try {
+        const response = await axios.post(route('subscription.checkout'), { plan_id: plan.id });
+        if (response.data.url) {
+            window.location.href = response.data.url;
+        }
+    } catch (error) {
+        console.error('Subscription error:', error);
+    }
 };
 </script>
 
@@ -72,7 +79,7 @@ const subscribe = (plan) => {
 
           <div class="mt-6">
             <PrimaryButton 
-              @click="subscribe('monthly')"
+              @click="handleSubscription(plans.monthly)"
               class="w-full justify-center"
               :disabled="user.membership_status === 'active'"
             >
@@ -100,7 +107,7 @@ const subscribe = (plan) => {
 
           <div class="mt-6">
             <PrimaryButton 
-              @click="subscribe('yearly')"
+              @click="handleSubscription(plans.yearly)"
               class="w-full justify-center"
               :disabled="user.membership_status === 'active'"
             >

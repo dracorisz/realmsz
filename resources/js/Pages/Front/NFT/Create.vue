@@ -1,5 +1,5 @@
 <template>
-  <FrontLayout>
+  <FrontLayout title="Create NFT">
     <!-- Hero Section -->
     <div class="bg-gradient-to-r from-indigo-900 to-purple-900 py-12">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
