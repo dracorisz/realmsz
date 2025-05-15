@@ -12,7 +12,11 @@ class PriorityController extends Controller
 {
 	public function index()
 	{
-		return Priority::where('organization_id', Auth::user()->organization_id)->with('icon')->get();
+		$priorities = Priority::where('organization_id', Auth::user()->organization_id)
+			->orderBy('name')
+			->get();
+
+		return response()->json($priorities);
 	}
 
 	public function store(Request $request)

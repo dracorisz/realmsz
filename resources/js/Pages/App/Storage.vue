@@ -17,15 +17,38 @@ const tabs = [
 
 const fetchImages = async () => {
   try {
-    const response = await axios.get(route('images.organization'));
+    const response = await axios.get(route('images.organization'), {
+      withCredentials: false
+    });
+    
     if (response.data.success) {
-      images.value = response.data.images;
+      images.value = response.data.images.map(image => ({
+        ...image,
+        image: image.image_url // S3 URL is already provided by the backend
+      }));
+    } else {
+      toast.error(response.data.message || 'Failed to load images');
     }
   } catch (error) {
     console.error('Error fetching images:', error);
-    toast.error('Failed to load images');
+    toast.error(error.response?.data?.message || 'Failed to load images');
   } finally {
     isLoading.value = false;
+  }
+};
+
+const deleteImage = async (imageId) => {
+  try {
+    const response = await axios.delete(route('images.delete', { id: imageId }), {
+      withCredentials: false
+    });
+    if (response.data.success) {
+      images.value = images.value.filter(img => img.id !== imageId);
+      toast.success('Image deleted successfully');
+    }
+  } catch (error) {
+    console.error('Error deleting image:', error);
+    toast.error('Failed to delete image');
   }
 };
 
@@ -81,6 +104,12 @@ onMounted(() => {
               <div class="absolute bottom-0 left-0 right-0 p-4">
                 <h3 class="text-white font-medium">{{ image.title }}</h3>
                 <p class="text-gray-400 text-sm">{{ new Date(image.created_at).toLocaleDateString() }}</p>
+                <button
+                  @click="deleteImage(image.id)"
+                  class="mt-2 text-red-400 hover:text-red-300 text-sm font-medium"
+                >
+                  Delete
+                </button>
               </div>
             </div>
           </div>

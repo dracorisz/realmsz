@@ -13,8 +13,7 @@ class NetworkController extends Controller
 {
 	public function index(Request $request)
 	{
-		$query = User::query()
-			->with(['organization', 'items']);
+		$users = User::query()->with(['organization', 'items'])->get();
 			// ->where('id', '!=', Auth::id());
 
 		// Filter by role if specified
@@ -23,25 +22,25 @@ class NetworkController extends Controller
 		// }
 
 		// Filter by organization if specified
-		if ($request->has('organization_id')) {
-			$query->whereHas('organization', function ($q) use ($request) {
-				$q->where('organizations.id', $request->organization_id);
-			});
-		}
+		// if ($request->has('organization_id')) {
+		// 	$query->whereHas('organization', function ($q) use ($request) {
+		// 		$q->where('organizations.id', $request->organization_id);
+		// 	});
+		// }
 
 		// Filter by visibility preference
 		// $query->where('show_in_network', true);
 
-		$users = $query->paginate(12);
+		// $users = $query->paginate(12);
 		$organizations = Organization::all();
 
-		return Inertia::render('App/Network', [
+		return Inertia::render('App/Network/Main', [
 			'users' => $users,
 			'organizations' => $organizations,
-			'filters' => [
-				'role' => $request->role ?? 'all',
-				'organization_id' => $request->organization_id
-			]
+			// 'filters' => [
+			// 	'role' => $request->role ?? 'all',
+			// 	'organization_id' => $request->organization_id
+			// ]
 		]);
 	}
 
@@ -123,5 +122,38 @@ class NetworkController extends Controller
 			->delete();
 
 		return response()->json(['message' => 'User removed from task successfully']);
+	}
+
+	public function users(Request $request)
+	{
+		try {
+			$query = User::query()
+				->where('id', '!=', Auth::id());
+
+			if ($request->has('search')) {
+				$search = $request->input('search');
+				$query->where(function ($q) use ($search) {
+					$q->where('name', 'like', "%{$search}%")
+						->orWhere('email', 'like', "%{$search}%");
+				});
+			}
+
+			$users = $query->get()->map(function ($user) {
+				return [
+					'id' => $user->id,
+					'name' => $user->name,
+					'email' => $user->email,
+					'profile_photo_url' => $user->profile_photo_url,
+					'role' => $user->role ?? 'member', // Use actual role if available
+				];
+			});
+
+			return response()->json($users);
+		} catch (\Exception $e) {
+			return response()->json([
+				'message' => 'Failed to fetch users',
+				'error' => $e->getMessage()
+			], 500);
+		}
 	}
 }

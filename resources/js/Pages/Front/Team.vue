@@ -152,7 +152,7 @@ const advisors = [
               Contact Us
             </Link>
             <a
-              href="mailto:careers@realmsz.com"
+              href="mailto:scopia@realmsz.com"
               class="btn-dragon-outline"
             >
               Email Careers

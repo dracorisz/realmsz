@@ -1,12 +1,8 @@
 <script setup>
-import { Link } from "@inertiajs/vue3";
 import FrontLayout from "@/Layouts/FrontLayout.vue";
-import { onMounted, ref, computed } from "vue";
+import { onMounted } from "vue";
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import axios from "axios";
 import AIImageGenerator from '@/Components/AIImageGenerator.vue';
-// import DezgoImageGenerator from '@/Components/DezgoImageGenerator.vue';
 
 const scrollToSection = (sectionId) => {
   const element = document.getElementById(sectionId);
@@ -85,14 +81,6 @@ const integrations = [
   },
 ];
 
-// Add Dezgo API configuration
-const dezgoConfig = {
-  apiUrl: "https://api.dezgo.com",
-  apiKey: "DEZGO-C435BFF100D9194A967B1C199F2F5BACE688F4A861EBE2C8A9892536C1835AEDD5107C3B",
-};
-
-gsap.registerPlugin(ScrollTrigger);
-
 onMounted(() => {
   // Simple fade-in animation for hero section
   const hero = document.querySelector(".hero-section");
@@ -108,7 +96,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <FrontLayout title="RealmSZ Ecosystem">
+  <FrontLayout title="Realmsz Ecosystem">
     <div class="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
       <!-- Hero Section -->
       <section class="hero-section container mx-auto px-4 py-16">
@@ -163,10 +151,7 @@ onMounted(() => {
       <!-- AI Studio Section -->
       <section id="ai-studio" class="container mx-auto px-4 py-16">
         <h2 class="mb-8 text-4xl font-bold">AI Image Generation</h2>
-        <AIImageGenerator
-          :api-key="dezgoConfig.apiKey"
-          :api-url="dezgoConfig.apiUrl"
-        />
+        <AIImageGenerator />
       </section>
 
       <!-- Integrations Section -->
@@ -191,8 +176,3 @@ onMounted(() => {
     </div>
   </FrontLayout>
 </template>
-
-<style scoped>
-/* Add any custom styles here */
-</style>
-

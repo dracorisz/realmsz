@@ -2,8 +2,12 @@
 import { onMounted, ref } from "vue";
 
 defineProps({
-  modelValue: String,
+  modelValue: [String, Number],
   placeholder: String,
+  type: {
+    type: String,
+    default: 'text'
+  }
 });
 
 defineEmits(["update:modelValue"]);
@@ -20,5 +24,11 @@ defineExpose({ focus: () => input.value.focus() });
 </script>
 
 <template>
-  <input ref="input" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" :placeholder="placeholder" />
+  <input 
+    ref="input" 
+    :value="modelValue" 
+    @input="$emit('update:modelValue', type === 'number' ? Number($event.target.value) : $event.target.value)" 
+    :placeholder="placeholder"
+    :type="type"
+  />
 </template>

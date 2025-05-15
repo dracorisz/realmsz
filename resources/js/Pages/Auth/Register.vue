@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
-import AuthLayout from '@/Layouts/AuthLayout.vue';
+import { Link, useForm } from '@inertiajs/vue3';
+import FrontLayout from '@/Layouts/FrontLayout.vue';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/outline';
 
 const form = useForm({
@@ -23,9 +23,8 @@ const submit = () => {
 </script>
 
 <template>
-  <Head title="Create your account" />
-  <AuthLayout>
-    <div class="bg-dragon-dark-700/50 backdrop-blur-sm p-8 rounded-xl border border-dragon-dark-600">
+  <FrontLayout title="Create your account">
+    <div class="bg-dragon-dark-700/50 backdrop-blur-sm p-8 rounded-xl border border-dragon-dark-600 w-full max-w-md mx-auto my-20">
       <div class="text-center">
         <h2 class="text-2xl font-bold text-white">Create your account</h2>
         <p class="mt-2 text-gray-400">Join Realmsz and start your journey</p>
@@ -161,6 +160,6 @@ const submit = () => {
         </p>
       </div>
     </div>
-  </AuthLayout>
+  </FrontLayout>
 </template>
 

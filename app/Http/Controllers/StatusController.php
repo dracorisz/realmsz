@@ -12,7 +12,11 @@ class StatusController extends Controller
 {
 	public function index()
 	{
-		return Status::where('organization_id', Auth::user()->organization_id)->with('icon')->get();
+		$statuses = Status::where('organization_id', Auth::user()->organization_id)
+			->orderBy('name')
+			->get();
+
+		return response()->json($statuses);
 	}
 
 	public function store(Request $request)

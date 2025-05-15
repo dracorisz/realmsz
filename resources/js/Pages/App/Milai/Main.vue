@@ -238,35 +238,35 @@ onUnmounted(() => {
   window.removeEventListener("keydown", handleKeyboardShortcuts);
 });
 
-const webSearchEnabled = ref(false);
-const mapsEnabled = ref(false);
+// const webSearchEnabled = ref(false);
+// const mapsEnabled = ref(false);
 
-const toggleWebSearch = () => {
-  webSearchEnabled.value = !webSearchEnabled.value;
-};
+// const toggleWebSearch = () => {
+//   webSearchEnabled.value = !webSearchEnabled.value;
+// };
 
-const toggleMaps = () => {
-  mapsEnabled.value = !mapsEnabled.value;
-};
+// const toggleMaps = () => {
+//   mapsEnabled.value = !mapsEnabled.value;
+// };
 
-const chatMessages = ref([]);
-const speechSynthesis = window.speechSynthesis;
-let speechUtterance;
+// const chatMessages = ref([]);
+// const speechSynthesis = window.speechSynthesis;
+// let speechUtterance;
 
-const startTextToSpeech = () => {
-  if (!speechSynthesis) {
-    console.error("Text-to-Speech is not supported in this browser.");
-    return;
-  }
-  speechUtterance = new SpeechSynthesisUtterance("Text-to-Speech enabled.");
-  speechSynthesis.speak(speechUtterance);
-};
+// const startTextToSpeech = () => {
+//   if (!speechSynthesis) {
+//     console.error("Text-to-Speech is not supported in this browser.");
+//     return;
+//   }
+//   speechUtterance = new SpeechSynthesisUtterance("Text-to-Speech enabled.");
+//   speechSynthesis.speak(speechUtterance);
+// };
 
-const stopTextToSpeech = () => {
-  if (speechSynthesis) {
-    speechSynthesis.cancel();
-  }
-};
+// const stopTextToSpeech = () => {
+//   if (speechSynthesis) {
+//     speechSynthesis.cancel();
+//   }
+// };
 </script>
 
 <template>
@@ -287,7 +287,7 @@ const stopTextToSpeech = () => {
               </div>
               <AutoResizeTextarea ref="autoTextarea" v-model="prompt" placeholder="Ask anything..." @enter="startChat" />
               <div class="flex gap-2">
-                <PrimaryButton color="#1a1a1a" opacity="100" hoverOpacity="100" :toggled="false">
+                <!-- <PrimaryButton color="#1a1a1a" opacity="100" hoverOpacity="100" :toggled="false">
                   <template #icon>
                     <svg width="24" height="24" class="icons" stroke-width="2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor">
                       <path d="M21 2L20 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -322,13 +322,13 @@ const stopTextToSpeech = () => {
                     </svg>
                   </template>
                   <span>Search</span>
-                </PrimaryButton>
-                <PrimaryButton color="#1a1a1a" opacity="100" hoverOpacity="100" :toggled="false">
+                </PrimaryButton> -->
+                <!-- <PrimaryButton color="#1a1a1a" opacity="100" hoverOpacity="100" :toggled="false">
                   <template #icon>
                     <svg width="24" height="24" class="icons" stroke-width="2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor"><path d="M21.4383 11.6622L12.2483 20.8522C11.1225 21.9781 9.59552 22.6106 8.00334 22.6106C6.41115 22.6106 4.88418 21.9781 3.75834 20.8522C2.63249 19.7264 2 18.1994 2 16.6072C2 15.015 2.63249 13.4881 3.75834 12.3622L12.9483 3.17222C13.6989 2.42166 14.7169 2 15.7783 2C16.8398 2 17.8578 2.42166 18.6083 3.17222C19.3589 3.92279 19.7806 4.94077 19.7806 6.00222C19.7806 7.06368 19.3589 8.08166 18.6083 8.83222L9.40834 18.0222C9.03306 18.3975 8.52406 18.6083 7.99334 18.6083C7.46261 18.6083 6.95362 18.3975 6.57834 18.0222C6.20306 17.6469 5.99222 17.138 5.99222 16.6072C5.99222 16.0765 6.20306 15.5675 6.57834 15.1922L15.0683 6.71222" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                   </template>
                   <span>Attach</span>
-                </PrimaryButton>
+                </PrimaryButton> -->
                 <PrimaryButton :class="chats.length < 1 && 'cursor-not-allowed !bg-[#888888]'" :disabled="chats.length < 1" @click="openHistoryModal" color="#1a1a1a" opacity="100" hoverOpacity="100">
                   <template #icon>
                     <svg width="24" height="24" stroke-width="2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor" class="icons">
@@ -395,8 +395,8 @@ const stopTextToSpeech = () => {
                 <KeyboardHint shortcut="⇧ ↵" label="New Line" />
                 <KeyboardHint shortcut="Cmd/Ctrl + ↓" label="Scroll" />
                 <KeyboardHint shortcut="↵" label="Send Message" />
-                <div class="ml-auto flex gap-2">
-                  <PrimaryButton color="#1a1a1a" opacity="100" hoverOpacity="100" :class="working && 'cursor-not-allowed !bg-[#888888]'" :disabled="working" :toggled="false">
+                  <!-- <div class="ml-auto flex gap-2">
+                <PrimaryButton color="#1a1a1a" opacity="100" hoverOpacity="100" :class="working && 'cursor-not-allowed !bg-[#888888]'" :disabled="working" :toggled="false">
                     <template #icon>
                       <svg width="24" height="24" class="icons" stroke-width="2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor">
                         <path d="M21 2L20 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -438,7 +438,7 @@ const stopTextToSpeech = () => {
                     </template>
                     <span>Attach</span>
                   </PrimaryButton>
-                </div>
+                </div> -->
               </div>
               <div class="relative flex w-full">
                 <div v-if="working" class="absolute bottom-2 left-2 z-50 flex items-center gap-5 rounded-2xl bg-black/70 pl-5 pr-3 text-xs backdrop-blur-2xl ah-[36px]">
@@ -496,18 +496,12 @@ const stopTextToSpeech = () => {
       </transition>
     </teleport>
     <!-- <div>
-      <PrimaryButton @click="toggleWebSearch">Web Search</PrimaryButton>
-      <PrimaryButton @click="toggleMaps">Maps</PrimaryButton>
-      <div v-if="webSearchEnabled">Web Search Content</div>
-      <div v-if="mapsEnabled">Maps Content</div>
-    </div> -->
-    <div>
       <PrimaryButton @click="startTextToSpeech">Enable Text-to-Speech</PrimaryButton>
-      <!-- <PrimaryButton @click="stopTextToSpeech">Disable Text-to-Speech</PrimaryButton> -->
+      <PrimaryButton @click="stopTextToSpeech">Disable Text-to-Speech</PrimaryButton>
       <div v-for="message in chatMessages" :key="message.id">
         <p>{{ message.text }}</p>
       </div>
-    </div>
+    </div> -->
   </AppLayout>
 </template>
 

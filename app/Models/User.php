@@ -32,6 +32,10 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'role',
         'show_in_network',
+        'bio',
+        'location',
+        'website',
+        'social_links',
     ];
 
     /**
@@ -54,6 +58,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
         'show_in_network' => 'boolean',
+        'social_links' => 'array',
     ];
 
     /**
@@ -69,7 +74,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsTo(Organization::class, 'organization_id', 'id');
     }
-    
+
     public function chats()
     {
         return $this->hasMany(Chat::class, 'user_id', 'id');
@@ -155,5 +160,12 @@ class User extends Authenticatable implements MustVerifyEmail
     public function hasConnection(User $user)
     {
         return $this->connections()->where('id', $user->id)->exists();
+    }
+
+    public function organizations()
+    {
+        return $this->belongsToMany(\App\Models\Organization::class, 'organization_user')
+            ->withPivot('role')
+            ->withTimestamps();
     }
 }

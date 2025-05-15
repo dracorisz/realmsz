@@ -36,17 +36,6 @@ const updateProfile = () => {
     },
   });
 };
-
-const handleSubscription = async (plan) => {
-  try {
-    const response = await axios.post(route("subscriptions.checkout"), { plan_id: plan.id });
-    if (response.data.url) {
-      window.location.href = response.data.url;
-    }
-  } catch (error) {
-    console.error("Subscription error:", error);
-  }
-};
 </script>
 
 <template>
@@ -55,7 +44,7 @@ const handleSubscription = async (plan) => {
     <template #description>Update your profile information and social media connections.</template>
     <template #content>
       <!-- Membership Status -->
-      <div class="mb-6 rounded-lg bg-gray-50/20 p-4">
+      <div class="mb-5 rounded-xl border border-gray-50/20 p-5">
         <div class="flex items-center justify-between">
           <div>
             <h3 class="text-lg font-medium text-gray-300">Membership Status</h3>
@@ -64,9 +53,7 @@ const handleSubscription = async (plan) => {
             </p>
           </div>
           <div v-if="user.membership_status !== 'active'" class="flex-shrink-0">
-            <SecondaryButton as="a" :href="handleSubscription">
-              Upgrade to Premium
-            </SecondaryButton>
+            <PrimaryButton as="a" :href="route('subscriptions.checkout', { plan_id: 'premium' })">Upgrade</PrimaryButton>
           </div>
         </div>
       </div>

@@ -19,9 +19,6 @@ class Kernel extends ConsoleKernel
         //         '--retry' => 60,
         //     ]);
         // })->dailyAt('02:00'); // Example: Enable maintenance mode daily at 2 AM
-        
-        // Sync content with dracoscopia.com every hour
-        $schedule->command('content:sync')->hourly();
     }
 
     /**
@@ -29,8 +26,6 @@ class Kernel extends ConsoleKernel
      */
     protected function commands(): void
     {
-        $this->load(__DIR__.'/Commands');
-
         require base_path('routes/console.php');
     }
 }

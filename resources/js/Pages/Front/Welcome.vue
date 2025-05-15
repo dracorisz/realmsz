@@ -181,7 +181,7 @@ onMounted(() => {
       <section class="relative px-4 py-20 sm:px-6 lg:px-8">
         <div class="absolute inset-0 overflow-hidden">
           <div class="absolute inset-0 z-0">
-            <img :src="'images/ai/9.png'" alt="Features Background" class="h-full w-full object-cover opacity-10" />
+            <img :src="'https://dracoscopia.com/images/ai/9.png'" alt="Features Background" class="h-full w-full object-cover opacity-10" />
           </div>
         </div>
         <div class="relative z-10 mx-auto max-w-7xl">

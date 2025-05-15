@@ -11,9 +11,13 @@ use Exception;
 class CategoryController extends Controller
 {
     public function index()
-	{
-		return Category::where('organization_id', Auth::user()->organization_id)->with('icon')->get();
-	}
+    {
+        $categories = Category::where('organization_id', Auth::user()->organization_id)
+            ->orderBy('name')
+            ->get();
+
+        return response()->json($categories);
+    }
 
 	public function store(Request $request)
 	{

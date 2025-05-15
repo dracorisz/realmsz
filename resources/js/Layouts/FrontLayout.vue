@@ -29,7 +29,7 @@ const navigation = [
 ];
 
 const logout = () => {
-  router.post(route('logout'));
+  router.post(route("logout"));
 };
 
 const baseUrl = "https://dracoscopia.com/";
@@ -65,26 +65,26 @@ const modules = ref([
     icon: "🎨",
     features: ["Content Creation", "Design Tools", "Media Management", "Creative Collaboration"],
   },
-  {
-    name: "Finance",
-    icon: "💰",
-    features: ["Budget Management", "Expense Tracking", "Financial Analytics", "Investment Tools"],
-  },
-  {
-    name: "Crypto",
-    icon: "🔗",
-    features: ["Crypto Wallet", "NFT Management", "Trading Tools", "Portfolio Tracking"],
-  },
-  {
-    name: "Websites",
-    icon: "🌐",
-    features: ["Website Builder", "Hosting Services", "Domain Management", "SEO Tools"],
-  },
-  {
-    name: "Storage",
-    icon: "💾",
-    features: ["Cloud Storage", "File Management", "Data Backup", "Secure Sharing"],
-  },
+  // {
+  //   name: "Finance",
+  //   icon: "💰",
+  //   features: ["Budget Management", "Expense Tracking", "Financial Analytics", "Investment Tools"],
+  // },
+  // {
+  //   name: "Crypto",
+  //   icon: "🔗",
+  //   features: ["Crypto Wallet", "NFT Management", "Trading Tools", "Portfolio Tracking"],
+  // },
+  // {
+  //   name: "Websites",
+  //   icon: "🌐",
+  //   features: ["Website Builder", "Hosting Services", "Domain Management", "SEO Tools"],
+  // },
+  // {
+  //   name: "Storage",
+  //   icon: "💾",
+  //   features: ["Cloud Storage", "File Management", "Data Backup", "Secure Sharing"],
+  // },
 ]);
 
 const selectedModule = ref(null);
@@ -108,7 +108,7 @@ const isDropdownOpen = ref(false);
   <div class="relative min-h-screen bg-dragon-dark-900">
     <!-- Background Images -->
     <div class="fixed inset-0 -z-10">
-      <img src="/images/background04.jpg" alt="Background" class="h-full w-full object-cover opacity-20" />
+      <img src="https://dracoscopia.com/images/background04.jpg" alt="Background" class="h-full w-full object-cover opacity-20" />
       <div class="absolute inset-0 bg-gradient-to-b from-dragon-dark-900 to-dragon-dark-800/50"></div>
     </div>
 
@@ -219,7 +219,7 @@ const isDropdownOpen = ref(false);
 
           <div class="space-y-4">
             <h3 class="font-semibold text-white">Modules</h3>
-            <ul class="space-y-2">
+            <ul class="space-y-1 -mt-5">
               <li v-for="module in modules" :key="module.name">
                 <button @click="openModuleModal(module)" class="flex items-center text-left text-gray-400 hover:text-teal-400">
                   <span class="mr-2 text-2xl">{{ module.icon }}</span>
@@ -246,10 +246,12 @@ const isDropdownOpen = ref(false);
             <div class="mt-4">
               <p class="text-gray-400">Contact:</p>
               <p class="text-gray-400">scopia@realmsz.com</p>
-              <div class="mt-4">
-                <img src="https://dracoscopia.com/logo.png" alt="DRC Token" class="w-10 h-10">
-                <p class="text-gray-400">DRC Token:</p>
-                <p class="break-all text-xs text-gray-500">0x497A5...d149b</p>
+              <div class="mt-4 flex items-center gap-3">
+                <img src="https://dracoscopia.com/logo.png" alt="DRC Token" class="h-10 w-10" />
+                <div class="flex flex-col">
+                  <p class="text-gray-400">DRC Token:</p>
+                  <p class="break-all text-xs text-gray-500">0x497A5...d149b</p>
+                </div>
               </div>
             </div>
           </div>
@@ -278,7 +280,6 @@ const isDropdownOpen = ref(false);
               <div class="mt-3 w-full text-center sm:mt-0 sm:text-left">
                 <h3 class="text-lg font-medium leading-6 text-white" id="modal-title">
                   <p v-html="selectedModule?.icon" :alt="selectedModule?.name" class="mr-2 inline-block h-8 w-8"></p>
-
                   {{ selectedModule?.name }}
                 </h3>
                 <div class="mt-2">

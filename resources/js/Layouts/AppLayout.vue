@@ -9,6 +9,9 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
+import ToastContainer from '@/Components/ToastContainer.vue';
+import LoadingSpinner from '@/Components/LoadingSpinner.vue';
+
 const page = usePage();
 const assetUrl = import.meta.env.VITE_ASSET_URL;
 
@@ -39,11 +42,16 @@ const canAccess = (allowedRoles) => {
 
 <template>
   <Head :title="title" />
+  <meta name="csrf-token" :content="page.props.csrf_token">
+  
+  <!-- Add Toast Container -->
+  <ToastContainer />
+  
   <div id="dragref" class="relative flex h-screen w-full overflow-hidden bg-black" :class="sidebarPosition ? 'flex-row' : 'flex-row-reverse'">
     
    
     <AppBanner />
-    <nav class="relative z-50 flex h-full flex-col bg-black bg-gradient-to-br from-primary/10 to-accent/5 transition-all duration-300 ease-in-out" :class="expandNav ? 'aw-[233px]' : 'aw-[55px]'">
+    <nav class="relative z-40 flex h-full flex-col bg-black bg-gradient-to-br from-primary/10 to-accent/5 transition-all duration-300 ease-in-out" :class="expandNav ? 'aw-[233px]' : 'aw-[55px]'">
       <div class="flex h-full w-full flex-col items-start justify-start">
         <div class="gradient flex w-full items-center gap-3 bg-black py-2" :class="expandNav ? 'justify-start px-5' : 'flex-col px-px'">
           <Link :href="route('focus')">
@@ -70,7 +78,7 @@ const canAccess = (allowedRoles) => {
                 </div>
                 <PrimaryButton v-if="expandNav" :onlyIcon="true" class="w-full" color="#1a1a1a" opacity="100" hoverOpacity="100" @click="userNav = !userNav">
                   <template #icon>
-                    <svg :class="userNav && '-scale-y-100'" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icons"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    <svg :class="userNav && '-scale-y-100'" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icons as-[24px]"><polyline points="6 9 12 15 18 9"></polyline></svg>
                   </template>
                 </PrimaryButton>
                 <div v-else="expandNav" class="flex items-center justify-center rounded-2xl border border-accent text-zx text-accent aw-[36px]">Pro</div>
@@ -146,8 +154,7 @@ const canAccess = (allowedRoles) => {
                 </template>
                 <div :class="expandNav ? 'inline-block' : 'hidden'">Milai</div>
               </PrimaryButton>
-              
-              <PrimaryButton :opaque="true" :onlyIcon="!expandNav" class="w-full" color="#00c2c5" opacity="30" hoverOpacity="50" type="link" href="finance" :toggled="route().current('finance')">
+              <!-- <PrimaryButton :opaque="true" :onlyIcon="!expandNav" class="w-full" color="#00c2c5" opacity="30" hoverOpacity="50" type="link" href="finance" :toggled="route().current('finance')">
                 <template #icon>
                   <svg width="24" height="24" class="icons" stroke-width="2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M21 7.35304L21 16.647C21 16.8649 20.8819 17.0656 20.6914 17.1715L12.2914 21.8381C12.1102 21.9388 11.8898 21.9388 11.7086 21.8381L3.30861 17.1715C3.11814 17.0656 3 16.8649 3 16.647L2.99998 7.35304C2.99998 7.13514 3.11812 6.93437 3.3086 6.82855L11.7086 2.16188C11.8898 2.06121 12.1102 2.06121 12.2914 2.16188L20.6914 6.82855C20.8818 6.93437 21 7.13514 21 7.35304Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -190,7 +197,7 @@ const canAccess = (allowedRoles) => {
                   </svg>
                 </template>
                 <div :class="expandNav ? 'inline-block' : 'hidden'">Storage</div>
-              </PrimaryButton>
+              </PrimaryButton> -->
               <form @submit.prevent="logout" class="mt-auto flex items-center self-center" :class="expandNav && 'w-full'">
                 <PrimaryButton :opaque="true" :onlyIcon="!expandNav" class="w-full" color="#00c2c5" opacity="30" hoverOpacity="50" type="submit" :toggled="false">
                   <template #icon>

@@ -21,11 +21,11 @@
   <meta name="author" content="Realmsz Team" />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#00449f" />
-  <meta name="description" content="Realmsz - Manage your tasks, plans, and projects efficiently." />
+  <meta name="description" content="Realmsz combines 10 essential modules in one place: Focus, Plans, Profile, Network, Milai, Studio, Finance, Crypto, Websites, and Storage. Streamline your workflow, create content, connect with your community, and manage your digital assets. Get started by creating an account and exploring each module!" />
   <meta name="robots" content="index, follow" />
-  <meta name="keywords" content="task management, project planning, productivity" />
+  <meta name="keywords" content="ai, generation, productivity, focus, plans, profile, network, milai, studio, finance, crypto, websites, storage" />
 
-  <link rel="image_src" href="https://realmsz.com/cover.jpg" />
+  <link rel="image_src" href="https://dracoscopia.com/images/ai/3.png" />
   <link rel="canonical" href="https://realmsz.com" />
 
   <meta property="og:title" content="Realmsz" />
@@ -35,8 +35,8 @@
   <meta property="og:site_name" content="Realmsz" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://realmsz.com" />
-  <meta property="og:image" content="https://realmsz.com/cover.jpg" />
-  <meta property="og:image:secure_url" content="https://realmsz.com/cover.jpg" />
+  <meta property="og:image" content="https://dracoscopia.com/images/ai/3.png" />
+  <meta property="og:image:secure_url" content="https://dracoscopia.com/images/ai/3.png" />
   <meta property="og:image:type" content="image/jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
@@ -44,8 +44,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Realmsz" />
   <meta name="twitter:description" content="Realmsz combines 10 essential modules in one place: Focus, Plans, Profile, Network, Milai, Studio, Finance, Crypto, Websites, and Storage. Streamline your workflow, create content, connect with your community, and manage your digital assets. Get started by creating an account and exploring each module!" />
-  <meta name="twitter:image" content="https://realmsz.com/cover.jpg" />
-  <meta name="twitter:site" content="@realmsz" />
+  <meta name="twitter:image" content="https://dracoscopia.com/images/ai/3.png" />
+  <!-- <meta name="twitter:site" content="@realmsz" /> -->
   
   <!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="{{ asset('favicon/favicon.ico') }}" /><![endif]-->
   <meta name="msapplication-TileImage" content="{{ asset('favicon/android-chrome-512x512.png') }}" />
@@ -88,7 +88,7 @@
       "name": "Realmsz",
       "headline": "Realmsz",
       "description": "Realmsz combines 10 essential modules in one place: Focus, Plans, Profile, Network, Milai, Studio, Finance, Crypto, Websites, and Storage. Streamline your workflow, create content, connect with your community, and manage your digital assets. Get started by creating an account and exploring each module!",
-      "image": "https://realmsz.com/cover.jpg",
+      "image": "https://dracoscopia.com/images/ai/3.png",
       "url": "https://realmsz.com"
     }
   </script>

@@ -230,13 +230,13 @@ const advisors = [
             Get the complete technical documentation and detailed analysis
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
+            <!-- <a
               href="/whitepaper.pdf"
               class="btn-dragon"
               download
             >
               Download PDF
-            </a>
+            </a> -->
             <Link
               :href="route('contact')"
               class="btn-dragon-outline"

@@ -60,6 +60,7 @@ return [
 
     'dezgo' => [
         'api_key' => env('DEZGO_API_KEY'),
+        'api_url' => env('DEZGO_API_URL', 'https://api.dezgo.com'),
     ],
 
     'stripe' => [

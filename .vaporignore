@@ -1,5 +1,0 @@
-tests/
-.env
-node_modules/
-vendor/
-.git/

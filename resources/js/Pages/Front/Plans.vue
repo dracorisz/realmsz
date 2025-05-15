@@ -4,6 +4,7 @@ import FrontLayout from "@/Layouts/FrontLayout.vue";
 import { ref, onMounted, computed } from "vue";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import axios from 'axios';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -41,8 +42,7 @@ const planFeatures = {
 
 const fetchPlans = async () => {
   try {
-    const response = await fetch("/api/plans");
-    const data = await response.json();
+    const { data } = await axios.get(route('plans'));
     plans.value = data.map((plan) => ({
       ...plan,
       features: typeof plan.features === "string" ? JSON.parse(plan.features) : plan.features,
@@ -61,17 +61,10 @@ const handleSubscribe = async (plan) => {
 
 const processSubscription = async () => {
   try {
-    const response = await fetch("/api/subscriptions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        plan_id: selectedPlan.value.id,
-        billing_cycle: billingCycle.value,
-      }),
+    const { data } = await axios.post(route('subscriptions.checkout'), {
+      plan_id: selectedPlan.value.id,
+      billing_cycle: billingCycle.value,
     });
-    const data = await response.json();
     if (data.checkout_url) {
       window.location.href = data.checkout_url;
     }
@@ -212,8 +205,6 @@ const faqs = [
         <div class="mx-auto max-w-7xl">
           <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
             <div v-for="plan in plans" :key="plan.id" class="plan-card relative transform rounded-xl border border-dragon-dark-600 bg-dragon-dark-700/50 p-8 transition-all duration-300 hover:scale-105" :class="{ 'border-dragon-primary shadow-xl shadow-dragon-primary/20': plan.name === 'Pro' }">
-              <!-- Popular Badge -->
-              <div v-if="plan.name === 'Pro'" class="absolute -right-4 -top-4 rounded-full bg-dragon-primary px-4 py-2 text-sm font-bold text-white shadow-lg">Most Popular</div>
 
               <h3 class="mb-4 text-2xl font-bold text-white">{{ plan.name }}</h3>
 
