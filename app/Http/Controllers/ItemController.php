@@ -124,6 +124,27 @@ class ItemController extends Controller
         }
     }
 
+    /**
+     * RESTful DELETE method for deleting an item by ID from the route param.
+     */
+    public function destroyDelete($id)
+    {
+        try {
+            $item = Item::findOrFail($id);
+            $item->delete();
+            return response()->json([
+                'success' => true,
+                'message' => 'Item deleted successfully'
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete item',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function archive(Item $item)
     {
         try {

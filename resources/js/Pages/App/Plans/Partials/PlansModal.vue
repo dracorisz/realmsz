@@ -225,6 +225,37 @@ const submitForm = async () => {
   }
 };
 
+const showDeleteDialog = ref(false);
+const deleteButtonRef = ref(null);
+
+function openDeleteDialog() {
+  showDeleteDialog.value = true;
+  nextTick(() => deleteButtonRef.value?.focus());
+}
+
+async function confirmDeleteItem() {
+  if (!props.item?.id) return;
+  try {
+    await axios.delete(route("items.destroy.delete", { item: props.item.id }));
+    toast.success("Item deleted successfully");
+    emit("saved");
+    closeModal();
+    router.reload({ only: ["items"] });
+  } catch (error) {
+    toast.error(error?.response?.data?.message || "Failed to delete item");
+  } finally {
+    showDeleteDialog.value = false;
+  }
+}
+
+function handleDeleteDialogKeydown(e) {
+  if (e.key === "Enter") {
+    confirmDeleteItem();
+  } else if (e.key === "Escape") {
+    showDeleteDialog.value = false;
+  }
+}
+
 const handleKeyDown = (e) => {
   if (props.show && e.key === "Escape") closeModal();
 };
@@ -519,12 +550,37 @@ const modalTitle = computed(() => {
             </svg>
             {{ item ? "Update" : "Create" }}
           </button>
+          <div v-if="props.mode === 'edit' && props.item?.id" class="flex justify-end">
+            <button type="button" class="flex items-center gap-2 rounded-lg bg-red-600 px-3 py-1 text-white hover:bg-red-700 transition-colors" @click="openDeleteDialog">
+              <TrashIcon class="h-8" />
+              <!-- Delete -->
+            </button>
+          </div>
         </div>
+
+        <!-- Show delete button only if in edit mode and item exists, and place it inside the form for visibility -->
       </form>
     </template>
     <!-- <template #footer> -->
     <!-- <ChecklistModal v-if="showChecklistModal" :show="showChecklistModal" :item="item" :checklists="form.checklists" @close="showChecklistModal = false" @update="handleChecklistUpdate" /> -->
     <!-- </template> -->
+  </DialogModal>
+
+  <!-- Delete Confirmation Dialog -->
+  <DialogModal :show="showDeleteDialog" @close="() => (showDeleteDialog = false)">
+    <template #header>
+      <div class="flex items-center space-x-2">
+        <TrashIcon class="h-6 w-6 text-red-500" />
+        <span class="text-lg font-semibold text-white">Delete Item</span>
+      </div>
+    </template>
+    <template #content>
+      <div class="py-2 text-white">Are you sure you want to delete this item? This action cannot be undone.</div>
+    </template>
+    <template #footer>
+      <button class="rounded px-4 py-2 bg-gray-700 text-white mr-2" @click="showDeleteDialog = false">Cancel</button>
+      <button ref="deleteButtonRef" class="rounded px-4 py-2 bg-red-600 text-white" @click="confirmDeleteItem" @keydown="handleDeleteDialogKeydown">Delete</button>
+    </template>
   </DialogModal>
 </template>
 

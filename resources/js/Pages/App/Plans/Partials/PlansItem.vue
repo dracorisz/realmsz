@@ -3,6 +3,8 @@ import { ref, computed, nextTick, onMounted, onUnmounted, watch } from "vue";
 import { ChevronDownIcon, EllipsisVerticalIcon, CalendarIcon, PaperClipIcon, PencilSquareIcon, ArchiveBoxIcon, TrashIcon } from "@heroicons/vue/24/outline";
 import Datepicker from "@/Components/Datepicker.vue";
 import { usePlans } from "@/Composables/usePlans";
+import DialogModal from "@/Components/DialogModal.vue";
+import { useToast } from "vue-toastification";
 
 const emit = defineEmits(["toggle-popup", "edit", "refresh", "reorder"]);
 
@@ -54,6 +56,7 @@ const props = defineProps({
 });
 
 const { handleStatusChange, handlePriorityChange, handleDateChange, isLoading, handleDelete, handleArchive, handleError } = usePlans();
+const toast = useToast();
 
 const KEYS = {
   TAB: "Tab",
@@ -87,6 +90,13 @@ const dropdownPosition = ref({
   actions: { right: "0px", top: "40px" },
 });
 
+const dropdownOpenOnTop = ref({
+  status: false,
+  priority: false,
+  date: false,
+  actions: false,
+});
+
 const actions = [
   { id: "edit", label: "Edit", icon: PencilSquareIcon, handler: (item) => emit("edit", item) },
   { id: "archive", label: props.item.archived && props.item.archived == 1 ? "Unarchive" : "Archive", icon: ArchiveBoxIcon, handler: (item) => archiveItemHandler(item) },
@@ -102,14 +112,36 @@ async function archiveItemHandler(item) {
   }
 }
 
+const showDeleteDialog = ref(false);
+const itemToDelete = ref(null);
+const deleteButtonRef = ref(null);
+
 async function deleteItemHandler(item) {
-  if (confirm("Are you sure you want to delete this item?")) {
-    try {
-      await handleDelete(item.id);
-      emit("refresh");
-    } catch (error) {
-      handleError(error, "Failed to delete item");
-    }
+  showDeleteDialog.value = true;
+  itemToDelete.value = item;
+  await nextTick();
+  deleteButtonRef.value?.focus();
+}
+
+async function confirmDeleteItem() {
+  if (!itemToDelete.value) return;
+  try {
+    await handleDelete(itemToDelete.value.id);
+    emit("refresh");
+    toast.success("Item deleted successfully");
+  } catch (error) {
+    toast.error(error?.response?.data?.message || "Failed to delete item");
+  } finally {
+    showDeleteDialog.value = false;
+    itemToDelete.value = null;
+  }
+}
+
+function handleDeleteDialogKeydown(e) {
+  if (e.key === "Enter") {
+    confirmDeleteItem();
+  } else if (e.key === "Escape") {
+    showDeleteDialog.value = false;
   }
 }
 
@@ -121,24 +153,30 @@ function calculateDropdownPosition(type, itemId) {
     const rect = button.getBoundingClientRect();
     const viewportHeight = window.innerHeight;
     const spaceBelow = viewportHeight - rect.bottom;
+    const spaceAbove = rect.top;
+    let openOnTop = false;
+
+    // If not enough space below and more space above, open on top
+    if (spaceBelow < 220 && spaceAbove > spaceBelow) {
+      openOnTop = true;
+    }
 
     if (type === "actions" || type === "date") {
       dropdownPosition.value[type] = {
         left: "auto",
         right: `${window.innerWidth - rect.right}px`,
-        top: spaceBelow < 200 ? "auto" : `${rect.bottom}px`,
-        bottom: spaceBelow < 200 ? `${window.innerHeight - rect.top}px` : "auto",
-        transformOrigin: spaceBelow < 200 ? "bottom right" : "top right",
+        top: openOnTop ? "auto" : `${rect.bottom}px`,
+        bottom: openOnTop ? `${viewportHeight - rect.top}px` : "auto",
       };
+      dropdownOpenOnTop.value[type] = openOnTop;
       return;
     }
 
     dropdownPosition.value[type] = {
       left: `${rect.left}px`,
       right: "auto",
-      top: spaceBelow < 200 ? "auto" : `${rect.bottom}px`,
-      bottom: spaceBelow < 200 ? `${window.innerHeight - rect.top}px` : "auto",
-      transformOrigin: spaceBelow < 200 ? "bottom left" : "top left",
+      top: openOnTop ? "auto" : `${rect.bottom}px`,
+      bottom: openOnTop ? `${viewportHeight - rect.top}px` : "auto",
     };
   });
 }
@@ -507,6 +545,22 @@ onUnmounted(() => {
         </Teleport>
       </div>
     </div>
+
+    <DialogModal :show="showDeleteDialog" @close="() => (showDeleteDialog = false)">
+      <template #header>
+        <div class="flex items-center space-x-2">
+          <TrashIcon class="h-6 w-6 text-red-500" />
+          <span class="text-lg font-semibold text-white">Delete Item</span>
+        </div>
+      </template>
+      <template #content>
+        <div class="py-2 text-white">Are you sure you want to delete this item? This action cannot be undone.</div>
+      </template>
+      <template #footer>
+        <button class="rounded px-4 py-2 bg-gray-700 text-white mr-2" @click="showDeleteDialog = false">Cancel</button>
+        <button ref="deleteButtonRef" class="rounded px-4 py-2 bg-red-600 text-white" @click="confirmDeleteItem" @keydown="handleDeleteDialogKeydown">Delete</button>
+      </template>
+    </DialogModal>
   </div>
 </template>
 

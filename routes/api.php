@@ -38,6 +38,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [ItemController::class, 'index'])->name('index');
     Route::post('/store', [ItemController::class, 'store'])->name('store');
     Route::post('/destroy', [ItemController::class, 'destroy'])->name('destroy');
+    Route::delete('/{item}', [ItemController::class, 'destroyDelete'])->name('destroy.delete');
     Route::post('/duplicate', [ItemController::class, 'duplicate'])->name('duplicate');
     Route::post('/update', [ItemController::class, 'update'])->name('update');
     Route::post('/export', [ItemController::class, 'export'])->name('export');  
@@ -100,9 +101,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
   Route::prefix('images')->name('images.')->group(function () {
     Route::post('/upload', [ImageController::class, 'upload'])->name('upload');
     Route::delete('/{image}', [ImageController::class, 'destroy'])->name('destroy');
+    Route::post('/generate', [ImageController::class, 'generate'])->name('generate');
   });
 
-  Route::post('/generate', [ImageController::class, 'generate'])->name('generate');
   Route::post('/upload', [ImageController::class, 'upload'])->name('upload');
   Route::get('/', [ImageController::class, 'getOrganizationImages'])->name('getOrganizationImages');
   Route::delete('/{id}', [ImageController::class, 'delete'])->name('delete');

@@ -151,16 +151,11 @@ export function usePlans() {
 
   // Add handlers for delete and archive
   const handleDelete = async (itemId) => {
-    closeAllPopups();
-    loadingStates.value.delete = true;
     try {
-      await axios.post(route('items.destroy', itemId));
-      ToastManager.success('Item deleted successfully');
-      await handleRefresh();
+      await axios.delete(route("items.destroy.delete", { item: itemId }));
     } catch (error) {
-      ToastManager.error(error.response?.data?.message || 'Failed to delete item');
-    } finally {
-      loadingStates.value.delete = false;
+      handleError(error, "Failed to delete item");
+      throw error;
     }
   };
 
@@ -393,4 +388,4 @@ export function usePlans() {
     handleTogglePopup,
     isLoading
   };
-} 
+}

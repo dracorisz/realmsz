@@ -45,7 +45,7 @@
   <meta name="twitter:title" content="Realmsz" />
   <meta name="twitter:description" content="Realmsz combines 10 essential modules in one place: Focus, Plans, Profile, Network, Milai, Studio, Finance, Crypto, Websites, and Storage. Streamline your workflow, create content, connect with your community, and manage your digital assets. Get started by creating an account and exploring each module!" />
   <meta name="twitter:image" content="https://dracoscopia.com/images/ai/3.png" />
-  <!-- <meta name="twitter:site" content="@realmsz" /> -->
+  <meta name="twitter:site" content="@dracoscopia" />
   
   <!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="{{ asset('favicon/favicon.ico') }}" /><![endif]-->
   <meta name="msapplication-TileImage" content="{{ asset('favicon/android-chrome-512x512.png') }}" />
@@ -89,9 +89,9 @@
       "headline": "Realmsz",
       "description": "Realmsz combines 10 essential modules in one place: Focus, Plans, Profile, Network, Milai, Studio, Finance, Crypto, Websites, and Storage. Streamline your workflow, create content, connect with your community, and manage your digital assets. Get started by creating an account and exploring each module!",
       "image": "https://dracoscopia.com/images/ai/3.png",
-      "url": "https://realmsz.com"
     }
   </script>
+  <!-- "url": "https://realmsz.com" -->
 </head>
 
 <body class="font-primary antialiased relative tracking-wide selection:text-black selection:bg-accent scroll-smooth overflow-x-hidden h-screen">
